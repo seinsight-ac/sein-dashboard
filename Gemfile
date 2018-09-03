@@ -25,6 +25,9 @@ gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'devise'
 # 檢查代碼風格
 gem 'rubocop', '~> 0.39.0'
+# google登入
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
