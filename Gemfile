@@ -19,8 +19,10 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
-#存放隱密資料(key)，會新增application.yml檔存放資料並加到gitignore內
+# 存放隱密資料(key)，會新增application.yml檔存放資料並加到gitignore內
 gem 'figaro', '~> 1.1', '>= 1.1.1'
+# user login
+gem 'devise'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
