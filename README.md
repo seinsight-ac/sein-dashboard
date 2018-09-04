@@ -10,6 +10,6 @@
 
 * bundle install
 
-* rails db:migrate(目前不用)
+* rails db:migrate
 
 * 注意自己在哪個分支
