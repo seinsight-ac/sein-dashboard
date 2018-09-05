@@ -8,19 +8,4 @@
   </div>
 </div>
 
-<% @campaigns["campaigns"].each do |c| %>
-
-  <% if c["status"] == "sent" %>
-    id: <%= c["id"] %><br>
-    send_time: <%= c["send_time"] %><br>
-    emails_sent: <%= c["emails_sent"] %><br>
-    title: <%= c["settings"]["title"] %><br>
-    <%= c["settings"]["subject_line"] %><br>
-    unique_open: <%= Mailchimp.mailchimp_report_open(c["id"])["unique_opens"] %><br>
-    open_rate: <%= Mailchimp.mailchimp_report_open(c["id"])["open_rate"].round(4) * 100 %>%<br>
-    unique_subscriber_clicks: <%= Mailchimp.mailchimp_report_click(c["id"])["unique_subscriber_clicks"] %><br>
-    click_rate: <%= Mailchimp.mailchimp_report_click(c["id"])["click_rate"].round(4) * 100 %>%<br>
-    <%= Mailchimp.mailchimp_report_detail(c["id"]) %><br>
-    <br>
-  <% end %>
-<% end %>
+<%= @data %>

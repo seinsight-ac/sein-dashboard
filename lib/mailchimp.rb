@@ -1,22 +1,17 @@
-require 'gibbon'
 require 'json'
 
 class Mailchimp
 
-  def self.mailchimp_campaign
-    @mailchimp = Gibbon::Request.new(api_key: CONFIG.MAILCHIMP_KEY)
-    @mailchimp.timeout = 30
-    @mailchimp.open_timeout = 30
-    campaigns = @mailchimp.campaigns.retrieve
-    JSON.parse(campaigns.to_json)
+  def self.campaigns(since, before)
+    @data = RestClient::Request.execute(method: :get, 
+      url: CONFIG.CAMPAIGNS_URL, 
+      user: 'anystring', 
+      password: CONFIG.MAILCHIMP_KEY,
+      since_send_time: '#{since}T00:00:00+00:00',
+      before_send_time: '#{before}T00:00:00+00:00',
+      sort_field: 'send_time',
+      sort_dir: 'ASC',
+      status: 'sent')
   end
 
-  def self.mailchimp_report_open(id)
-    open = @mailchimp.reports(id).retrieve["opens"]
-  end
-
-  def self.mailchimp_report_click(id)
-    click = @mailchimp.reports(id).retrieve["clicks"]
-  end
-  
 end

@@ -91,9 +91,6 @@ GEM
       railties (>= 3.2, < 6.0)
     font-awesome-sass (5.3.1)
       sassc (>= 1.11)
-    gibbon (2.2.5)
-      faraday (>= 0.9.1)
-      multi_json (>= 1.11.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     google-api-client (0.23.8)
@@ -306,7 +303,6 @@ DEPENDENCIES
   devise
   font-awesome-rails
   font-awesome-sass (~> 5.3.1)
-  gibbon (~> 2.2, >= 2.2.3)
   google-api-client
   jbuilder (~> 2.5)
   koala

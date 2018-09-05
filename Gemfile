@@ -25,8 +25,6 @@ gem 'devise'
 gem 'rubocop', '~> 0.39.0'
 # HTTP Request
 gem 'rest-client'
-# 串接mailchimp api
-gem 'gibbon', '~> 2.2', '>= 2.2.3'
 # google登入
 gem 'omniauth'
 gem 'omniauth-google-oauth2'

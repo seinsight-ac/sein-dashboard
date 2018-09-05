@@ -1,6 +1,5 @@
 class DashboardsController < ApplicationController
   require 'json'
-  require 'gibbon'
 
 
   def index 
@@ -33,7 +32,8 @@ class DashboardsController < ApplicationController
   end
 
   def mailchimp
-    @campaigns = Mailchimp.mailchimp_campaign
+    @data = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+    JSON.parse(@data)
   end
 
 
