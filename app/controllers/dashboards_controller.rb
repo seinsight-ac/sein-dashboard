@@ -1,7 +1,9 @@
 class DashboardsController < ApplicationController
+  require 'json'
+  require 'gibbon'
 
   def index 
-    @report = Mailchimp.mailchimp_report
+    @campaigns = Mailchimp.mailchimp_campaign
   end
 
 end
