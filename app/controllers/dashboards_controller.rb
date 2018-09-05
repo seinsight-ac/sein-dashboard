@@ -32,10 +32,8 @@ class DashboardsController < ApplicationController
   end
 
   def mailchimp
-    @data = Mailchimp.campaigns('2018-08-01', '2018-09-01')
-    JSON.parse(@data)
+    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
-
-
+  
 end
 

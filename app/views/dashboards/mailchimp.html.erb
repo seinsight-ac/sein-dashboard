@@ -8,4 +8,18 @@
   </div>
 </div>
 
-<%= @data %>
+<% @campaigns.each do |c| %>
+  id: <%= c["id"] %><br>
+  sent_time: <%= c["send_time"] %><br>
+  title: <%= c["settings"]["title"] %><br>
+  subject_line: <%= c["settings"]["subject_line"] %><br>
+  email_sent: <%= c["emails_sent"] %><br>
+  opens: <%= c["report_summary"]["opens"] %><br>
+  open_rate: <%= (c["report_summary"]["open_rate"]*100).round(2) %>%<br>
+  subscriber_clicks: <%= c["report_summary"]["subscriber_clicks"] %><br>
+  click_rate: <%= (c["report_summary"]["click_rate"]*100).round(2) %>%<br>
+  <% link = Mailchimp.click_details(c["id"]) %>
+  url: <%= link["url"] %><br>
+  unique_clicks: <%= link["unique_clicks"] %><br>
+  <br>
+<% end %>
