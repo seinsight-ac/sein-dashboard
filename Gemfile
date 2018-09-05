@@ -28,6 +28,8 @@ gem 'rubocop', '~> 0.39.0'
 # google登入
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
+# GA
+gem 'google-api-client'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
