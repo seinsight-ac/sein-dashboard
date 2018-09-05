@@ -5,7 +5,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.6'
 
@@ -36,7 +35,10 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-
+# FB API
+gem "koala"
+# user login
+gem 'omniauth-facebook'
 group :development, :test do
   # 自動化部屬
   gem 'capistrano-passenger'
@@ -60,8 +62,7 @@ group :development do
 end
 
 group :production do
-  # GCP use mySQL
-  gem 'mysql2', '~> 0.4.4'
+
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
