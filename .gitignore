@@ -22,7 +22,13 @@
 
 .byebug_history
 
+<<<<<<< HEAD
 # Ignore application configuration
 /config/application.yml
 # Ignore FB API id secrect
 /config/facebook.yml
+=======
+config/database.yml
+config/secrets.yml
+
+>>>>>>> 1a0c76e463e12aed06be5e84cd83087dd91e6744
