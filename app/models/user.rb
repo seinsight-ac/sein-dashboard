@@ -18,7 +18,7 @@ class User < ApplicationRecord
         existing_user.save!
         return existing_user
       else
-    # Uncomment the section below if you want users to be created if they don't exist
+        # Uncomment the section below if you want users to be created if they don't exist
         user = User.create(
           name: data["name"],
           email: data["email"],
