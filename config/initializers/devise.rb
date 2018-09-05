@@ -258,7 +258,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   
-  config.omniauth :google_oauth2, CONFIG.GOOGLE_API_KEY, GONFIG.GOOGLE_API_SECRET, { access_type: "offline", approval_prompt: "", scope: "userinfo.email, userinfo.profile, https://www.googleapis.com/auth/analytics.readonly" }
+  config.omniauth :google_oauth2, CONFIG.GOOGLE_API_KEY, CONFIG.GOOGLE_API_SECRET, { access_type: "offline", approval_prompt: "", scope: "userinfo.email, userinfo.profile, https://www.googleapis.com/auth/analytics.readonly" }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
