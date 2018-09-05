@@ -23,6 +23,13 @@ gem 'uglifier', '>= 1.3.0'
 gem 'devise'
 # 檢查代碼風格
 gem 'rubocop', '~> 0.39.0'
+# google登入
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+# GA
+gem 'google-api-client'
+# bootstrap
+gem 'bootstrap-sass', '~> 3.3.7'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
