@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
 
   def index 
-    @report = get_mailchimp_report
+    @report = Mailchimp.mailchimp_report
   end
-  
+
 end
