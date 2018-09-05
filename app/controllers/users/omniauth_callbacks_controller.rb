@@ -16,5 +16,5 @@ class Users::OmniauthCallbacksController < ApplicationController
   def failure
     redirect_to root_path, alert: "無法獲得驗證！"
   end
-
+  
 end
