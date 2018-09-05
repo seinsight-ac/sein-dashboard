@@ -25,6 +25,13 @@ gem 'devise'
 gem 'rubocop', '~> 0.39.0'
 # 串接mailchimp api
 gem 'gibbon', '~> 2.2', '>= 2.2.3'
+# google登入
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+# GA
+gem 'google-api-client'
+# bootstrap
+gem 'bootstrap-sass', '~> 3.3.7'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
