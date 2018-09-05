@@ -23,6 +23,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'devise'
 # 檢查代碼風格
 gem 'rubocop', '~> 0.39.0'
+# 串接mailchimp api
+gem 'gibbon', '~> 2.2', '>= 2.2.3'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
