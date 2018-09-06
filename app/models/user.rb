@@ -57,4 +57,7 @@ class User < ApplicationRecord
     user.save!
     return user
   end
+  def facebook
+    Koala::Facebook::API.new(User.last.fb_token)
+  end
 end
