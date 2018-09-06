@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resources :dashboards do
 
-    member do
+    collection do
       get :ga
     end
 
