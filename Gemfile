@@ -32,6 +32,11 @@ gem 'omniauth-google-oauth2'
 gem 'google-api-client'
 # fb login
 gem 'omniauth-facebook'
+#FB API
+gem "koala"
+
+#debug
+gem "pry"
 
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'

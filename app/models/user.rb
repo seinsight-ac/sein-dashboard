@@ -57,4 +57,7 @@ class User < ApplicationRecord
     user.save!
     return user
   end
+  def facebook
+    Koala::Facebook::API.new('EAAFsd5SdW74BAAYdi0pQez1RnIWdwi81kIEQGAZAuXsJgChMAXKrd4jJMZBYznCGTDJmT0qeqvFS7Syz8gaZBOAAp1yZBd2bZCW19ZBGkR0OFRz8gr82YRqvDtdsf1zgH9yLVXXkK74GMwr8CHqw17XlP6koYWyH7bFZCJTJZABawwZDZD')
+  end
 end
