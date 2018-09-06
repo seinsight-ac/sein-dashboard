@@ -30,8 +30,15 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 # GA
 gem 'google-api-client'
+
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
+# font-awesome
+gem 'font-awesome-sass', '~> 5.3.1'
+gem "font-awesome-rails"
+# animate css
+gem "animate-rails"
+
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
