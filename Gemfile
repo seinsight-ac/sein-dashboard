@@ -30,14 +30,19 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 # GA
 gem 'google-api-client'
-# fb login
+# FB login
 gem 'omniauth-facebook'
+# FB API
+gem "koala"
+
+# Debug
+gem "pry"
 
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
 # font-awesome
-gem 'font-awesome-sass', '~> 5.3.1'
 gem "font-awesome-rails"
+gem 'font-awesome-sass', '~> 5.3.1'
 # animate css
 gem "animate-rails"
 
