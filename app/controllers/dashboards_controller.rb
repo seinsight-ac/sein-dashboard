@@ -34,4 +34,3 @@ class DashboardsController < ApplicationController
 
 end
 
-require 'koala'
