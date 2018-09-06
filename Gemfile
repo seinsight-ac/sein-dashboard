@@ -30,6 +30,8 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 # GA
 gem 'google-api-client'
+# fb login
+gem 'omniauth-facebook'
 
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
