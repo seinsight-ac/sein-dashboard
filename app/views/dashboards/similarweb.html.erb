@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li role="presentation"><%= link_to '首頁', root_path  %></li>
+      <li role="presentation"><%= link_to 'Google Analytics', ga_dashboards_path %></li>
+      <li role="presentation"><%= link_to 'Mailchimp', mailchimp_dashboards_path %></li>
+      <li role="presentation" class="active"><%= link_to 'Similarweb', similarweb_dashboards_path %></li>
+    </ul>
+  </div>
+</div>
+
+seinsights.asia<br>
+<% urls =  Similarweb.visits("seinsights.asia") %>
+<% urls.each do |url| %>
+  date: <%= url["date"] %>, &nbsp
+  visits <%= url["visits"].round(2) %><br>
+<% end %><br>
+
+<% (0..10).each do |x| %>
+  <%= @similars[x]["url"] %><br>
+  <% urls =  Similarweb.visits(@similars[x]["url"]) %>
+  <% urls.each do |url| %>
+    date: <%= url["date"] %>, &nbsp
+    visits <%= url["visits"].round(2) %><br>
+  <% end %><br>
+<% end %>

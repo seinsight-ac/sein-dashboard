@@ -34,6 +34,10 @@ class DashboardsController < ApplicationController
   def mailchimp
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
+
+  def similarweb
+    @similars = Similarweb.similars('2018-08','2018-09')
+  end
   
 end
 
