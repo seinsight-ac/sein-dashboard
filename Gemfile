@@ -35,6 +35,9 @@ gem 'omniauth-facebook'
 #FB API
 gem "koala"
 
+#debug
+gem "pry"
+
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
 # font-awesome
