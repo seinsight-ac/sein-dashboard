@@ -1,8 +1,8 @@
 class DashboardsController < ApplicationController
+  require 'json'
 
 
   def index 
-    @report = Mailchimp.mailchimp_report
   end
 
   def ga
@@ -31,6 +31,9 @@ class DashboardsController < ApplicationController
     
   end
 
-
+  def mailchimp
+    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+  end
+  
 end
 
