@@ -9,18 +9,60 @@
   </div>
 </div>
 
-seinsights.asia<br>
-<% urls =  Similarweb.visits("seinsights.asia") %>
-<% urls.each do |url| %>
-  date: <%= url["date"] %>, &nbsp
-  visits <%= url["visits"].round(2) %><br>
-<% end %><br>
+社企流<br>
+<%= show_data(@sein) %>
 
-<% (0..10).each do |x| %>
-  <%= @similars[x]["url"] %><br>
-  <% urls =  Similarweb.visits(@similars[x]["url"]) %>
-  <% urls.each do |url| %>
-    date: <%= url["date"] %>, &nbsp
-    visits <%= url["visits"].round(2) %><br>
-  <% end %><br>
+上下游<br>
+<% @newsmarket.each do |data| %>
+  <% if data["country"] == 158 %>
+    visits: <%= data["visits"].round(2) %><br>
+    pages_per_visit: <%= data["pages_per_visit"].round(2) %><br>
+    average_time: <%= data["average_time"].round(2) %><br>
+    bounce_rate: <%= (data["bounce_rate"] * 100).round(2) %>%<br>
+    rank: <%= data["rank"] %><br><br>
+  <% end %>
+<% end %>
+
+泛科學<br>
+<% @pansci.each do |data| %>
+  <% if data["country"] == 158 %>
+    visits: <%= data["visits"].round(2) %><br>
+    pages_per_visit: <%= data["pages_per_visit"].round(2) %><br>
+    average_time: <%= data["average_time"].round(2) %><br>
+    bounce_rate: <%= (data["bounce_rate"] * 100).round(2) %>%<br>
+    rank: <%= data["rank"] %><br><br>
+  <% end %>
+<% end %>
+
+環境資訊中心<br>
+<% @einfo.each do |data| %>
+  <% if data["country"] == 158 %>
+    visits: <%= data["visits"].round(2) %><br>
+    pages_per_visit: <%= data["pages_per_visit"].round(2) %><br>
+    average_time: <%= data["average_time"].round(2) %><br>
+    bounce_rate: <%= (data["bounce_rate"] * 100).round(2) %>%<br>
+    rank: <%= data["rank"] %><br><br>
+  <% end %>
+<% end %>
+
+NPOst<br>
+<% @npost.each do |data| %>
+  <% if data["country"] == 158 %>
+    visits: <%= data["visits"].round(2) %><br>
+    pages_per_visit: <%= data["pages_per_visit"].round(2) %><br>
+    average_time: <%= data["average_time"].round(2) %><br>
+    bounce_rate: <%= (data["bounce_rate"] * 100).round(2) %>%<br>
+    rank: <%= data["rank"] %><br><br>
+  <% end %>
+<% end %>
+
+Womany<br>
+<% @womany.each do |data| %>
+  <% if data["country"] == 158 %>
+    visits: <%= data["visits"].round(2) %><br>
+    pages_per_visit: <%= data["pages_per_visit"].round(2) %><br>
+    average_time: <%= data["average_time"].round(2) %><br>
+    bounce_rate: <%= (data["bounce_rate"] * 100).round(2) %>%<br>
+    rank: <%= data["rank"] %><br><br>
+  <% end %>
 <% end %>

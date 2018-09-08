@@ -36,7 +36,13 @@ class DashboardsController < ApplicationController
   end
 
   def similarweb
-    @similars = Similarweb.similars('2018-08','2018-09')
+    similarweb = Similarweb.new('2018-08', '2018-09')
+    @sein = similarweb.data('seinsights.asia')
+    @newsmarket = similarweb.data("newsmarket.com.tw")
+    @pansci = similarweb.data("pansci.asia")
+    @einfo = similarweb.data("e-info.org.tw")
+    @npost = similarweb.data("npost.tw")
+    @womany = similarweb.data("womany.net")
   end
   
 end
