@@ -35,14 +35,13 @@ class DashboardsController < ApplicationController
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
 
-  def similarweb
-    similarweb = Similarweb.new('2018-08', '2018-09')
-    @sein = similarweb.data('seinsights.asia')
-    @newsmarket = similarweb.data("newsmarket.com.tw")
-    @pansci = similarweb.data("pansci.asia")
-    @einfo = similarweb.data("e-info.org.tw")
-    @npost = similarweb.data("npost.tw")
-    @womany = similarweb.data("womany.net")
+  def alexa
+    @sein = Alexa.data('seinsights.asia')
+    @newsmarket = Alexa.data("newsmarket.com.tw")
+    @pansci = Alexa.data("pansci.asia")
+    @einfo = Alexa.data("e-info.org.tw")
+    @npost = Alexa.data("npost.tw")
+    @womany = Alexa.data("womany.net")
   end
   
 end

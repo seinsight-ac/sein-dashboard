@@ -1,2 +1,2 @@
 require 'mailchimp'
-require 'similarweb'
+require 'alexa'

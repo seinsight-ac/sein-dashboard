@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     collection do
       get :ga
       get :mailchimp
-      get :similarweb
+      get :alexa
     end
 
   end
