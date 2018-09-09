@@ -35,6 +35,9 @@ gem 'omniauth-facebook'
 # FB API
 gem "koala"
 
+# web scraping
+gem 'mechanize'
+
 # Debug
 gem "pry"
 
