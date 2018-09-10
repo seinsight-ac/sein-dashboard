@@ -1,36 +1,25 @@
 class DashboardsController < ApplicationController
-
+  before_action :authenticate_user!
+  require 'google/apis/analyticsreporting_v4'
+  require 'omniauth-google-oauth2'
 
   def index 
     @report = Mailchimp.mailchimp_report
   end
-
+  
   def ga
-    require 'google/apis/analyticsreporting_v4'
-
     analytics = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
     analytics.authorization = current_user.google_token
-
-    date_range = Google::Apis::AnalyticsreportingV4::DateRange.new(start_date: '7DaysAgo', end_date: 'today')
-    metric = Google::Apis::AnalyticsreportingV4::Metric.new(expression: 'ga:sessions', alias: 'sessions')
-    dimension = Google::Apis::AnalyticsreportingV4::Dimension.new(name: 'ga:browser')
-    
     request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
-      report_requests: [Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: '55621750',
-      metrics: [metric],
-      dimensions: [dimension],
-      date_ranges: [date_range]
-      )]
-    ) 
+      {report_requests:[
+            {metrics:[{expression: "ga:pageviews"}, {expression: "ga:pageviewsPerSession"}, {expression: "ga:avgSessionDuration"}, {expression: "ga:bounceRate"}, {expression: "ga:sessions"}, {expression: "ga:percentNewSessions"}],
+             dimensions:[{name:"ga:date"}, {name:"ga:channelGrouping"}, {name:"ga:daysSinceLastSession"}],
+             date_ranges:[{start_date: (Date.today - 7).strftime("%Y-%m-%d"), end_date: Time.now.strftime("%Y-%m-%d")}],
+             view_id:"ga:55621750", 
+    }]})
     @response = analytics.batch_get_reports(request)
-    @response.reports
-    render json: {
-      data: @response
-    }
-    
+    @data = JSON.parse(@response.to_json) 
   end
-
 
 end
 
