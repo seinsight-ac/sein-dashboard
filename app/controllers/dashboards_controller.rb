@@ -1,10 +1,14 @@
 class DashboardsController < ApplicationController
+<<<<<<< HEAD
   before_action :authenticate_user!
   require 'google/apis/analyticsreporting_v4'
   require 'omniauth-google-oauth2'
+=======
+  require 'json'
+
+>>>>>>> b7eaa6b144a1f9b98716003757d4c01d247b3b4a
 
   def index 
-    @report = Mailchimp.mailchimp_report
   end
   
   def ga
@@ -21,5 +25,21 @@ class DashboardsController < ApplicationController
     @data = JSON.parse(@response.to_json) 
   end
 
+<<<<<<< HEAD
+=======
+  def mailchimp
+    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+  end
+
+  def alexa
+    @sein = Alexa.data('seinsights.asia')
+    @newsmarket = Alexa.data("newsmarket.com.tw")
+    @pansci = Alexa.data("pansci.asia")
+    @einfo = Alexa.data("e-info.org.tw")
+    @npost = Alexa.data("npost.tw")
+    @womany = Alexa.data("womany.net")
+  end
+  
+>>>>>>> b7eaa6b144a1f9b98716003757d4c01d247b3b4a
 end
 

@@ -23,8 +23,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'devise'
 # 檢查代碼風格
 gem 'rubocop', '~> 0.39.0'
-# 串接mailchimp api
-gem 'gibbon', '~> 2.2', '>= 2.2.3'
+# HTTP Request
+gem 'rest-client'
 # google登入
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
@@ -34,6 +34,9 @@ gem 'google-api-client'
 gem 'omniauth-facebook'
 # FB API
 gem "koala"
+
+# web scraping
+gem 'mechanize'
 
 # Debug
 gem "pry"
