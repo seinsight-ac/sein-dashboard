@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Seindashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Seindashboard</title>
 
-    <!-- Main css styles -->
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- Main css styles -->
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 
-    <!-- Main javascript files -->
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-    <%= csrf_meta_tags %>
+  <!-- Main javascript files -->
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
 
 
 
 </head>
 <body>
-    <!-- Wrapper-->
-    <div id="wrapper" class="dashboards.dashboard_2">
+  <!-- Wrapper-->
+  <div id="wrapper" class="dashboards.dashboard_2">
 
-        <!-- Page wraper -->
-        <div class="gray-bg <%= @extra_class %>">
+    <!-- Page wraper -->
+    <div class="gray-bg <%= @extra_class %>">
 
-            <!-- Page wrapper -->
-            <%= render 'layouts/topnavbar' %>
+      <!-- Page wrapper -->
+      <%= render 'layouts/topnavbar' %>
 
-            <!-- Main view  -->
-            <%= yield %>
-
-        </div>
-        <!-- End page wrapper-->
-
+      <!-- Main view  -->
+      <%= yield %>
 
     </div>
-    <!-- End wrapper-->
+    <!-- End page wrapper-->
 
-    <!-- Include javascript per-view -->
-    <!-- For demo purpose we include javascript in view but you can easily start SeedProject and organize it with Rails asset pipeline as you want -->
-    <%= yield :javascript %>
+
+  </div>
+  <!-- End wrapper-->
+
+  <!-- Include javascript per-view -->
+  <!-- For demo purpose we include javascript in view but you can easily start SeedProject and organize it with Rails asset pipeline as you want -->
+  <%= yield :javascript %>
 
 </body>
 </html>
