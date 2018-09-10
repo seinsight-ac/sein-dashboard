@@ -42,5 +42,14 @@ class DashboardsController < ApplicationController
     binding.pry
   end
   
+  def alexa
+    @sein = Alexa.data('seinsights.asia')
+    @newsmarket = Alexa.data("newsmarket.com.tw")
+    @pansci = Alexa.data("pansci.asia")
+    @einfo = Alexa.data("e-info.org.tw")
+    @npost = Alexa.data("npost.tw")
+    @womany = Alexa.data("womany.net")
+  end
+  
 end
 
