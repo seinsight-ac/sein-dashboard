@@ -47,6 +47,7 @@ gem "animate-rails"
 gem "font-awesome-rails"
 gem 'jquery-rails'
 gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
+
 gem 'jquery-peity-rails'
 gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
 gem 'jquery-slimscroll-rails'
@@ -66,9 +67,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  # 自動化部屬
-  gem 'capistrano-passenger'
-  gem 'capistrano-rails'
+
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
