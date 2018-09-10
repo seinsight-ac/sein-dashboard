@@ -1,9 +1,6 @@
 class DashboardsController < ApplicationController
+  before_action :authenticate_user!
   require 'json'
-
-
-  def index 
-  end
 
   def ga
     require 'google/apis/analyticsreporting_v4'
@@ -51,4 +48,3 @@ class DashboardsController < ApplicationController
   end
   
 end
-
