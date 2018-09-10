@@ -7,11 +7,8 @@ Rails.application.routes.draw do
     collection do
       get :ga
       get :mailchimp
-<<<<<<< HEAD
       get :fb
-=======
       get :alexa
->>>>>>> b7eaa6b144a1f9b98716003757d4c01d247b3b4a
     end
 
   end

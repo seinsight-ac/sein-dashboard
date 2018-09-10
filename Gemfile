@@ -40,13 +40,16 @@ gem 'mechanize'
 # Debug
 gem "pry"
 
+# CSS
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
-# font-awesome
 gem "font-awesome-rails"
-gem 'font-awesome-sass', '~> 5.3.1'
-# animate css
 gem "animate-rails"
+gem 'jquery-rails'
+gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
+gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
+gem 'jquery-peity-rails'
+gem 'jquery-slimscroll-rails'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
