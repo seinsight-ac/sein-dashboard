@@ -1,12 +1,12 @@
 class DashboardsController < ApplicationController
-<<<<<<< HEAD
+
   before_action :authenticate_user!
   require 'google/apis/analyticsreporting_v4'
   require 'omniauth-google-oauth2'
-=======
+
   require 'json'
 
->>>>>>> b7eaa6b144a1f9b98716003757d4c01d247b3b4a
+
 
   def index 
   end
@@ -25,8 +25,6 @@ class DashboardsController < ApplicationController
     @data = JSON.parse(@response.to_json) 
   end
 
-<<<<<<< HEAD
-=======
   def mailchimp
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
@@ -40,6 +38,4 @@ class DashboardsController < ApplicationController
     @womany = Alexa.data("womany.net")
   end
   
->>>>>>> b7eaa6b144a1f9b98716003757d4c01d247b3b4a
-end
 
