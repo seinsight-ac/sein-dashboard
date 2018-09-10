@@ -19,3 +19,6 @@
 //= require inspinia.js
 //= require sparkline/jquery.sparkline.min.js
 //= require chartjs/Chart.min.js
+//= require jquery_ujs
+//= require turbolinks
+//= require_tree .

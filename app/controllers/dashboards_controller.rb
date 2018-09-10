@@ -2,9 +2,6 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   require 'json'
 
-  def index 
-  end
-
   def ga
     require 'google/apis/analyticsreporting_v4'
 
@@ -39,7 +36,6 @@ class DashboardsController < ApplicationController
     require 'koala'
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     @fans = @graph.get_object("278666028863859/insights/page_fans")
-    binding.pry
   end
   
   def alexa
@@ -52,4 +48,3 @@ class DashboardsController < ApplicationController
   end
   
 end
-
