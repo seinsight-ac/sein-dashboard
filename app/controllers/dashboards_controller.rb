@@ -35,6 +35,13 @@ class DashboardsController < ApplicationController
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
 
+  def fb
+    require 'koala'
+    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    @fans = @graph.get_object("278666028863859/insights/page_fans")
+    binding.pry
+  end
+  
   def alexa
     @sein = Alexa.data('seinsights.asia')
     @newsmarket = Alexa.data("newsmarket.com.tw")

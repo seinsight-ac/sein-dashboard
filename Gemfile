@@ -8,8 +8,7 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.6'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
@@ -22,7 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 # user login
 gem 'devise'
 # 檢查代碼風格
-gem 'rubocop', '~> 0.39.0'
+gem 'rubocop', '~> 0.49.0'
 # HTTP Request
 gem 'rest-client'
 # google登入
@@ -41,14 +40,17 @@ gem 'mechanize'
 # Debug
 gem "pry"
 
+# CSS
 # bootstrap
 gem 'bootstrap-sass', '~> 3.3.7'
-# font-awesome
-gem "font-awesome-rails"
-gem 'font-awesome-sass', '~> 5.3.1'
-# animate css
 gem "animate-rails"
+gem "font-awesome-rails"
+gem 'jquery-rails'
+gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
 
+gem 'jquery-peity-rails'
+gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
+gem 'jquery-slimscroll-rails'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -65,6 +67,9 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+
+  # Use sqlite3 as the database for Active Record
+  gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
