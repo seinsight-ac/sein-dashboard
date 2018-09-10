@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
+  before_action :authenticate_user!
   require 'json'
-
 
   def index 
   end

@@ -12,27 +12,19 @@
     <!-- Main javascript files -->
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
-
-
-
 </head>
+
 <body>
     <!-- Wrapper-->
     <div id="wrapper" class="dashboards.dashboard_2">
-
         <!-- Page wraper -->
         <div class="gray-bg <%= @extra_class %>">
-
             <!-- Page wrapper -->
             <%= render 'layouts/topnavbar' %>
-
             <!-- Main view  -->
             <%= yield %>
-
         </div>
         <!-- End page wrapper-->
-
-
     </div>
     <!-- End wrapper-->
 
