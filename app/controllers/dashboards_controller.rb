@@ -9,7 +9,14 @@ class DashboardsController < ApplicationController
   end
   
   def ga
-    @data = GoogleAnalytics.ga_request(request) 
+    @active_user = GoogleAnalytics.active_user(current_user.google_token) 
+    @avg_session_duration = GoogleAnalytics.avg_session_duration(current_user.google_token)
+    @pageviews_per_session = GoogleAnalytics.pageviews_per_session(current_user.google_token)
+    @session_count = GoogleAnalytics.session_count(current_user.google_token)
+    @single_session_user = @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @multi_session_user = @session_count.first[1][0]["data"]["totals"][0]["values"][0].to_i - @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0].to_i
+    
+
   end
 
   def mailchimp
