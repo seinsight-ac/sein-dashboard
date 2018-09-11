@@ -2,6 +2,10 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   require 'json'
 
+  def index
+    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-10-01')
+  end
+
   def ga
     require 'google/apis/analyticsreporting_v4'
 

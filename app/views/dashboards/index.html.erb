@@ -80,8 +80,12 @@
           <h5>電子報</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins">19218</h1>
-          <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+          <h1 class="no-margins">
+            <%= @campaigns[1]["emails_sent"] %>
+          </h1>
+          <div class="stat-percent font-bold text-info">
+            <%= ((@campaigns[2]["emails_sent"] - @campaigns[1]["emails_sent"]) / @campaigns[1]["emails_sent"]).round(2) %>%
+           <i class="fa fa-level-up"></i></div>
           <small>訂閱數</small>
         </div>
       </div>
@@ -94,8 +98,12 @@
           <h5>電子報</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins">25.1%</h1>
-          <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+          <h1 class="no-margins">
+            <%= (@campaigns[1]["report_summary"]["open_rate"]*100).round(2) %>%
+          </h1>
+          <div class="stat-percent font-bold text-navy">
+            <%= ((@campaigns[2]["report_summary"]["open_rate"] - @campaigns[1]["report_summary"]["open_rate"]) / @campaigns[1]["report_summary"]["open_rate"]).round(2) %>%
+          <i class="fa fa-level-up"></i></div>
           <small>開信率</small>
         </div>
       </div>
