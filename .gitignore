@@ -22,7 +22,6 @@
 
 .byebug_history
 
-
 config/database.yml
 config/secrets.yml
 config/client_secrets.json

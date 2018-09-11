@@ -1,13 +1,9 @@
 class DashboardsController < ApplicationController
 
   before_action :authenticate_user!
-  require 'google/apis/analyticsreporting_v4'
-  require 'omniauth-google-oauth2'
   require 'json'
 
-  def index 
-  end
-  
+
   def ga
     @active_user = GoogleAnalytics.active_user(current_user.google_token) 
     @avg_session_duration = GoogleAnalytics.avg_session_duration(current_user.google_token)
@@ -23,6 +19,12 @@ class DashboardsController < ApplicationController
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
 
+  def fb
+    require 'koala'
+    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    @fans = @graph.get_object("278666028863859/insights/page_fans")
+  end
+  
   def alexa
     @sein = Alexa.data('seinsights.asia')
     @newsmarket = Alexa.data("newsmarket.com.tw")
@@ -30,6 +32,5 @@ class DashboardsController < ApplicationController
     @einfo = Alexa.data("e-info.org.tw")
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
-  end
-
+  end 
 end

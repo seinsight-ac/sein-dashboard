@@ -49,6 +49,9 @@ Style/SymbolArray:
 Style/BracesAroundHashParameters:
   Enabled: false
 
+Style/RedundantReturn:
+  Enabled: false
+
 Style/MixinUsage:
   Exclude:
     - bin/*
@@ -60,6 +63,15 @@ Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
 Layout/TrailingWhitespace:
+  Enabled: false
+
+Layout/AlignHash:
+  Enabled: false
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+Layout/FirstParameterIndentation:
   Enabled: false
 
 Layout/SpaceInsideArrayLiteralBrackets:
