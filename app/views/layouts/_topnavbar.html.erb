@@ -9,10 +9,10 @@
 			<li>
 				<span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Hi～ 社企流的夥伴:D 數據就是力量!</span>
 			</li>
-			<% if current_user %>            
+			<% if current_user %>   
 				<li><%= link_to('登出', destroy_user_session_path, method: :delete, class: "fa fa-sign-out") %></li>
 			<% else %>
-				<li><%= link_to('登入', new_user_session_path, class: "fa fa-sign-in") %></li>
+				<li><%= link_to '登入', user_session_path %></li>
 			<% end %>
 		</ul>
 	</nav>
