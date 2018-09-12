@@ -16,15 +16,27 @@ class DashboardsController < ApplicationController
 
   def mailchimp
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+    
+    @sein = Alexa.data('seinsights.asia')
+    @newsmarket = Alexa.data("newsmarket.com.tw")
+    @pansci = Alexa.data("pansci.asia")
+    @einfo = Alexa.data("e-info.org.tw")
+    @npost = Alexa.data("npost.tw")
+    @womany = Alexa.data("womany.net")
+
     export_xls = ExportXls.new
+    
+    export_xls.mailchimp_xls(@campaigns)
+    export_xls.alexa_xls(@sein, @newsmarket, @pansci, @einfo, @npost, @womany)
+    
     respond_to do |format|
-      format.xls {
-        send_data(export_xls.mailchimp_xls(@campaigns),
-          :type => "text/excel; charset=utf-8; header=present",
-          :filename => "社企流#{Date.today}資料分析.xls")
+      format.xls { send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "社企流#{Date.today}資料分析.xls")
       }
       format.html
     end
+
   end
 
   def fb
@@ -41,5 +53,5 @@ class DashboardsController < ApplicationController
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
   end 
-
+  
 end
