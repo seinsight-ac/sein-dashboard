@@ -9,6 +9,8 @@
   </div>
 </div>
 
+<%= link_to "Excel", mailchimp_dashboards_path(:format => 'xls')%>  
+
 <% @campaigns.each do |c| %>
   id: <%= c["id"] %><br>
   sent_time: <%= c["send_time"] %><br>

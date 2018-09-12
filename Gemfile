@@ -33,6 +33,8 @@ gem 'google-api-client'
 gem 'omniauth-facebook'
 # FB API
 gem "koala"
+# export xls
+gem 'spreadsheet'
 
 # web scraping
 gem 'mechanize'

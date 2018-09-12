@@ -1,44 +1,30 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
-  require 'json'
 
   def index
-    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-10-01')
-
-    respond_to do |format|
-      format.html
-      format.csv { send_data @campaigns.to_csv, filename: "社企流#{Date.today}資料分析" }
-    end
+    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
 
   def ga
-    require 'google/apis/analyticsreporting_v4'
-
-    analytics = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
-    analytics.authorization = current_user.google_token
-
-    date_range = Google::Apis::AnalyticsreportingV4::DateRange.new(start_date: '7DaysAgo', end_date: 'today')
-    metric = Google::Apis::AnalyticsreportingV4::Metric.new(expression: 'ga:sessions', alias: 'sessions')
-    dimension = Google::Apis::AnalyticsreportingV4::Dimension.new(name: 'ga:browser')
-    
-    request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
-      report_requests: [Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: '55621750',
-      metrics: [metric],
-      dimensions: [dimension],
-      date_ranges: [date_range]
-      )]
-    ) 
-    @response = analytics.batch_get_reports(request)
-    @response.reports
-    render json: {
-      data: @response
-    }
-    
+    @active_user = GoogleAnalytics.active_user(current_user.google_token) 
+    @avg_session_duration = GoogleAnalytics.avg_session_duration(current_user.google_token)
+    @pageviews_per_session = GoogleAnalytics.pageviews_per_session(current_user.google_token)
+    @session_count = GoogleAnalytics.session_count(current_user.google_token)
+    @single_session_user = @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @multi_session_user = @session_count.first[1][0]["data"]["totals"][0]["values"][0].to_i - @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0].to_i
   end
 
   def mailchimp
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+    export_xls = ExportXls.new
+    respond_to do |format|
+      format.xls {
+        send_data(export_xls.mailchimp_xls(@campaigns),
+          :type => "text/excel; charset=utf-8; header=present",
+          :filename => "社企流#{Date.today}資料分析.xls")
+      }
+      format.html
+    end
   end
 
   def fb
@@ -54,6 +40,6 @@ class DashboardsController < ApplicationController
     @einfo = Alexa.data("e-info.org.tw")
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
-  end
-  
+  end 
+
 end
