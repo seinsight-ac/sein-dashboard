@@ -4,10 +4,10 @@
 			<a href="/"><img src="<%= image_path('logo.png') %>" style="width:130px; margin-left:25px"></a>
 		</div>
 		<ul class="nav navbar-top-links navbar-right">
-			<li><%= link_to('分析', fb_dashboards_path, class: "fa fa-facebook-f") %></li>
-			<li><%= link_to('分析', ga_dashboards_path, class: "fa fa-google") %></li>
+			<li><%= link_to('粉專分析', fb_dashboards_path, class: "fa fa-facebook-f") %></li>
+			<li><%= link_to('官網分析', ga_dashboards_path, class: "fa fa-google") %></li>
 			<li>
-				<span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Hi～ 社企流的夥伴！數據就是力量</span>
+				<span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Hi～ 社企流的夥伴:D 數據就是力量!</span>
 			</li>
 			<% if current_user %>            
 				<li><%= link_to('登出', destroy_user_session_path, method: :delete, class: "fa fa-sign-out") %></li>
