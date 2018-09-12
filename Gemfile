@@ -36,6 +36,8 @@ gem "koala"
 
 # web scraping
 gem 'mechanize'
+# download csv
+gem 'smarter_csv'
 
 # Debug
 gem "pry"

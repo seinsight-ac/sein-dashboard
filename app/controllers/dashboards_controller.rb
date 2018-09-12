@@ -4,6 +4,11 @@ class DashboardsController < ApplicationController
 
   def index
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-10-01')
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @campaigns.to_csv, filename: "社企流#{Date.today}資料分析" }
+    end
   end
 
   def ga
