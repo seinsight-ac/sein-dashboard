@@ -1,5 +1,6 @@
 <div class="wrapper wrapper-content">
   <div class="row">
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -13,6 +14,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -26,6 +28,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -39,6 +42,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -53,6 +57,7 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
@@ -67,6 +72,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -80,6 +86,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -93,6 +100,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -106,8 +114,11 @@
         </div>
       </div>
     </div>
+
   </div>
+
   <div class="row">
+
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -123,8 +134,10 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-8">
       <div class="ibox float-e-margins">
+
         <div class="ibox-title">
           <h5>粉絲黏著度分析</h5>
           <div class="pull-right">
@@ -135,15 +148,19 @@
             </div>
           </div>
         </div>
+
         <div class="ibox-content">
           <div class="row">
+
             <div class="col-lg-9">
               <div>
                 <canvas id="lineChart1" height="135"></canvas>
               </div>
             </div>
+
             <div class="col-lg-3">
               <ul class="stat-list">
+
                 <li>
                   <h2 class="no-margins">3246</h2>
                   <small>心情數</small>
@@ -152,6 +169,7 @@
                     <div style="width: 48%;" class="progress-bar"></div>
                   </div>
                 </li>
+
                 <li>
                   <h2 class="no-margins ">522</h2>
                   <small>留言數</small>
@@ -160,6 +178,7 @@
                     <div style="width: 60%;" class="progress-bar"></div>
                   </div>
                 </li>
+
                 <li>
                   <h2 class="no-margins ">80</h2>
                   <small>分享數</small>
@@ -168,14 +187,20 @@
                       <div style="width: 22%;" class="progress-bar"></div>
                   </div>
                 </li>
+
               </ul>
             </div>
+
           </div>
         </div>
+
       </div>
     </div>
+
   </div>
+
   <div class="row">
+
     <div class="col-lg-6">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -191,6 +216,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-6">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -203,8 +229,11 @@
         </div>
       </div>
     </div>
+
   </div>
+
   <div class="row">
+
     <div class="col-lg-6">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -220,6 +249,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -232,6 +262,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -244,6 +275,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -335,7 +367,6 @@ $(function() {
   new Chart(ctx3, {type: 'line', data: lineData3, options:lineOptions});
 
 
-  
   var polarData = {
     datasets: [{
       data: [
@@ -454,9 +485,7 @@ $(function() {
 
   var ctx7 = document.getElementById("barChart2").getContext("2d");
   new Chart(ctx7, {type: 'horizontalBar', data: barData2, options:barOptions2});
-
 });
-
 
 </script>
 

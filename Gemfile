@@ -45,10 +45,10 @@ gem "pry"
 gem "animate-rails"
 gem 'bootstrap-sass', '~> 3.3.7'
 gem "font-awesome-rails"
-gem 'jquery-rails'
 gem 'jquery-peity-rails'
-gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
+gem 'jquery-rails'
 gem 'jquery-slimscroll-rails'
+gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
 gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
 
 # Use CoffeeScript for .coffee assets and views
@@ -66,7 +66,9 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-
+  # 自動化部屬
+  gem 'capistrano-passenger'
+  gem 'capistrano-rails'
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -83,6 +85,11 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+group :production do
+  # GCP use mySQL
+  gem 'mysql2', '~> 0.4.4'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
