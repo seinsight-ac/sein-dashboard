@@ -96,5 +96,20 @@ class GoogleAnalytics
     @user_type = JSON.parse(@response.to_json)
   end
 
+  def self.device(google_token)
+    analytics = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new  
+    analytics.authorization = google_token
+    request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
+      {report_requests:[
+            {metrics:[{expression: "ga:users"}],
+             dimensions:[{name:"ga:deviceCategory"}],
+             date_ranges:[{start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+                           end_date: Time.now.strftime("%Y-%m-%d")}],
+             view_id:"ga:55621750", 
+      }]})
+    @response = analytics.batch_get_reports(request)
+    @device = JSON.parse(@response.to_json)
+  end
+
 
 end

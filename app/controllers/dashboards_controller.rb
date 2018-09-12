@@ -17,7 +17,8 @@ class DashboardsController < ApplicationController
     @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
     @new = @user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @old = @user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-
+    @device = GoogleAnalytics.device(current_user.google_token)
+    @tool= @device.first[1][0]["data"]["totals"][0]["values"][0]
       
   end
 

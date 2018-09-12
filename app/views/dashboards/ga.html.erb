@@ -39,8 +39,15 @@
 <li>新訪客<%= @new %></li>
 <li>舊訪客<%= @old %></li>
 
+<hr>
 
-
+<% @device.first[1][0]["data"]["rows"].each do |d| %>
+  <li>
+    <%= d["dimensions"][0] %>
+    <%= d["metrics"][0]["values"][0] %> 
+  </li>
+<% end %>
+<li><%= @tool %></li>>
 
 
 
