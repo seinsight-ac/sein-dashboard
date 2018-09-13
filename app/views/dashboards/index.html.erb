@@ -162,8 +162,10 @@
 <% content_for :javascript do %>
 
 <script type="text/javascript">
+
 $(function() {
   $(".label").click(function(){
+
     if ($(this).html() == 'Weekly') {
       $(this).removeClass('label-info');
       $(this).addClass('label-success');
@@ -191,6 +193,7 @@ $(function() {
       });       
     }
   });
+
   $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
     type: 'line',
     width: '100%',
@@ -198,6 +201,7 @@ $(function() {
     lineColor: '#1ab394',
     fillColor: "#ffffff"
   });
+
   $("#sparkline2").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',
     width: '100%',
@@ -205,6 +209,7 @@ $(function() {
     lineColor: '#1ab394',
     fillColor: "#ffffff"
   });
+
   $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',
     width: '100%',
@@ -212,6 +217,7 @@ $(function() {
     lineColor: '#1ab394',
     fillColor: "#ffffff"
   });
+
   $("#sparkline4").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',
     width: '100%',
@@ -245,6 +251,7 @@ $(function() {
       }
     ]
   };
+
   var lineData2 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -270,6 +277,7 @@ $(function() {
       }
     ]
   };
+
   var lineData3 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -302,6 +310,7 @@ $(function() {
       }
     ]
   };
+
   var lineOptions = {
     responsive: true,
     scales: {
@@ -321,12 +330,16 @@ $(function() {
       }],
     }
   };
+
   var ctx1 = document.getElementById("lineChart1").getContext("2d");
   new Chart(ctx1, {type: 'line', data: lineData1, options:lineOptions});
+
   var ctx2 = document.getElementById("lineChart2").getContext("2d");
   new Chart(ctx2, {type: 'line', data: lineData2, options:lineOptions});
+
   var ctx3 = document.getElementById("lineChart3").getContext("2d");
   new Chart(ctx3, {type: 'line', data: lineData3, options:lineOptions});
+
   var barData1 = {
     labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
     datasets: [
@@ -348,6 +361,7 @@ $(function() {
       }
     ]
   };
+
   var barOptions1 = {
     responsive: true,
     scales: {
@@ -368,6 +382,7 @@ $(function() {
       }],
     }
   };
+
   var ctx6 = document.getElementById("barChart1").getContext("2d");
   new Chart(ctx6, {type: 'bar', data: barData1, options:barOptions1});
   var barData2 = {
@@ -390,6 +405,7 @@ $(function() {
       },
     ]
   };
+
   var barOptions2 = {
     responsive: true,
     scales: {
@@ -411,9 +427,11 @@ $(function() {
       }],
     }
   };
+
   var ctx7 = document.getElementById("barChart2").getContext("2d");
   new Chart(ctx7, {type: 'horizontalBar', data: barData2, options:barOptions2});
 });
+
 </script>
 
 <% end %>
