@@ -4,13 +4,31 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
+          <span class="label label-info pull-right">Weekly</span>
+          <h5>粉絲專頁讚數</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins" style="display: inline-block"><%= @fans%></h1>
+          <div class="stat-percent font-bold <%= arrow(@fansaddsweekrate) %> ">
+            <span><%= @fansaddsweekrate %></span> ‱
+            <i class="fa <%= @fansaddsweekrate > 0? 'fa-level-up' : 'fa-level-down' %> "></i>
+          </div>
+          <div id="sparkline1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
           <span class="label label-success pull-right">Monthly</span>
-          <h5>粉絲專頁</h5>
+          <h5>粉絲專頁曝光使用者</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins">4543</h1>
-          <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-          <small>用戶數</small>
+          <h1 class="no-margins" style="display: inline-block">89218</h1>
+          <div class="stat-percent font-bold text-navy">20% <i class="fa <%= @fansaddsweek * 10000 / @fans > 0? 'fa-level-up' : 'fa-level-down' %> "></i></div>
+          <small></small>
+          <div id="sparkline2"></div>
         </div>
       </div>
     </div>
@@ -18,27 +36,13 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <span class="label label-info pull-right">Monthly</span>
-          <h5>官網</h5>
+          <span class="label label-success pull-right">Monthly</span>
+          <h5>官網使用者</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins">89218</h1>
-          <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-          <small>使用者</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-primary pull-right">Weekly</span>
-          <h5>官網</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">1分34秒</h1>
+          <h1 class="no-margins" style="display: inline-block">19218</h1>
           <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-          <small>工作階段持續時間</small>
+          <div id="sparkline3"></div>
         </div>
       </div>
     </div>
@@ -46,83 +50,16 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <span class="label label-danger pull-right">Today</span>
-          <h5>官網</h5>
+          <span class="label label-info pull-right">Weekly</span>
+          <h5>電子報訂閱數</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins">2.11</h1>
+          <h1 class="no-margins" style="display: inline-block">21911</h1>
           <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
-          <small>每次工作階段頁數</small>
+          <div id="sparkline4"></div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
-          <h5>粉絲專頁</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">3.03%</h1>
-          <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-          <small>連結點擊率</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-info pull-right">Monthly</span>
-          <h5>電子報</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">
-            <%= @campaigns[1]["emails_sent"] %>
-          </h1>
-          <div class="stat-percent font-bold text-info">
-            <%= ((@campaigns[2]["emails_sent"] - @campaigns[1]["emails_sent"]) / @campaigns[1]["emails_sent"]).round(2) %>%
-           <i class="fa fa-level-up"></i></div>
-          <small>訂閱數</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-primary pull-right">Weekly</span>
-          <h5>電子報</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">
-            <%= (@campaigns[1]["report_summary"]["open_rate"]*100).round(2) %>%
-          </h1>
-          <div class="stat-percent font-bold text-navy">
-            <%= ((@campaigns[2]["report_summary"]["open_rate"] - @campaigns[1]["report_summary"]["open_rate"]) / @campaigns[1]["report_summary"]["open_rate"]).round(2) %>%
-          <i class="fa fa-level-up"></i></div>
-          <small>開信率</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-danger pull-right">Today</span>
-          <h5>電子報</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">1.11%</h1>
-          <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
-          <small>連結點擊率</small>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div class="row">
@@ -130,81 +67,60 @@
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <h5>
-            粉專讚數趨勢
-          </h5>
-          <div ibox-tools></div>
-        </div>
-        <div class="ibox-content">
-          <div>
-            <canvas id="lineChart2" height="215"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-8">
-      <div class="ibox float-e-margins">
-
-        <div class="ibox-title">
           <h5>粉絲黏著度分析</h5>
           <div class="pull-right">
             <div class="btn-group">
               <button type="button" class="btn btn-xs btn-white active">Today</button>
               <button type="button" class="btn btn-xs btn-white">Monthly</button>
-              <button type="button" class="btn btn-xs btn-white">Annual</button>
+            </div>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <canvas id="lineChart1" height="213"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="ibox float-e-margins">
+
+        <div class="ibox-title">
+          <h5>官網瀏覽活躍度分析</h5>
+          <div class="pull-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs btn-white active">Today</button>
+              <button type="button" class="btn btn-xs btn-white">Monthly</button>
             </div>
           </div>
         </div>
 
         <div class="ibox-content">
-          <div class="row">
-
-            <div class="col-lg-9">
-              <div>
-                <canvas id="lineChart1" height="135"></canvas>
-              </div>
-            </div>
-
-            <div class="col-lg-3">
-              <ul class="stat-list">
-
-                <li>
-                  <h2 class="no-margins">3246</h2>
-                  <small>心情數</small>
-                  <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i></div>
-                  <div class="progress progress-mini">
-                    <div style="width: 48%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-                <li>
-                  <h2 class="no-margins ">522</h2>
-                  <small>留言數</small>
-                  <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
-                  <div class="progress progress-mini">
-                    <div style="width: 60%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-                <li>
-                  <h2 class="no-margins ">80</h2>
-                  <small>分享數</small>
-                  <div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
-                  <div class="progress progress-mini">
-                      <div style="width: 22%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-              </ul>
-            </div>
-
+          <div>
+            <canvas id="lineChart2" height="215"></canvas>
           </div>
         </div>
 
       </div>
     </div>
 
+    <div class="col-lg-4">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>電子報成效分析</h5>
+          <div class="pull-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs btn-white active">Today</button>
+              <button type="button" class="btn btn-xs btn-white">Monthly</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ibox-content">
+          <canvas id="lineChart3" height="215"></canvas>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="row">
@@ -212,14 +128,11 @@
     <div class="col-lg-6">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <h5>
-            官網使用者活躍度分析
-          </h5>
-          <div ibox-tools></div>
+          <h5>競爭對手流量分析</h5>
         </div>
         <div class="ibox-content">
           <div>
-            <canvas id="lineChart3" height="140"></canvas>
+            <canvas id="barChart2" height="140"></canvas>
           </div>
         </div>
       </div>
@@ -229,6 +142,12 @@
       <div class="ibox float-e-margins">
         <div class="ibox-title">
           <h5>官網流量來源與跳出率分析</h5>
+          <div class="pull-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs btn-white active">Today</button>
+              <button type="button" class="btn btn-xs btn-white">Monthly</button>
+            </div>
+          </div>
         </div>
         <div class="ibox-content">
           <div>
@@ -240,190 +159,176 @@
 
   </div>
 
-  <div class="row">
-
-    <div class="col-lg-6">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>
-            競爭對手流量分析
-          </h5>
-          <div ibox-tools></div>
-        </div>
-        <div class="ibox-content">
-          <div>
-            <canvas id="barChart2" height="140"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>官網新舊訪客分析 </h5>
-        </div>
-        <div class="ibox-content">
-          <div>
-            <canvas id="doughnutChart1" height="310"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>官網使用者裝置分析</h5>
-        </div>
-        <div class="ibox-content">
-          <div class="text-center">
-            <canvas id="polarChart" height="310"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <% content_for :javascript do %>
 
 <script type="text/javascript">
-
 $(function() {
+  $(".label").click(function(){
+    if ($(this).html() == 'Weekly') {
+      $(this).removeClass('label-info');
+      $(this).addClass('label-success');
+      $(this).html('Monthly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });    
+    }
+    else if ($(this).html() == 'Monthly') {
+      $(this).removeClass('label-success');
+      $(this).addClass('label-info');
+      $(this).html('Weekly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });       
+    }
+  });
+  $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
+    type: 'line',
+    width: '100%',
+    height: '60',
+    lineColor: '#1ab394',
+    fillColor: "#ffffff"
+  });
+  $("#sparkline2").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+    type: 'line',
+    width: '100%',
+    height: '60',
+    lineColor: '#1ab394',
+    fillColor: "#ffffff"
+  });
+  $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+    type: 'line',
+    width: '100%',
+    height: '60',
+    lineColor: '#1ab394',
+    fillColor: "#ffffff"
+  });
+  $("#sparkline4").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+    type: 'line',
+    width: '100%',
+    height: '60',
+    lineColor: '#1ab394',
+    fillColor: "#ffffff"
+  });
   
   var lineData1 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
-
       {
-        label: "心情數",
+        label: "內容曝光總數", // page_impressions
         backgroundColor: 'rgba(220, 220, 220, 0.3)',
         pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
         pointBorderColor: "#fff",
-        data: [78, 87, 94, 83, 73, 84, 90]
+        data: [78, 87, 94, 83, 73, 84, 90],
+        yAxisID: 'y-axis-1',
       },{
-        label: "留言數",
+        label: "貼文互動總數", // page_impressions_unique
         backgroundColor: 'rgba(26,179,148,0.5)',
         pointBorderColor: "#fff",
-        data: [65, 59, 60, 71, 56, 55, 40]
+        data: [65, 59, 60, 71, 56, 55, 46],
+        yAxisID: 'y-axis-1',
       },{
-        label: "分享數",
+        label: "互動率",
         backgroundColor: 'rgba(225,225,225,1)',
         pointBorderColor: "#fff",
-        data: [11, 23, 14, 26, 24, 17, 25]
+        data: [0.65, 0.59, 0.60, 0.71, 0.56, 0.55, 0.46],
+        yAxisID: 'y-axis-2',
       }
     ]
   };
-
   var lineData2 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
-
       {
-        label: "讚數",
+        label: "所有使用者瀏覽量",
         backgroundColor: 'rgba(220, 220, 220, 0.3)',
         pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
         pointBorderColor: "#fff",
-        data: [78, 87, 94, 83, 73, 84, 90]
+        data: [178, 187, 194, 183, 173, 184, 190],
+        yAxisID: 'y-axis-1',
       },{
-        label: "淨讚數",
+        label: "多工作階段使用者瀏覽量",
         backgroundColor: 'rgba(26,179,148,0.5)',
         pointBorderColor: "#fff",
-        data: [65, 59, 60, 71, 56, 55, 40]
+        data: [65, 59, 60, 71, 56, 55, 40],
+        yAxisID: 'y-axis-1',
       },{
-        label: "退讚數",
+        label: "活躍度",
         backgroundColor: 'rgba(225,225,225,1)',
         pointBorderColor: "#fff",
-        data: [-10, -12, -14, -26, -24, -17, -25]
+        data: [0.65, 0.59, 0.60, 0.71, 0.56, 0.55, 0.40],
+        yAxisID: 'y-axis-2',
       }
     ]
   };
-
   var lineData3 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
-
       {
-        label: "一次工作階段使用者",
-        backgroundColor: 'rgba(220, 220, 220, 0.5)',
+        label: "開信數",
+        backgroundColor: 'rgba(220, 220, 220, 0.3)',
+        pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
         pointBorderColor: "#fff",
-        data: [65, 59, 80, 81, 56, 55, 40]
+        data: [1178, 1287, 1494, 1283, 1473, 1184, 1290],
+        yAxisID: 'y-axis-1',
       },{
-        label: "多次工作階段使用者",
+        label: "連結點擊數",
         backgroundColor: 'rgba(26,179,148,0.5)',
-        borderColor: "rgba(26,179,148,0.7)",
-        pointBackgroundColor: "rgba(26,179,148,1)",
         pointBorderColor: "#fff",
-        data: [28, 48, 40, 19, 86, 27, 90]
+        data: [65, 59, 60, 71, 56, 55, 40],
+        yAxisID: 'y-axis-1',
+      },{
+        label: "開信率",
+        backgroundColor: 'rgba(220, 220, 220, 0.3)',
+        pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+        pointBorderColor: "#fff",
+        data: [0.78, 0.87, 0.94, 0.83, 0.73, 0.84, 0.90],
+        yAxisID: 'y-axis-2',
+      },{
+        label: "連結點擊率",
+        backgroundColor: 'rgba(26,179,148,0.5)',
+        pointBorderColor: "#fff",
+        data: [0.65, 0.59, 0.60, 0.71, 0.56, 0.55, 0.40],
+        yAxisID: 'y-axis-2',
       }
     ]
   };
-
   var lineOptions = {
-    responsive: true
+    responsive: true,
+    scales: {
+      yAxes: [{
+        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        display: true,
+        position: 'left',
+        id: 'y-axis-1',
+      }, {
+        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        display: true,
+        position: 'right',
+        id: 'y-axis-2',
+        gridLines: {
+          drawOnChartArea: false
+        }
+      }],
+    }
   };
-
   var ctx1 = document.getElementById("lineChart1").getContext("2d");
   new Chart(ctx1, {type: 'line', data: lineData1, options:lineOptions});
-
   var ctx2 = document.getElementById("lineChart2").getContext("2d");
   new Chart(ctx2, {type: 'line', data: lineData2, options:lineOptions});
-
   var ctx3 = document.getElementById("lineChart3").getContext("2d");
   new Chart(ctx3, {type: 'line', data: lineData3, options:lineOptions});
-
-
-  var polarData = {
-    datasets: [{
-      data: [
-        300,250,200,
-      ],
-      backgroundColor: [
-        "#a3e1d4", "#dedede", "#b5b8cf"
-      ],
-      label: [
-        "My Radar chart"
-      ]
-    }],
-    labels: [
-      "手機","桌電","平板"
-    ]
-  };
-
-  var polarOptions = {
-    segmentStrokeWidth: 2,
-    responsive: true,
-    scale: {
-      ticks: {
-        beginAtZero: true
-      },
-      reverse: false
-    },
-  };
-
-  var ctx5 = document.getElementById("polarChart").getContext("2d");
-  new Chart(ctx5, {type: 'polarArea', data: polarData, options:polarOptions});
-
-  var doughnutData1 = {
-    labels: ["新訪客","回訪客"],
-    datasets: [{
-      data: [300,100],
-      backgroundColor: ["#a3e1d4","#b5b8cf"]
-    }]
-  } ;
-
-  var doughnutOptions = {
-    responsive: true
-  };
-
-  var ctx4 = document.getElementById("doughnutChart1").getContext("2d");
-  new Chart(ctx4, {type: 'doughnut', data: doughnutData1, options:doughnutOptions});
-
-
   var barData1 = {
-    labels: ["有機搜尋", "社群", "自然流量", "參照連結", "其他"],
+    labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
     datasets: [
       {
         label: "流量數",
@@ -443,7 +348,6 @@ $(function() {
       }
     ]
   };
-
   var barOptions1 = {
     responsive: true,
     scales: {
@@ -464,37 +368,52 @@ $(function() {
       }],
     }
   };
-
   var ctx6 = document.getElementById("barChart1").getContext("2d");
   new Chart(ctx6, {type: 'bar', data: barData1, options:barOptions1});
-
   var barData2 = {
   labels: ["社企流", "上下游", "泛科學", "環境資訊中心", "NPOst", "Womany"],
   datasets: [
       {
-        label: "流量",
+        label: "流量數",
+        backgroundColor: 'rgba(220, 220, 220, 0.5)',
+        pointBorderColor: "#fff",
+        data: [3124, 3108, 2158, 2159, 1130, 1134],
+        xAxisID: 'x-axis-1',
+      },{
+        label: "跳出率",
         backgroundColor: 'rgba(26,179,148,0.5)',
         borderColor: "rgba(26,179,148,0.7)",
         pointBackgroundColor: "rgba(26,179,148,1)",
         pointBorderColor: "#fff",
-        data: [1248, 1084, 658, 539, 1300, 334]
-      }
+        data: [80, 84, 68, 79, 83, 74],
+        xAxisID: 'x-axis-2',
+      },
     ]
   };
-
   var barOptions2 = {
     responsive: true,
     scales: {
       xAxes: [{
+        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        display: true,
+        position: 'top',
+        id: 'x-axis-1',
         stacked: true,
-      }]
+      }, {
+        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        display: true,
+        position: 'bottom',
+        id: 'x-axis-2',
+        stacked: true,
+        gridLines: {
+          drawOnChartArea: false
+        }
+      }],
     }
   };
-
   var ctx7 = document.getElementById("barChart2").getContext("2d");
   new Chart(ctx7, {type: 'horizontalBar', data: barData2, options:barOptions2});
 });
-
 </script>
 
 <% end %>
