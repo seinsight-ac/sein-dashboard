@@ -17,13 +17,14 @@ class DashboardsController < ApplicationController
     @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
   end
 
-  def fb
+  def index
     require 'koala'
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fansaddsweek = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @fansaddsmonth = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").third.first.second.first['value'] 
     @fansaddslast7d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
+    @fansaddslast30d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
     @fansaddsweekrate = @fansaddsweek*10000/(@fans-@fansaddsweek)
     @fansaddsmonthrate = @fansaddsmonth*10000/(@fans-@fansaddsmonth)
   end

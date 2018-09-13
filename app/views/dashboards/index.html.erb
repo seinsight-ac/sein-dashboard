@@ -10,7 +10,7 @@
         <div class="ibox-content">
           <h1 class="no-margins" style="display: inline-block"><%= @fans%></h1>
           <div class="stat-percent font-bold <%= @fansaddsweekrate >0?'text-navy':'text-danger'%>">
-            <%= @fansaddsweekrate%>‱ 
+            <span><%= @fansaddsweekrate%></span> ‱
             <i class="fa <%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>"></i>
           </div>
           <div id="sparkline1"></div>
@@ -162,12 +162,28 @@ $(function() {
       $(this).removeClass('label-info');
       $(this).addClass('label-success');
       $(this).html('Monthly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });    
     }
 
     else if ($(this).html() == 'Monthly') {
       $(this).removeClass('label-success');
       $(this).addClass('label-info');
       $(this).html('Weekly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });       
     }
   });
 
