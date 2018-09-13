@@ -4,12 +4,15 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
+          <span class="label label-info pull-right">Weekly</span>
           <h5>粉絲專頁讚數</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block">4543</h1>
-          <div class="stat-percent font-bold text-danger" nowrap>98% <i class="fa fa-bolt"></i></div>
+          <h1 class="no-margins" style="display: inline-block"><%= @fans%></h1>
+          <div class="stat-percent font-bold <%= @fansaddsweekrate >0?'text-navy':'text-danger'%>">
+            <%= @fansaddsweekrate%>‱ 
+            <i class="fa <%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>"></i>
+          </div>
           <div id="sparkline1"></div>
         </div>
       </div>
@@ -23,7 +26,7 @@
         </div>
         <div class="ibox-content">
           <h1 class="no-margins" style="display: inline-block">89218</h1>
-          <div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>
+          <div class="stat-percent font-bold text-navy">20% <i class="fa <%= @fansaddsweek*10000/@fans >0?'fa-level-up':'fa-level-down'%>"></i></div>
           <small></small>
           <div id="sparkline2"></div>
         </div>
@@ -154,7 +157,21 @@
 
 $(function() {
 
-  $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+  $(".label").click(function(){
+    if ($(this).html() == 'Weekly') {
+      $(this).removeClass('label-info');
+      $(this).addClass('label-success');
+      $(this).html('Monthly');
+    }
+
+    else if ($(this).html() == 'Monthly') {
+      $(this).removeClass('label-success');
+      $(this).addClass('label-info');
+      $(this).html('Weekly');
+    }
+  });
+
+  $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
     type: 'line',
     width: '100%',
     height: '60',
