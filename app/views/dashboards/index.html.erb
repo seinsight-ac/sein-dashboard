@@ -9,9 +9,9 @@
         </div>
         <div class="ibox-content">
           <h1 class="no-margins" style="display: inline-block"><%= @fans%></h1>
-          <div class="stat-percent font-bold <%= @fansaddsweekrate >0?'text-navy':'text-danger'%>">
-            <span><%= @fansaddsweekrate%></span> ‱
-            <i class="fa <%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>"></i>
+          <div class="stat-percent font-bold <%= arrow(@fansaddsweekrate) %> ">
+            <span><%= @fansaddsweekrate %></span> ‱
+            <i class="fa <%= @fansaddsweekrate > 0? 'fa-level-up' : 'fa-level-down' %> "></i>
           </div>
           <div id="sparkline1"></div>
         </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="ibox-content">
           <h1 class="no-margins" style="display: inline-block">89218</h1>
-          <div class="stat-percent font-bold text-navy">20% <i class="fa <%= @fansaddsweek*10000/@fans >0?'fa-level-up':'fa-level-down'%>"></i></div>
+          <div class="stat-percent font-bold text-navy">20% <i class="fa <%= @fansaddsweek * 10000 / @fans > 0? 'fa-level-up' : 'fa-level-down' %> "></i></div>
           <small></small>
           <div id="sparkline2"></div>
         </div>
@@ -63,6 +63,7 @@
   </div>
 
   <div class="row">
+
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -79,8 +80,10 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
+
         <div class="ibox-title">
           <h5>官網瀏覽活躍度分析</h5>
           <div class="pull-right">
@@ -90,13 +93,16 @@
             </div>
           </div>
         </div>
+
         <div class="ibox-content">
           <div>
             <canvas id="lineChart2" height="215"></canvas>
           </div>
         </div>
+
       </div>
     </div>
+
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -108,9 +114,11 @@
             </div>
           </div>
         </div>
+
         <div class="ibox-content">
           <canvas id="lineChart3" height="215"></canvas>
         </div>
+
       </div>
     </div>
   </div>
@@ -156,8 +164,8 @@
 <script type="text/javascript">
 
 $(function() {
-
   $(".label").click(function(){
+
     if ($(this).html() == 'Weekly') {
       $(this).removeClass('label-info');
       $(this).addClass('label-success');
@@ -171,7 +179,6 @@ $(function() {
         fillColor: "#ffffff"
       });    
     }
-
     else if ($(this).html() == 'Monthly') {
       $(this).removeClass('label-success');
       $(this).addClass('label-info');
@@ -222,7 +229,6 @@ $(function() {
   var lineData1 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
-
       {
         label: "內容曝光總數", // page_impressions
         backgroundColor: 'rgba(220, 220, 220, 0.3)',
@@ -275,7 +281,6 @@ $(function() {
   var lineData3 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
-
       {
         label: "開信數",
         backgroundColor: 'rgba(220, 220, 220, 0.3)',
@@ -380,7 +385,6 @@ $(function() {
 
   var ctx6 = document.getElementById("barChart1").getContext("2d");
   new Chart(ctx6, {type: 'bar', data: barData1, options:barOptions1});
-
   var barData2 = {
   labels: ["社企流", "上下游", "泛科學", "環境資訊中心", "NPOst", "Womany"],
   datasets: [
