@@ -4,7 +4,7 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <span class="label label-info pull-right">Weekly</span>
+          <span id="labelpagefans" class="label label-info pull-right">Weekly</span>
           <h5>粉絲專頁讚數</h5>
         </div>
         <div class="ibox-content">
@@ -21,13 +21,15 @@
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
+          <span id="labelpageusers" class="label label-info pull-right">Weekly</span>
           <h5>粉絲專頁曝光使用者</h5>
         </div>
         <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block">89218</h1>
-          <div class="stat-percent font-bold text-navy">20% <i class="fa <%= @fansaddsweek * 10000 / @fans > 0? 'fa-level-up' : 'fa-level-down' %> "></i></div>
-          <small></small>
+          <h1 class="no-margins" style="display: inline-block"><%= @pageusersweek%></h1>
+          <div class="stat-percent font-bold <%= @pageusersweekrate >0?'text-navy':'text-danger'%>">
+            <span><%= @pageusersweekrate%></span> %
+            <i class="fa <%= @pageusersweekrate >0?'fa-level-up':'fa-level-down'%>"></i>
+          </div>
           <div id="sparkline2"></div>
         </div>
       </div>
@@ -164,13 +166,15 @@
 <script type="text/javascript">
 
 $(function() {
-  $(".label").click(function(){
 
+  $("#labelpagefans").click(function(){
     if ($(this).html() == 'Weekly') {
       $(this).removeClass('label-info');
       $(this).addClass('label-success');
       $(this).html('Monthly');
       $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
       $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
         type: 'line',
         width: '100%',
@@ -184,6 +188,8 @@ $(function() {
       $(this).addClass('label-info');
       $(this).html('Weekly');
       $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
       $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
         type: 'line',
         width: '100%',
@@ -200,6 +206,39 @@ $(function() {
     height: '60',
     lineColor: '#1ab394',
     fillColor: "#ffffff"
+  });
+
+  $("#labelpageusers").click(function(){
+    if ($(this).html() == 'Weekly') {
+      $(this).removeClass('label-info');
+      $(this).addClass('label-success');
+      $(this).html('Monthly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });    
+    }
+    else if ($(this).html() == 'Monthly') {
+      $(this).removeClass('label-success');
+      $(this).addClass('label-info');
+      $(this).html('Weekly');
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
+      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
+      $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
+        type: 'line',
+        width: '100%',
+        height: '60',
+        lineColor: '#1ab394',
+        fillColor: "#ffffff"
+      });       
+    }
   });
 
   $("#sparkline2").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
