@@ -2,37 +2,11 @@
   <div class="row">
 
     <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span id="labelpagefans" class="label label-info pull-right">Weekly</span>
-          <h5>粉絲專頁讚數</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block"><%= @fans%></h1>
-          <div class="stat-percent font-bold <%= arrow(@fansaddsweekrate) %> ">
-            <span><%= @fansaddsweekrate %></span> ‱
-            <i class="fa <%= @fansaddsweekrate > 0? 'fa-level-up' : 'fa-level-down' %> "></i>
-          </div>
-          <div id="sparkline1"></div>
-        </div>
-      </div>
+      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fansaddsweekrate, linechart: 'sparkline1'} %>
     </div>
 
     <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span id="labelpageusers" class="label label-info pull-right">Weekly</span>
-          <h5>粉絲專頁曝光使用者</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block"><%= @pageusersweek%></h1>
-          <div class="stat-percent font-bold <%= @pageusersweekrate >0?'text-navy':'text-danger'%>">
-            <span><%= @pageusersweekrate%></span> %
-            <i class="fa <%= @pageusersweekrate >0?'fa-level-up':'fa-level-down'%>"></i>
-          </div>
-          <div id="sparkline2"></div>
-        </div>
-      </div>
+      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @pageusersweek, rate: @pageusersweekrate, linechart: 'sparkline2'} %>
     </div>
 
     <div class="col-lg-3">
@@ -166,88 +140,8 @@
 <script type="text/javascript">
 
 $(function() {
-
-  $("#labelpagefans").click(function(){
-    if ($(this).html() == 'Weekly') {
-      $(this).removeClass('label-info');
-      $(this).addClass('label-success');
-      $(this).html('Monthly');
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
-      $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
-        type: 'line',
-        width: '100%',
-        height: '60',
-        lineColor: '#1ab394',
-        fillColor: "#ffffff"
-      });    
-    }
-    else if ($(this).html() == 'Monthly') {
-      $(this).removeClass('label-success');
-      $(this).addClass('label-info');
-      $(this).html('Weekly');
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
-      $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
-        type: 'line',
-        width: '100%',
-        height: '60',
-        lineColor: '#1ab394',
-        fillColor: "#ffffff"
-      });       
-    }
-  });
-
-  $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
-
-  $("#labelpageusers").click(function(){
-    if ($(this).html() == 'Weekly') {
-      $(this).removeClass('label-info');
-      $(this).addClass('label-success');
-      $(this).html('Monthly');
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsmonthrate%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
-      $("#sparkline1").sparkline(<%= @fansaddslast30d%>, {
-        type: 'line',
-        width: '100%',
-        height: '60',
-        lineColor: '#1ab394',
-        fillColor: "#ffffff"
-      });    
-    }
-    else if ($(this).html() == 'Monthly') {
-      $(this).removeClass('label-success');
-      $(this).addClass('label-info');
-      $(this).html('Weekly');
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= @fansaddsweekrate%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= @fansaddsmonthrate >0?'fa-level-up':'fa-level-down'%>')
-      $(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= @fansaddsweekrate >0?'fa-level-up':'fa-level-down'%>')
-      $("#sparkline1").sparkline(<%= @fansaddslast7d%>, {
-        type: 'line',
-        width: '100%',
-        height: '60',
-        lineColor: '#1ab394',
-        fillColor: "#ffffff"
-      });       
-    }
-  });
-
-  $("#sparkline2").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparkline1', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparkline2', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
 
   $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',

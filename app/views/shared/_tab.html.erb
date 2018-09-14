@@ -1,0 +1,14 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<span id="<%= id%>" class="label label-info pull-right">Weekly</span>
+		<h5><%= title%></h5>
+	</div>
+	<div class="ibox-content">
+		<h1 class="no-margins" style="display: inline-block"><%= data%></h1>
+		<div class="stat-percent font-bold <%= color(rate) %> ">
+			<span><%= rate %></span> ‱
+			<i class="fa <%= arrow(rate) %> "></i>
+		</div>
+		<div id="<%= linechart%>"></div>
+	</div>
+</div>
