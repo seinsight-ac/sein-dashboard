@@ -258,7 +258,7 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth :facebook, CONFIG.FB_APP_ID, CONFIG.FB_SECRET, scope: "public_profile,email,manage_pages,read_insights", info_fields: "email,name", callback_url: CONFIG.CALLBACK_URL
 
-  config.omniauth :google_oauth2, CONFIG.GOOGLE_API_KEY, CONFIG.GOOGLE_API_SECRET, { skip_jwt: true, access_type: "offline", approval_prompt: "", scope: "userinfo.email, userinfo.profile, https://www.googleapis.com/auth/analytics.readonly" }
+  config.omniauth :google_oauth2, CONFIG.GOOGLE_API_KEY, CONFIG.GOOGLE_API_SECRET, { skip_jwt: true, access_type: "offline", approval_prompt: "consent", scope: "userinfo.email, userinfo.profile, https://www.googleapis.com/auth/analytics.readonly" }
 
 
   # ==> Warden configuration
