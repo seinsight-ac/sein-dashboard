@@ -20,8 +20,9 @@
     <div class="gray-bg <%= @extra_class %>">
 
       <!-- Page wrapper -->
-      <%= render 'layouts/topnavbar' %>
-
+      <% if current_user %>
+       <%= render 'layouts/topnavbar' %>
+      <% end %>
       <!-- Main view  -->
       <%= yield %>
 
