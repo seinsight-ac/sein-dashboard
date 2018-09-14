@@ -25,8 +25,17 @@ class DashboardsController < ApplicationController
     @fansaddsmonth = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").third.first.second.first['value'] 
     @fansaddslast7d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
     @fansaddslast30d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
-    @fansaddsweekrate = @fansaddsweek*10000/(@fans-@fansaddsweek)
-    @fansaddsmonthrate = @fansaddsmonth*10000/(@fans-@fansaddsmonth)
+    @fansaddsweekratef = @fansaddsweek*1000/(@fans-@fansaddsweek).to_f
+    @fansaddsweekrate = @fansaddsweekratef.round(2)
+    @fansaddsmonthratef = @fansaddsmonth*1000/(@fans-@fansaddsmonth).to_f
+    @fansaddsmonthrate = @fansaddsmonthratef.round(2)
+    @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
+    @pageusersweeklast_7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
+    @pageusersweekratef = @pageusersweek*10/@pageusersweeklast_7d.to_f.round(2)
+    @pageusersweekrate = @pageusersweekratef.round(2)
+
+
+    
   end
 
   
