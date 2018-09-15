@@ -19,7 +19,6 @@ class ExportXls
 
   def ga_xls(data)
 
-
   end
 
   def fb_xls(data)

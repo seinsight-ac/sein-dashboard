@@ -1,13 +1,26 @@
 require 'google/apis/analyticsreporting_v4'
-
+require "googleauth"
 
 class GoogleAnalytics
 
   include Google::Apis::AnalyticsreportingV4
 
-  def self.active_user(google_token)
+
+  @credentials = 
+    Google::Auth::UserRefreshCredentials.new(
+      client_id: CONFIG.GOOGLE_API_KEY,
+      client_secret: CONFIG.GOOGLE_API_SECRET,
+      scope: ["https://www.googleapis.com/auth/analytics.readonly"],
+      additional_parameters: { "access_type" => "offline" })
+    
+  @credentials.refresh_token = CONFIG.GOOGLE_REFRESH_TOKEN
+  @credentials.fetch_access_token!
+
+
+
+  def self.active_user
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:30dayUsers" }],
@@ -20,9 +33,9 @@ class GoogleAnalytics
     @active_user = JSON.parse(@response.to_json)  
   end
 
-  def self.avg_session_duration(google_token)
+  def self.avg_session_duration
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:avgSessionDuration" }],
@@ -35,9 +48,9 @@ class GoogleAnalytics
     @avg_session_duration = JSON.parse(@response.to_json)  
   end
 
-  def self.pageviews_per_session(google_token)
+  def self.pageviews_per_session
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:pageviewsPerSession" }],
@@ -50,9 +63,9 @@ class GoogleAnalytics
     @pageviews_per_session = JSON.parse(@response.to_json)  
   end
 
-  def self.session_count(google_token)
+  def self.session_count
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }],
@@ -65,9 +78,9 @@ class GoogleAnalytics
     @session_count = JSON.parse(@response.to_json)
   end
 
-  def self.channel_grouping(google_token)
+  def self.channel_grouping
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }, { expression: "ga:bounceRate" }],
@@ -80,9 +93,9 @@ class GoogleAnalytics
     @channel_goruping = JSON.parse(@response.to_json)
   end
 
-  def self.user_type(google_token)
+  def self.user_type
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }],
@@ -95,9 +108,9 @@ class GoogleAnalytics
     @user_type = JSON.parse(@response.to_json)
   end
 
-  def self.device(google_token)
+  def self.device
     analytics = AnalyticsReportingService.new  
-    analytics.authorization = google_token
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }],
