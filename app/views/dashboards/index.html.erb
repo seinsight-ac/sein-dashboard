@@ -140,8 +140,8 @@
 <script type="text/javascript">
 
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparkline1', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparkline2', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparkline1', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @pageusersweek, monthdata: @pageusersmonth, weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparkline2', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
 
   $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',

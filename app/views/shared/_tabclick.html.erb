@@ -3,6 +3,7 @@ $("<%= id%>").click(function(){
 		$(this).removeClass('label-info');
 		$(this).addClass('label-success');
 		$(this).html('Monthly');
+		$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= monthdata%>');
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= monthrate%>')
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(weekrate)%>')
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(monthrate)%>')
@@ -20,6 +21,7 @@ $("<%= id%>").click(function(){
 		$(this).removeClass('label-success');
 		$(this).addClass('label-info');
 		$(this).html('Weekly');
+		$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= weekdata%>');
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= weekrate%>')
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(monthrate)%>')
 		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(weekrate)%>')
