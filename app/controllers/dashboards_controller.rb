@@ -70,14 +70,16 @@ class DashboardsController < ApplicationController
     @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
     #facebook fans retention
     @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}    
-    @pageimpressionslast7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('-').join()[4..7].to_i}
+    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('-').join()[4..7].to_i}
+    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}    
+    @last30ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('-').join()[4..7].to_i}
     @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
-    @fansretentionrate = Array.new
-    for i in (0...@pageimpressionslast7ddata.size)
-      ratefloat = @postenagementslast7ddata[i]/@pageimpressionslast7ddata[i].to_f
-      rate = ratef.round(3)
-      @fansrate = @fansrate.push(rate)
-    end
+    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
+    @fansretentionrate7d = Array.new
+    @fansretentionrate7d = rate(@postenagementslast7ddata, @pageimpressionslast7ddata, @fansretentionrate7d)
+    @fansretentionrate30d = Array.new
+    @fansretentionrate30d = rate(@postenagementslast30ddata, @pageimpressionslast30ddata, @fansretentionrate30d)
+ 
   end
 
   
@@ -88,6 +90,15 @@ class DashboardsController < ApplicationController
     @einfo = Alexa.data("e-info.org.tw")
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
-  end 
+  end
+  
+  def rate(numerator, denominator, array)
+    for i in (0...numerator.size)
+      ratefloat = numerator[i] / denominator[i].to_f
+      rate = ratefloat.round(3)
+      array = array.push(rate)
+    end
+    return array
+  end
   
 end
