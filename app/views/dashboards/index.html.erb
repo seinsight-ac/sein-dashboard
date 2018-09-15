@@ -1,5 +1,4 @@
 <div class="wrapper wrapper-content">
-<%= @pageimpressionslast7ddate%>
   <div class="row">
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fansaddsweekrate, linechart: 'sparklinefansadds'} %>
@@ -123,7 +122,7 @@ $(function() {
     <%= render partial: "shared/tabclick", locals: {id: '#labelmailusers', weekdata: @mailusers, monthdata: @mailusers, weekrate: @mailusersweekrate, monthrate: @mailusersmonthrate, linechartid: '#sparklinemailusers', data7d: @mailuserslast7d, data30d: @mailuserslast30d} %>
   <% end %>
   var lineData1 = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: <%= @pageimpressionslast7ddate %>,
     datasets: [
       {
         label: "內容曝光總數", // page_impressions
@@ -133,10 +132,10 @@ $(function() {
         data: <%= @pageimpressionslast7ddata %>,
         yAxisID: 'y-axis-1',
       },{
-        label: "貼文互動總數", // page_impressions_unique
+        label: "貼文互動總數", // page_post_engagements
         backgroundColor: 'rgba(26,179,148,0.5)',
         pointBorderColor: "#fff",
-        data: [65, 59, 60, 71, 56, 55, 46],
+        data:  <%= @postenagementslast7ddata %>,
         yAxisID: 'y-axis-1',
       },{
         label: "互動率",

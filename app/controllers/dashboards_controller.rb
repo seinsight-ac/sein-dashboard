@@ -69,9 +69,15 @@ class DashboardsController < ApplicationController
     @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
     @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
     #facebook fans retention
-    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
-    @pageimpressionslast7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('2018-').second.to_s}
-
+    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}    
+    @pageimpressionslast7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('-').join()[4..7].to_i}
+    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
+    @fansretentionrate = Array.new
+    for i in (0...@pageimpressionslast7ddata.size)
+      ratefloat = @postenagementslast7ddata[i]/@pageimpressionslast7ddata[i].to_f
+      rate = ratef.round(3)
+      @fansrate = @fansrate.push(rate)
+    end
   end
 
   
