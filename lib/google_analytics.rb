@@ -13,7 +13,7 @@ class GoogleAnalytics
       scope: ["https://www.googleapis.com/auth/analytics.readonly"],
       additional_parameters: { "access_type" => "offline" })
     
-  @credentials.refresh_token = CONFIG.GOOGLE_REFRESH_TOKEN
+  @credentials.refresh_token = "1/dUKaaIMt-JkRe5ZloWOw5VIYiDiEGYENBnX7LquTJPMq8EBEEwaNVwE-9iqCIo3u"
   @credentials.fetch_access_token!
 
 
@@ -25,7 +25,7 @@ class GoogleAnalytics
       { report_requests: [
             { metrics: [{ expression: "ga:30dayUsers" }],
              dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+             date_ranges: [{ start_date: (Date.today - 30).strftime("%Y-%m-%d"), 
                            end_date: Time.now.strftime("%Y-%m-%d") }],
              view_id: "ga:55621750"
       }]})
