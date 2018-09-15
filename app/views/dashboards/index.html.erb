@@ -1,45 +1,23 @@
 <div class="wrapper wrapper-content">
+
   <div class="row">
-
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fansaddsweekrate, linechart: 'sparkline1'} %>
+      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fansaddsweekrate, linechart: 'sparklinefansadds'} %>
     </div>
-
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @pageusersweek, rate: @pageusersweekrate, linechart: 'sparkline2'} %>
+      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @pageusersweek, rate: @pageusersweekrate, linechart: 'sparklinepageusers'} %>
     </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
-          <h5>官網使用者</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block">19218</h1>
-          <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-          <div id="sparkline3"></div>
-        </div>
+    <% if false %>
+      <div class="col-lg-3">
+        <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @webusersweek, rate: @webusersweekrate, linechart: 'sparklinewebusers'} %>
       </div>
-    </div>
-
-    <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-info pull-right">Weekly</span>
-          <h5>電子報訂閱數</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block">21911</h1>
-          <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
-          <div id="sparkline4"></div>
-        </div>
+      <div class="col-lg-3">
+        <%= render partial: "shared/tab", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @webusersweekrate, linechart: 'sparklinemailusers'} %>
       </div>
-    </div>
+    <% end %>
   </div>
 
   <div class="row">
-
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -140,25 +118,12 @@
 <script type="text/javascript">
 
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparkline1', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @pageusersweek, monthdata: @pageusersmonth, weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparkline2', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
-
-  $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
-
-  $("#sparkline4").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
-  
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparklinefansadds', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @pageusersweek, monthdata: @pageusersmonth, weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparklinepageusers', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
+  <% if false %>
+    <%= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @webusersweek, monthdata: @webusersmonth, weekrate: @webusersweekrate, monthrate: @webusersmonthrate, linechartid: '#sparklinewebusers', data7d: @webuserslast7d, data30d: @webuserslast30d} %>
+    <%= render partial: "shared/tabclick", locals: {id: '#labelmailusers', weekdata: @mailusers, monthdata: @mailusers, weekrate: @mailusersweekrate, monthrate: @mailusersmonthrate, linechartid: '#sparklinemailusers', data7d: @mailuserslast7d, data30d: @mailuserslast30d} %>
+  <% end %>
   var lineData1 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
