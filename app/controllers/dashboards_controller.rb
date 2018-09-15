@@ -76,10 +76,12 @@ class DashboardsController < ApplicationController
     @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
     @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
     @fansretentionrate7d = Array.new
-    @fansretentionrate7d = rate(@postenagementslast7ddata, @pageimpressionslast7ddata, @fansretentionrate7d)
+    @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map{|x, y| x / y.to_f}
+    @fansretentionrate7d = @fansretentionrate7d.map{ |i| i.round(3) }
     @fansretentionrate30d = Array.new
-    @fansretentionrate30d = rate(@postenagementslast30ddata, @pageimpressionslast30ddata, @fansretentionrate30d)
- 
+    @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
+    @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
+    
   end
 
   
@@ -91,14 +93,6 @@ class DashboardsController < ApplicationController
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
   end
-  
-  def rate(numerator, denominator, array)
-    for i in (0...numerator.size)
-      ratefloat = numerator[i] / denominator[i].to_f
-      rate = ratefloat.round(3)
-      array = array.push(rate)
-    end
-    return array
-  end
+
   
 end
