@@ -46,6 +46,7 @@ class DashboardsController < ApplicationController
   def index
     require 'koala'
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fansaddsweek = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @fansaddsmonth = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").third.first.second.first['value'] 
@@ -55,10 +56,18 @@ class DashboardsController < ApplicationController
     @fansaddsweekrate = @fansaddsweekratef.round(2)
     @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
     @fansaddsmonthrate = @fansaddsmonthratef.round(2)
+
     @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
-    @pageusersweeklast_7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
-    @pageusersweekratef = @pageusersweek * 10 / @pageusersweeklast_7d.to_f.round(2)
+    @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
+    @pageusersweeklastweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
+    @pageusersmonthlastmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").third.first.second.first['value']     
+    @pageusersweekratef = @pageusersweek * 10 / @pageusersweeklastweek.to_f
     @pageusersweekrate = @pageusersweekratef.round(2)
+    @pageusersmonthratef = @pageusersmonth * 10 / @pageusersmonthlastmonth.to_f
+    @pageusersmonthrate = @pageusersmonthratef.round(2)
+    @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
+    @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
+  
   end
 
   
