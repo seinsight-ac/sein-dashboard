@@ -17,8 +17,7 @@ class ExportXls
     @sheet1.default_format = @center
   end
 
-  def ga_xls(data)
-
+  def ga_xls(date)
 
   end
 
