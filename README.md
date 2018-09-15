@@ -3,6 +3,7 @@
 - DEMO網址：www.sein.fun (預計2019/8失效)
 - 專案進度可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/projects/2)
 - 如果有使用上有問題可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/wiki)
+- 此專案有使用gem，關於gem的使用可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCgem%E7%9A%84%E4%BD%BF%E7%94%A8)
 
 ## User Story
 - [X] 使用者可以登入(一組帳密)
@@ -22,9 +23,11 @@
 - fork到自己的空間
 - `git clone <自己的repo網址>`
 - `cd sein-dashboard`
-- `bundle install #安裝套件`
+- `bundle install # 安裝套件`
 - `rails db:migrate`
 - 新增並設定config/secrets.yml檔，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCsecrets.yml%E8%B3%87%E6%96%99)
+- 新增並設定config/database.yml檔，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCdatabase.yml%E8%B3%87%E6%96%99)
+- `rails console # 創建屬於自己的使用者`可以參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BC%E4%BD%BF%E7%94%A8%E8%80%85%E5%B8%B3%E5%AF%86)
 
 ## 作者
 
