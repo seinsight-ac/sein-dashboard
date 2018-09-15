@@ -44,9 +44,10 @@ class DashboardsController < ApplicationController
   end
 
   def index
+    # facebook API
     require 'koala'
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-
+    # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fansaddsweek = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @fansaddsmonth = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").third.first.second.first['value'] 
@@ -56,7 +57,7 @@ class DashboardsController < ApplicationController
     @fansaddsweekrate = @fansaddsweekratef.round(2)
     @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
     @fansaddsmonthrate = @fansaddsmonthratef.round(2)
-
+    # facebook page users
     @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
     @pageusersweeklastweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
@@ -67,7 +68,10 @@ class DashboardsController < ApplicationController
     @pageusersmonthrate = @pageusersmonthratef.round(2)
     @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
     @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
-  
+    #facebook fans retention
+    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
+    @pageimpressionslast7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.second}.map{ |i| i.split('T').first.split('2018-').second.to_s}
+
   end
 
   

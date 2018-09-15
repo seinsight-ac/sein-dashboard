@@ -58,7 +58,4 @@ class User < ApplicationRecord
     return user
   end
   
-  def facebook
-    Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-  end
 end

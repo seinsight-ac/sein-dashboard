@@ -1,5 +1,5 @@
 <div class="wrapper wrapper-content">
-
+<%= @pageimpressionslast7ddate%>
   <div class="row">
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fansaddsweekrate, linechart: 'sparklinefansadds'} %>
@@ -16,7 +16,6 @@
       </div>
     <% end %>
   </div>
-
   <div class="row">
     <div class="col-lg-4">
       <div class="ibox float-e-margins">
@@ -24,8 +23,7 @@
           <h5>粉絲黏著度分析</h5>
           <div class="pull-right">
             <div class="btn-group">
-              <button type="button" class="btn btn-xs btn-white active">Today</button>
-              <button type="button" class="btn btn-xs btn-white">Monthly</button>
+	          	<span id="labelfansretention" class="label label-info pull-right">Weekly</span>
             </div>
           </div>
         </div>
@@ -132,7 +130,7 @@ $(function() {
         backgroundColor: 'rgba(220, 220, 220, 0.3)',
         pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
         pointBorderColor: "#fff",
-        data: [78, 87, 94, 83, 73, 84, 90],
+        data: <%= @pageimpressionslast7ddata %>,
         yAxisID: 'y-axis-1',
       },{
         label: "貼文互動總數", // page_impressions_unique
