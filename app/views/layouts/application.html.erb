@@ -12,12 +12,16 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 
-<body>
+<body class="<% if current_user %> <% else %> login <% end %>" >
   <!-- Wrapper-->
-  <div id="wrapper" class="dashboards.dashboard_2">
+  <div id="wapper">
+    <!-- Navigation -->
+    <% if current_user %>
+     <%= render 'layouts/navigation' %>
+    <% end %>
 
     <!-- Page wraper -->
-    <div class="gray-bg <%= @extra_class %>">
+    <div id="<% if current_user %>page-wrapper<% end %>" class="gray-bg <%= @extra_class %>">
 
       <!-- Page wrapper -->
       <% if current_user %>
