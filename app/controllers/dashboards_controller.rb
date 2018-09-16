@@ -45,7 +45,6 @@ class DashboardsController < ApplicationController
 
   def index
     # facebook API
-    require 'koala'
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
@@ -82,6 +81,19 @@ class DashboardsController < ApplicationController
     @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
     @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
     
+    # alexa
+    @womanyrank = Alexa.data("womany.net")[1].inner_text.delete(',').to_i
+    @panscirank = Alexa.data("pansci.asia")[1].inner_text.delete(',').to_i
+    @newsmarketrank = Alexa.data("newsmarket.com.tw")[1].inner_text.delete(',').to_i
+    @einforank = Alexa.data("e-info.org.tw")[1].inner_text.delete(',').to_i
+    @seinrank = Alexa.data('seinsights.asia')[1].inner_text.delete(',').to_i
+    @npostrank = Alexa.data("npost.tw")[1].inner_text.delete(',').to_i
+    @womanyrate = divide100(Alexa.data("womany.net")[2].inner_text.to_i)
+    @panscirate = divide100(Alexa.data("pansci.asia")[2].inner_text.to_i)
+    @newsmarketrate = divide100(Alexa.data("newsmarket.com.tw")[2].inner_text.to_i)
+    @einforate = divide100(Alexa.data("e-info.org.tw")[2].inner_text.to_i)
+    @seinrate = divide100(Alexa.data('seinsights.asia')[2].inner_text.to_i)
+    @npostrate = divide100(Alexa.data("npost.tw")[2].inner_text.to_i)
   end
 
   
@@ -94,5 +106,8 @@ class DashboardsController < ApplicationController
     @womany = Alexa.data("womany.net")
   end
 
+  def divide100(data)
+    return data/100.to_f
+  end
   
 end
