@@ -2,19 +2,20 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
 
   def ga
-    @active_user = GoogleAnalytics.active_user
-    @avg_session_duration = GoogleAnalytics.avg_session_duration
-    @pageviews_per_session = GoogleAnalytics.pageviews_per_session
-    @session_count = GoogleAnalytics.session_count
+    ga = GoogleAnalytics.new
+    @active_user = ga.active_user
+    @avg_session_duration = ga.avg_session_duration
+    @pageviews_per_session = ga.pageviews_per_session
+    @session_count = ga.session_count
     @single_session_user = @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @multi_session_user = @session_count.first[1][0]["data"]["totals"][0]["values"][0].to_i - @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0].to_i
-    @channel_grouping = GoogleAnalytics.channel_grouping
+    @channel_grouping = ga.channel_grouping
     @channel_user = @channel_grouping.first[1][0]["data"]["totals"][0]["values"][0]
-    @user_type = GoogleAnalytics.user_type
+    @user_type = ga.user_type
     @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
     @new = @user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @old = @user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    @device = GoogleAnalytics.device
+    @device = ga.device
     @tool = @device.first[1][0]["data"]["totals"][0]["values"][0]
   end
 

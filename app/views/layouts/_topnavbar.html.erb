@@ -1,20 +1,9 @@
 <div class="row border-bottom">
 	<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 		<div class="navbar-header">
-			<a href="/"><img src="<%= image_path('logo.png') %>" style="width:130px; margin-left:25px"></a>
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 		</div>
 		<ul class="nav navbar-top-links navbar-right">
-			<li><%= link_to('粉專分析', fb_dashboards_path, class: "fa fa-facebook-f") %></li>
-			<li><%= link_to('官網分析', ga_dashboards_path, class: "fa fa-google") %></li>
-			<li><%= link_to('資料下載', dashboards_path, class: "fa fa-file-excel-o") %></li>
-			<li>
-				<span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Hi～ 夥伴:D 數據就是力量!</span>
-			</li>
-			<% if current_user %>   
-				<li><%= link_to('登出', destroy_user_session_path, method: :delete, class: "fa fa-sign-out") %></li>
-			<% else %>
-				<li><%= link_to '登入', user_session_path %></li>
-			<% end %>
 		</ul>
 	</nav>
 </div>
