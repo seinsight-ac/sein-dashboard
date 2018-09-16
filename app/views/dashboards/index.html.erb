@@ -10,17 +10,7 @@
     </div>
 
     <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
-          <h5>官網使用者</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block">19218</h1>
-          <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-          <div id="sparkline3"></div>
-        </div>
-      </div>
+      <%= render partial: "shared/tab", locals: {id: 'labelactiveusers', title: '官網使用者', data: @active_users_week, rate: @active_users_weekrate, linechart: 'sparkline3'} %>
     </div>
 
     <div class="col-lg-3">
@@ -143,13 +133,7 @@ $(function() {
   <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparkline1', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
   <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparkline2', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
 
-  $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+  <%= render partial: "shared/tabclick", locals: {id: '#labelactiveusers', weekrate: @active_users_weekrate, monthrate: @active_users_monthrate, linechartid: '#sparkline3', data7d: @active_users_last7d, data30d: @active_users_last30d} %>
 
   $("#sparkline4").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
     type: 'line',

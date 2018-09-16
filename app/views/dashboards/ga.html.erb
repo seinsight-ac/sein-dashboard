@@ -1,54 +1,55 @@
+<!-- 
 
-
-<h3>最近7天</h3>
-<% @active_user.first[1][0]["data"]["rows"].each do |d| %>
-  <li>官網使用者 <%= d["metrics"][0]["values"][0] %></li>
-<% end %>
-<hr>
-<% @avg_session_duration.first[1][0]["data"]["rows"].each do |d| %>
-  <li>日期 <%= d["dimensions"][0] %></li>
-  <li>平均工作持續時間 <%= d["metrics"][0]["values"][0] %></li>
-<% end %>
-<hr>
-<% @pageviews_per_session.first[1][0]["data"]["rows"].each do |d| %>
-  <li>日期 <%= d["dimensions"][0] %></li>
-  <li>每次工作階段頁數 <%= d["metrics"][0]["values"][0] %></li>
-<% end %>
-
+<%= @active_users %>
+<%= @active_users_week %>
+<%= @active_users_lastweek %>
+<%= @active_users_month %>
+<%= @active_users_lastmonth %>
+<%= @active_users_weekrate %>
+<%= @active_users_monthrate %>
+<%= @active_users_last7d %>
+<%= @active_users_last30d %>
 <hr>
 <li>單一工作階段使用者<%= @single_session_user %>
  </li>
  <li>多工作階段使用者 <%= @multi_session_user %>  </li>
 
 <hr>
-
-<% @channel_grouping.first[1][0]["data"]["rows"].each do  |c| %>
-  <li>
-    <%= c["dimensions"][0] %>
-    <%= c["metrics"][0]["values"][0] %> 
-  </li>
-  <li>
-    跳出率<%= c["metrics"][0]["values"][1]%>
-  </li>  
-<% end %>
-<li>各流量總數<%= @channel_user %></li>
+<%= @session_pageviews_week %>
+<%= @session_pageviews_week_total %>
+<%= @single_session_pageviews_week %>
+<%= @multi_session_pageviews_week %>
+<%= @activity %> -->
+<%= @pageviews_7d %>
+<hr>
+<%= @single_session_pageviews_7d %> 
+<hr>
+<%= @multi_session_pageviews_7d %>
 
 <hr>
-
-<li>全數訪客<%= @vistor %></li>
-<li>新訪客<%= @new %></li>
-<li>舊訪客<%= @old %></li>
-
+<%= @activity_7d %>
 <hr>
 
-<% @device.first[1][0]["data"]["rows"].each do |d| %>
-  <li>
-    <%= d["dimensions"][0] %>
-    <%= d["metrics"][0]["values"][0] %> 
-  </li>
-<% end %>
-<li><%= @tool %></li>>
 
+<%= @pageviews_30d %>
+<hr>
+<%= @single_session_pageviews_30d %> 
+<hr>
+<%= @multi_session_pageviews_30d %>
+
+<hr>
+<%= @activity_30d %>
+<hr>
+
+<%= @channel_grouping_month %>
+<hr>
+<%= @channel_user_week %>
+<hr>
+<%= @bounce_rate_week %>
+<hr>
+<%= @channel_user_month %>
+<hr>
+<%= @bounce_rate_month %>
 
 
 
