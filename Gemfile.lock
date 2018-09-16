@@ -53,10 +53,10 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    animate-rails (1.0.10)
-      rails
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
+    animate-rails (1.0.10)
+      rails
     arel (8.0.0)
     ast (2.4.0)
     autoprefixer-rails (9.1.4)
@@ -185,14 +185,14 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
+    mysql2 (0.4.10)
     net-http-digest_auth (1.4.1)
     net-http-persistent (3.0.0)
       connection_pool (~> 2.2)
-    netrc (0.11.0)
-    mysql2 (0.4.10)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (5.0.2)
+    netrc (0.11.0)
     nio4r (2.3.1)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
@@ -206,8 +206,6 @@ GEM
     omniauth (1.8.1)
       hashie (>= 3.4.6, < 3.6.0)
       rack (>= 1.6.2, < 3)
-    omniauth-facebook (5.0.0)
-      omniauth-oauth2 (~> 1.2)
     omniauth-google-oauth2 (0.5.3)
       jwt (>= 1.5)
       omniauth (>= 1.1.1)
@@ -278,6 +276,7 @@ GEM
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-ole (1.2.12.1)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
@@ -300,6 +299,8 @@ GEM
       faraday (~> 0.9)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
+    spreadsheet (1.1.8)
+      ruby-ole (>= 1.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -367,21 +368,18 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   mechanize
   metismenu-rails!
+  mysql2 (~> 0.4.4)
   omniauth
-  omniauth-facebook
   omniauth-google-oauth2
   pace-rails!
   pry
   puma (~> 3.7)
   rails (~> 5.1.6)
   rest-client
-  rubocop (~> 0.39.0)
-  mysql2 (~> 0.4.4)
-  puma (~> 3.7)
-  rails (~> 5.1.6)
   rubocop (~> 0.49.0)
   sass-rails (~> 5.0)
   selenium-webdriver
+  spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
@@ -391,4 +389,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.16.2
+   1.16.4

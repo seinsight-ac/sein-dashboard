@@ -1,0 +1,54 @@
+
+
+<h3>最近7天</h3>
+<% @active_user.first[1][0]["data"]["rows"].each do |d| %>
+  <li>官網使用者 <%= d["metrics"][0]["values"][0] %></li>
+<% end %>
+<hr>
+<% @avg_session_duration.first[1][0]["data"]["rows"].each do |d| %>
+  <li>日期 <%= d["dimensions"][0] %></li>
+  <li>平均工作持續時間 <%= d["metrics"][0]["values"][0] %></li>
+<% end %>
+<hr>
+<% @pageviews_per_session.first[1][0]["data"]["rows"].each do |d| %>
+  <li>日期 <%= d["dimensions"][0] %></li>
+  <li>每次工作階段頁數 <%= d["metrics"][0]["values"][0] %></li>
+<% end %>
+
+<hr>
+<li>單一工作階段使用者<%= @single_session_user %>
+ </li>
+ <li>多工作階段使用者 <%= @multi_session_user %>  </li>
+
+<hr>
+
+<% @channel_grouping.first[1][0]["data"]["rows"].each do  |c| %>
+  <li>
+    <%= c["dimensions"][0] %>
+    <%= c["metrics"][0]["values"][0] %> 
+  </li>
+  <li>
+    跳出率<%= c["metrics"][0]["values"][1]%>
+  </li>  
+<% end %>
+<li>各流量總數<%= @channel_user %></li>
+
+<hr>
+
+<li>全數訪客<%= @vistor %></li>
+<li>新訪客<%= @new %></li>
+<li>舊訪客<%= @old %></li>
+
+<hr>
+
+<% @device.first[1][0]["data"]["rows"].each do |d| %>
+  <li>
+    <%= d["dimensions"][0] %>
+    <%= d["metrics"][0]["values"][0] %> 
+  </li>
+<% end %>
+<li><%= @tool %></li>>
+
+
+
+

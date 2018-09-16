@@ -29,10 +29,10 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 # GA
 gem 'google-api-client'
-# FB login
-gem 'omniauth-facebook'
 # FB API
 gem "koala"
+# export xls
+gem 'spreadsheet'
 
 # web scraping
 gem 'mechanize'
@@ -41,7 +41,6 @@ gem 'mechanize'
 gem "pry"
 
 # CSS
-# bootstrap
 gem "animate-rails"
 gem 'bootstrap-sass', '~> 3.3.7'
 gem "font-awesome-rails"
