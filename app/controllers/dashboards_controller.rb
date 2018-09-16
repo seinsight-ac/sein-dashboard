@@ -5,20 +5,44 @@ class DashboardsController < ApplicationController
   def ga
 
     ga = GoogleAnalytics.new
-    @active_user = ga.active_user
-    @avg_session_duration = ga.avg_session_duration
-    @pageviews_per_session = ga.pageviews_per_session
-    @session_count = ga.session_count
-    @single_session_user = @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @multi_session_user = @session_count.first[1][0]["data"]["totals"][0]["values"][0].to_i - @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0].to_i
-    @channel_grouping = ga.channel_grouping
-    @channel_user = @channel_grouping.first[1][0]["data"]["totals"][0]["values"][0]
-    @user_type = ga.user_type
-    @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
-    @new = @user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @old = @user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    @device = ga.device
-    @tool = @device.first[1][0]["data"]["totals"][0]["values"][0]
+    
+    # @avg_session_duration = ga.avg_session_duration
+    # @pageviews_per_session = ga.pageviews_per_session
+    # @session_count = ga.session_count
+    # @single_session_user = @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    # @multi_session_user = @session_count.first[1][0]["data"]["totals"][0]["values"][0].to_i - @session_count.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0].to_i
+    
+    # @session_pageviews_week = ga.session_pageviews_week
+    # @session_pageviews_week_total = GoogleAnalytics.session_pageviews_week.first[1][0]["data"]["totals"][0]["values"][0]
+    # @single_session_pageviews_week = @session_pageviews_week.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    # @multi_session_pageviews_week = @session_pageviews_week_total.to_i - @single_session_pageviews_week.to_i
+    # @activity = @multi_session_pageviews_week.to_i / @session_pageviews_week_total.to_i
+    
+    #使用者活躍度分析
+    @pageviews_7d = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @single_session_pageviews_7d = ga.session_pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @multi_session_pageviews_7d = @pageviews_7d.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
+    @activity_7d = @multi_session_pageviews_7d.zip(@pageviews_7d).map{|k| (k[0] / k[1].to_f).round(2) }
+    @activity_date_7d = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,7]
+    
+    @pageviews_30d = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @single_session_pageviews_30d = ga.session_pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @multi_session_pageviews_30d = @pageviews_30d.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
+    @activity_30d = @multi_session_pageviews_30d.zip(@pageviews_30d).map{|k| (k[0] / k[1].to_f).round(2) }
+    @activity_date_30d = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,30]
+    #流量管道
+    @channel_user_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @bounce_rate_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+    @channel_user_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @bounce_rate_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+
+
+    # @user_type = ga.user_type
+    # @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
+    # @new = @user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    # @old = @user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
+    # @device = ga.device
+    # @tool = @device.first[1][0]["data"]["totals"][0]["values"][0]
 
   end
 

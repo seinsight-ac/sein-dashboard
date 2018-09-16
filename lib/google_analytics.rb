@@ -23,8 +23,22 @@ class GoogleAnalytics
     self.analytics.authorization = self.credentials
   end
 
+  def webusersweek
+    
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:7dayUsers" }],
+             dimensions: [{ name: "ga:date" }],
+             date_ranges: [{ start_date: "7daysAgo", 
+                           end_date: "today"}],
+             view_id: "ga:55621750"
+      }]})
+    return convert(request)
 
-  def active_user
+  end
+
+  def webusersmonth
+
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:30dayUsers" }],
@@ -38,32 +52,32 @@ class GoogleAnalytics
 
   end
 
-  def avg_session_duration
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:avgSessionDuration" }],
-             dimensions: [ { name: "ga:date" }],
-             date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
-             view_id: "ga:55621750" 
-      }]})
-    return convert(request) 
-  end
+  # def avg_session_duration
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:avgSessionDuration" }],
+  #            dimensions: [ { name: "ga:date" }],
+  #            date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request) 
+  # end
 
-  def pageviews_per_session
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:pageviewsPerSession" }],
-             dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
-             view_id: "ga:55621750" 
-      }]})
-    return convert(request)
-  end
+  # def pageviews_per_session
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:pageviewsPerSession" }],
+  #            dimensions: [{ name: "ga:date" }],
+  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
 
 
-  def session_count
+  def pageviews_7d
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:pageviews" }],
@@ -72,15 +86,10 @@ class GoogleAnalytics
                            end_date: "today" }],
              view_id: "ga:55621750" 
       }]})
-    @response = analytics.batch_get_reports(request)
-    @pageviews_7d = JSON.parse(@response.to_json)
+    return convert(request)
   end
 
-  
-
-  def self.pageviews_30d
-    analytics = AnalyticsReportingService.new  
-    analytics.authorization = @credentials
+  def pageviews_30d
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:pageviews" }],
@@ -89,13 +98,10 @@ class GoogleAnalytics
                            end_date: "today" }],
              view_id: "ga:55621750" 
       }]})
-    @response = analytics.batch_get_reports(request)
-    @pageviews_30d = JSON.parse(@response.to_json)
+    return convert(request)
   end
 
-  def self.session_pageviews_7d
-    analytics = AnalyticsReportingService.new  
-    analytics.authorization = @credentials
+  def session_pageviews_7d
     request = GetReportsRequest.new(
       { report_requests: [
             { view_id: "ga:55621750",
@@ -106,13 +112,10 @@ class GoogleAnalytics
                            end_date: "today" }]
                   
       }]})
-    @response = analytics.batch_get_reports(request)
-    @session_pageviews_7d = JSON.parse(@response.to_json)
+    return convert(request)
   end
 
-  def self.session_pageviews_30d
-    analytics = AnalyticsReportingService.new  
-    analytics.authorization = @credentials
+  def session_pageviews_30d
     request = GetReportsRequest.new(
       { report_requests: [
             { view_id: "ga:55621750",
@@ -123,11 +126,10 @@ class GoogleAnalytics
                            end_date: "today" }]
                   
       }]})
-    @response = analytics.batch_get_reports(request)
-    @session_pageviews_30d = JSON.parse(@response.to_json)
+    return convert(request)
   end
 
-  def self.session_pageviews_month
+  def session_pageviews_month
     analytics = AnalyticsReportingService.new  
     analytics.authorization = @credentials
     request = GetReportsRequest.new(
@@ -140,11 +142,10 @@ class GoogleAnalytics
              pageSize: 8
             
       }]})
-    @response = analytics.batch_get_reports(request)
-    @session_pageviews_month = JSON.parse(@response.to_json)
+    return convert(request)
   end
 
-  def self.channel_grouping_week
+  def channel_grouping_week
     analytics = AnalyticsReportingService.new  
     analytics.authorization = @credentials
     request = GetReportsRequest.new(
@@ -155,12 +156,10 @@ class GoogleAnalytics
                            end_date: "today"}],
              view_id: "ga:55621750" 
       }]})
-
     return convert(request)
   end
 
-  def channel_grouping
-
+  def channel_grouping_month
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }, { expression: "ga:bounceRate" }],
@@ -169,34 +168,32 @@ class GoogleAnalytics
                            end_date: "today"}],
              view_id: "ga:55621750" 
       }]})
-
-    return convert(request)
-
-  end
-
-  def user_type
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:users" }],
-             dimensions: [{ name: "ga:userType" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
-             view_id: "ga:55621750" 
-      }]})
     return convert(request)
   end
 
-  def device
-    request = GetReportsRequest.new(
-      { report_requests: [
-        { metrics: [{ expression: "ga:users" }],
-         dimensions: [{ name: "ga:deviceCategory" }],
-         date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                       end_date: Time.now.strftime("%Y-%m-%d") }],
-         view_id: "ga:55621750" 
-      }]})
-    return convert(request)
-  end
+  # def user_type
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:users" }],
+  #            dimensions: [{ name: "ga:userType" }],
+  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
+
+  # def device
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #       { metrics: [{ expression: "ga:users" }],
+  #        dimensions: [{ name: "ga:deviceCategory" }],
+  #        date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                      end_date: Time.now.strftime("%Y-%m-%d") }],
+  #        view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
 
   private
 
