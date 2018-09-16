@@ -1,0 +1,44 @@
+var <%= dataname %> = {
+	labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>", "<%= labelY6 %>"],
+	datasets: [
+		{
+			label: "<%= labelX1 %>",
+			backgroundColor: 'rgba(220, 220, 220, 0.5)',
+			pointBorderColor: "#fff",
+			data: <%= daydata %>,
+			xAxisID: 'x-axis-1',
+		},{
+			label: "<%= labelX2 %>",
+			backgroundColor: 'rgba(26,179,148,0.5)',
+			borderColor: "rgba(26,179,148,0.7)",
+			pointBackgroundColor: "rgba(26,179,148,1)",
+			pointBorderColor: "#fff",
+			data: <%= dayrate %>,
+			xAxisID: 'x-axis-2',
+		},
+	]
+};
+
+var barOptions2 = {
+	responsive: true,
+	scales: {
+		xAxes: [{
+			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			display: true,
+			position: 'top',
+			id: 'x-axis-1',
+			stacked: true,
+		}, {
+			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			display: true,
+			position: 'bottom',
+			id: 'x-axis-2',
+			stacked: true,
+			gridLines: {
+				drawOnChartArea: false
+			}
+		}],
+	}
+};
+
+new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptions2});

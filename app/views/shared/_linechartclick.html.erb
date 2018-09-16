@@ -49,8 +49,7 @@ $("#<%= id %>").click(function(){
 				}],
 			}
 		};
-		var ctx1 = document.getElementById("<%= linechartid %>").getContext("2d");
-		new Chart(ctx1, {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+ 		new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 	}
 
 	else if ($(this).html() == 'Monthly') {
@@ -103,8 +102,7 @@ $("#<%= id %>").click(function(){
 				}],
 			}
 		};
-		var ctx1 = document.getElementById("<%= linechartid %>").getContext("2d");
-		new Chart(ctx1, {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+ 		new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 	}
 });
 
@@ -153,5 +151,4 @@ var lineOptions = {
 		}],
 	}
 };
-var ctx1 = document.getElementById("<%= linechartid %>").getContext("2d");
-new Chart(ctx1, {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
