@@ -75,19 +75,19 @@ class DashboardsController < ApplicationController
   end
 
   def index
-    require 'koala'
+    # facebook API
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-
+    # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fansaddsweek = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @fansaddsmonth = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=today").third.first.second.first['value'] 
-    @fansaddslast7d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
-    @fansaddslast30d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
+    @fansaddslast7d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
+    @fansaddslast30d = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
     @fansaddsweekratef = @fansaddsweek * 1000 / (@fans - @fansaddsweek).to_f
     @fansaddsweekrate = @fansaddsweekratef.round(2)
     @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
     @fansaddsmonthrate = @fansaddsmonthratef.round(2)
-
+    # facebook page users
     @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
     @pageusersweeklastweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
@@ -96,23 +96,37 @@ class DashboardsController < ApplicationController
     @pageusersweekrate = @pageusersweekratef.round(2)
     @pageusersmonthratef = @pageusersmonth * 10 / @pageusersmonthlastmonth.to_f
     @pageusersmonthrate = @pageusersmonthratef.round(2)
-    @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{|i|i.values.first}
-    @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{|i|i.values.first}
-    
 
-    @active_users = GoogleAnalytics.active_30day_users.first[1][0]["data"]["rows"]
-    @active_users_week = GoogleAnalytics.active_7day_users.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
-    @active_users_lastweek = GoogleAnalytics.active_7day_users.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @active_users_weekratef = @active_users_week.to_i * 10 / @active_users_lastweek.to_f
-    @active_users_weekrate = @active_users_weekratef.round(2)
-    @active_users_last7d = GoogleAnalytics.active_7day_users.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @active_users_month = GoogleAnalytics.active_30day_users.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
-    @active_users_lastmonth = GoogleAnalytics.active_30day_users.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @active_users_monthratef = @active_users_month.to_i * 10 / @active_users_lastmonth.to_f
-    @active_users_monthrate = @active_users_monthratef.round(2)
-    @active_users_last30d = GoogleAnalytics.active_30day_users.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
+    @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
+    # facebook fans retention
+    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }    
+    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
+    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }    
+    @last30ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
+    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
+    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
+    @fansretentionrate7d = Array.new
+    @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map{|x, y| x / y.to_f}
+    @fansretentionrate7d = @fansretentionrate7d.map{ |i| i.round(3) }
+    @fansretentionrate30d = Array.new
+    @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
+    @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
     
-  end
+    # alexa
+    @womanyrank = Alexa.data("womany.net")[1].inner_text.delete(',').to_i
+    @panscirank = Alexa.data("pansci.asia")[1].inner_text.delete(',').to_i
+    @newsmarketrank = Alexa.data("newsmarket.com.tw")[1].inner_text.delete(',').to_i
+    @einforank = Alexa.data("e-info.org.tw")[1].inner_text.delete(',').to_i
+    @seinrank = Alexa.data('seinsights.asia')[1].inner_text.delete(',').to_i
+    @npostrank = Alexa.data("npost.tw")[1].inner_text.delete(',').to_i
+    @womanyrate = divide100(Alexa.data("womany.net")[2].inner_text.to_i)
+    @panscirate = divide100(Alexa.data("pansci.asia")[2].inner_text.to_i)
+    @newsmarketrate = divide100(Alexa.data("newsmarket.com.tw")[2].inner_text.to_i)
+    @einforate = divide100(Alexa.data("e-info.org.tw")[2].inner_text.to_i)
+    @seinrate = divide100(Alexa.data('seinsights.asia')[2].inner_text.to_i)
+    @npostrate = divide100(Alexa.data("npost.tw")[2].inner_text.to_i)
+
 
   
   def alexa
@@ -122,6 +136,10 @@ class DashboardsController < ApplicationController
     @einfo = Alexa.data("e-info.org.tw")
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
-  end 
+  end
+
+  def divide100(data)
+    return data/100.to_f
+  end
   
 end
