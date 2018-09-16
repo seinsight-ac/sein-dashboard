@@ -18,7 +18,7 @@ class GoogleAnalytics
 
 
 
-  def self.active_7day_users
+  def self.webusersweek
     analytics = AnalyticsReportingService.new  
     analytics.authorization = @credentials
     request = GetReportsRequest.new(
@@ -30,10 +30,10 @@ class GoogleAnalytics
              view_id: "ga:55621750"
       }]})
     @response = analytics.batch_get_reports(request)
-    @active_7day_users = JSON.parse(@response.to_json)  
+    @webusersweek = JSON.parse(@response.to_json)  
   end
 
-  def self.active_30day_users
+  def self.webusersmonth
     analytics = AnalyticsReportingService.new  
     analytics.authorization = @credentials
     request = GetReportsRequest.new(
@@ -45,7 +45,7 @@ class GoogleAnalytics
              view_id: "ga:55621750"
       }]})
     @response = analytics.batch_get_reports(request)
-    @active_30day_users = JSON.parse(@response.to_json)  
+    @webusersmonth = JSON.parse(@response.to_json)  
   end
 
   def self.avg_session_duration
@@ -92,6 +92,8 @@ class GoogleAnalytics
     @response = analytics.batch_get_reports(request)
     @pageviews_7d = JSON.parse(@response.to_json)
   end
+
+  
 
   def self.pageviews_30d
     analytics = AnalyticsReportingService.new  
