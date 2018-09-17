@@ -126,25 +126,20 @@ class DashboardsController < ApplicationController
     @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
     
     #mailchimp
-    t = Time.now
-    t.utc
-    month_age = t - 60 * 60 * 24 * 95 # 要一季的資料就95天 要一個月的資料就31天
-    t.strftime("%Y-%m-%d")
-    month_age.strftime("%Y-%m-%d")
+    set_time
 
-    @campaigns = Mailchimp.campaigns(month_age, t)
+    @campaigns = Mailchimp.campaigns(@month, @now)
 
     @mailusers = @campaigns[0]["emails_sent"]
-    @mailusersmonthrate = (@campaigns[0]["emails_sent"] - @campaigns[1]["emails_sent"]) * 10000 / @campaigns[1]["emails_sent"]
-    @last12wdate = Array.new
-    (0..3).each do |i| # 看要多少資料量
-        @last12wdate << @campaigns[i]["emails_sent"]
-    end
+    @mailusersmonthrate = rate_transit(@campaigns[0]["emails_sent"], @campaigns[1]["emails_sent"])
 
-    @mailsviews = Array.new
-    (0..3).each do |i|
-       @mailsviews << @campaigns[i]["report_summary"]["opens"]
-    end
+    @mailuserslast30d = set_mailchimp_array_month_simple("emails_sent")
+    @last12wdate = set_mailchimp_array_month_date("send_time")
+
+    @mailsviews = set_mailchimp_array_month("report_summary", "opens")
+    @maillinks= set_mailchimp_array_month("report_summary", "subscriber_clicks")
+    @mailsviewsrate = set_mailchimp_array_month("report_summary", "open_rate")
+    @maillinksrate = set_mailchimp_array_month("report_summary", "click_rate")
 
     # alexa
     alexa_api
@@ -164,6 +159,18 @@ class DashboardsController < ApplicationController
 
   private
 
+  def set_time
+    @now = Time.now
+    @now.utc
+    @month = @now - 60 * 60 * 24 * 35
+    @now.strftime("%Y-%m-%d")
+    @month.strftime("%Y-%m-%d")
+  end
+
+  def rate_transit(datanew, dataold)
+    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
+  end
+
   def alexa_api
     @sein = Alexa.data('seinsights.asia')
     @newsmarket = Alexa.data("newsmarket.com.tw")
@@ -180,5 +187,36 @@ class DashboardsController < ApplicationController
   def rank(data)
     return data[1].inner_text.delete(',').to_i
   end
-  
+
+  def set_mailchimp_array_month(range1, range2)
+    array = []
+    (0..3).each do |i|
+        array << @campaigns[i][range1][range2]
+    end
+    array.reverse!
+    return array
+  end
+
+  def set_mailchimp_array_month_simple(range)
+    array = []
+    (0..3).each do |i|
+        array << @campaigns[i][range]
+    end
+    array.reverse!
+    return array
+  end
+
+  def set_mailchimp_array_month_date(range)
+    array = []
+    (0..3).each do |i|
+        array << divide_date(@campaigns[i][range])
+    end
+    array.reverse!
+    return array
+  end
+
+  def divide_date(date)
+    return date.split('T').first.split('-').join()[4..7].to_i 
+  end
+
 end
