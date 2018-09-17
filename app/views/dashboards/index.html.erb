@@ -80,14 +80,14 @@ $(function() {
 
 
   var barData1 = {
-    labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
+    labels: ["自然流量", "電郵", "有機搜尋", "參照連結", "社交" ],
     datasets: [
       {
         label: "流量數",
         backgroundColor: 'rgba(220, 220, 220, 0.5)',
         pointBorderColor: "#fff",
         yAxisID: 'y-axis-1',
-        data: [15000, 10000, 8000, 5000, 3000]
+        data: @channel_user_week
       },
       {
         label: "跳出率",
@@ -96,7 +96,7 @@ $(function() {
         pointBackgroundColor: "rgba(26,179,148,1)",
         pointBorderColor: "#fff",
         yAxisID: 'y-axis-2',
-        data: [68, 78, 67, 69, 66]
+        data: @bounce_rate_week
       }
     ]
   };
