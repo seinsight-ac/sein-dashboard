@@ -19,7 +19,7 @@
     <% if current_user %>
      <%= render 'layouts/navigation' %>
     <% end %>
-
+    <%= render "layouts/alert" %>
     <!-- Page wraper -->
     <div id="<% if current_user %>page-wrapper<% end %>" class="gray-bg <%= @extra_class %>">
 
