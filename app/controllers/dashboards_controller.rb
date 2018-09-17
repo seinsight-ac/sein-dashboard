@@ -1,5 +1,6 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
+  before_action :fbinformation, :only => [:index, :facebook]
 
   def ga
     @active_user = GoogleAnalytics.active_user
@@ -44,6 +45,31 @@ class DashboardsController < ApplicationController
   end
 
   def index
+    
+    # alexa
+    @womanyrank = Alexa.data("womany.net")[1].inner_text.delete(',').to_i
+    @panscirank = Alexa.data("pansci.asia")[1].inner_text.delete(',').to_i
+    @newsmarketrank = Alexa.data("newsmarket.com.tw")[1].inner_text.delete(',').to_i
+    @einforank = Alexa.data("e-info.org.tw")[1].inner_text.delete(',').to_i
+    @seinrank = Alexa.data('seinsights.asia')[1].inner_text.delete(',').to_i
+    @npostrank = Alexa.data("npost.tw")[1].inner_text.delete(',').to_i
+    @womanyrate = divide100(Alexa.data("womany.net")[2].inner_text.to_i)
+    @panscirate = divide100(Alexa.data("pansci.asia")[2].inner_text.to_i)
+    @newsmarketrate = divide100(Alexa.data("newsmarket.com.tw")[2].inner_text.to_i)
+    @einforate = divide100(Alexa.data("e-info.org.tw")[2].inner_text.to_i)
+    @seinrate = divide100(Alexa.data('seinsights.asia')[2].inner_text.to_i)
+    @npostrate = divide100(Alexa.data("npost.tw")[2].inner_text.to_i)
+  end
+
+  def facebook
+    @fansgenderage = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values").first.first.second.second["value"]
+    @fansfemale = @fansgenderage.values[0..6].inject(0, :+)
+    @fansmale = @fansgenderage.values[7..13].inject(0, :+)
+  end
+
+  private
+
+  def fbinformation
     # facebook API
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
@@ -68,36 +94,21 @@ class DashboardsController < ApplicationController
     @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
     @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
     # facebook fans retention
-    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }    
-    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
-    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }    
+    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }    
+    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map { |i| i.split('T').first.split('-').join()[4..7].to_i }
+    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }    
     @last30ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
-    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
-    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
-    @fansretentionrate7d = Array.new
-    @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map{|x, y| x / y.to_f}
+    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }
+    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }
+    @fansretentionrate7d = []
+    @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map { |x, y| x / y.to_f }
     @fansretentionrate7d = @fansretentionrate7d.map{ |i| i.round(3) }
-    @fansretentionrate30d = Array.new
-    @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
-    @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
-    
-    # alexa
-    @womanyrank = Alexa.data("womany.net")[1].inner_text.delete(',').to_i
-    @panscirank = Alexa.data("pansci.asia")[1].inner_text.delete(',').to_i
-    @newsmarketrank = Alexa.data("newsmarket.com.tw")[1].inner_text.delete(',').to_i
-    @einforank = Alexa.data("e-info.org.tw")[1].inner_text.delete(',').to_i
-    @seinrank = Alexa.data('seinsights.asia')[1].inner_text.delete(',').to_i
-    @npostrank = Alexa.data("npost.tw")[1].inner_text.delete(',').to_i
-    @womanyrate = divide100(Alexa.data("womany.net")[2].inner_text.to_i)
-    @panscirate = divide100(Alexa.data("pansci.asia")[2].inner_text.to_i)
-    @newsmarketrate = divide100(Alexa.data("newsmarket.com.tw")[2].inner_text.to_i)
-    @einforate = divide100(Alexa.data("e-info.org.tw")[2].inner_text.to_i)
-    @seinrate = divide100(Alexa.data('seinsights.asia')[2].inner_text.to_i)
-    @npostrate = divide100(Alexa.data("npost.tw")[2].inner_text.to_i)
+    @fansretentionrate30d = []
+    @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map { |x, y| x / y.to_f }
+    @fansretentionrate30d = @fansretentionrate30d.map { |i| i.round(3) }
   end
 
   def divide100(data)
-    return data/100.to_f
+    return data / 100.to_f
   end
-  
 end
