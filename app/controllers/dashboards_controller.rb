@@ -110,35 +110,38 @@ class DashboardsController < ApplicationController
     @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
     @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
     #google
-    @webusersweek = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
-    @webusersweeklastweek = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    ga = GoogleAnalytics.new
+    @webusersweek = ga.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
+    @webusersweeklastweek = ga.webusersweek.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @webusersweekratef = @webusersweek.to_i * 10 / @active_users_lastweek.to_f
     @webusersweekrate = @webusersweekratef.round(2)
-    @webuserslast7d = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @webusersmonth = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
-    @webusersmonthlastmonth = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @webuserslast7d = ga.webusersweek.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @webusersmonth = ga.webusersmonth.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
+    @webusersmonthlastmonth = ga.webusersmonth.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @webusersmonthratef = @webusersmonth.to_i * 10 / @active_users_lastmonth.to_f
     @webusersmonthrate = @webusersmonthratef.round(2)
-    @webuserslast30d = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
 
     
     # alexa
-    @womanyrank = Alexa.data("womany.net")[1].inner_text.delete(',').to_i
-    @panscirank = Alexa.data("pansci.asia")[1].inner_text.delete(',').to_i
-    @newsmarketrank = Alexa.data("newsmarket.com.tw")[1].inner_text.delete(',').to_i
-    @einforank = Alexa.data("e-info.org.tw")[1].inner_text.delete(',').to_i
-    @seinrank = Alexa.data('seinsights.asia')[1].inner_text.delete(',').to_i
-    @npostrank = Alexa.data("npost.tw")[1].inner_text.delete(',').to_i
-    @womanyrate = divide100(Alexa.data("womany.net")[2].inner_text.to_i)
-    @panscirate = divide100(Alexa.data("pansci.asia")[2].inner_text.to_i)
-    @newsmarketrate = divide100(Alexa.data("newsmarket.com.tw")[2].inner_text.to_i)
-    @einforate = divide100(Alexa.data("e-info.org.tw")[2].inner_text.to_i)
-    @seinrate = divide100(Alexa.data('seinsights.asia')[2].inner_text.to_i)
-    @npostrate = divide100(Alexa.data("npost.tw")[2].inner_text.to_i)
+    alexa_api
+    @womanyrank = rank(@womany)
+    @panscirank = rank(@pansci)
+    @newsmarketrank = rank(@newsmarket)
+    @einforank = rank(@einfo)
+    @seinrank = rank(@sein)
+    @npostrank = rank(@npost)
+    @womanyrate = convert_rate(@womany)
+    @panscirate = convert_rate(@pansci)
+    @newsmarketrate = convert_rate(@newsmarket)
+    @einforate = convert_rate(@einfo)
+    @seinrate = convert_rate(@sein)
+    @npostrate = convert_rate(@npost)
   end
 
-  
-  def alexa
+  private
+
+  def alexa_api
     @sein = Alexa.data('seinsights.asia')
     @newsmarket = Alexa.data("newsmarket.com.tw")
     @pansci = Alexa.data("pansci.asia")
@@ -147,8 +150,12 @@ class DashboardsController < ApplicationController
     @womany = Alexa.data("womany.net")
   end
 
-  def divide100(data)
-    return data/100.to_f
+  def convert_rate(data)
+    return data[2].inner_text.to_i / 100.to_f
+  end
+
+  def rank(data)
+    return data[1].inner_text.delete(',').to_i
   end
   
 end
