@@ -110,16 +110,17 @@ class DashboardsController < ApplicationController
     @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
     @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
     #google
-    @webusersweek = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
-    @webusersweeklastweek = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    ga = GoogleAnalytics.new
+    @webusersweek = ga.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
+    @webusersweeklastweek = ga.webusersweek.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @webusersweekratef = @webusersweek.to_i * 10 / @active_users_lastweek.to_f
     @webusersweekrate = @webusersweekratef.round(2)
-    @webuserslast7d = GoogleAnalytics.webusersweek.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @webusersmonth = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
-    @webusersmonthlastmonth = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @webuserslast7d = ga.webusersweek.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @webusersmonth = ga.webusersmonth.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
+    @webusersmonthlastmonth = ga.webusersmonth.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
     @webusersmonthratef = @webusersmonth.to_i * 10 / @active_users_lastmonth.to_f
     @webusersmonthrate = @webusersmonthratef.round(2)
-    @webuserslast30d = GoogleAnalytics.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
 
     
     # alexa
