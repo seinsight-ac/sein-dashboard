@@ -3,7 +3,7 @@
         <img src="<%= image_path('logo.png') %>", style="width:300px">
         <p>Log in. To discover the world.</p>
 
-        <%= form_for(resource, as: resource_name, url: user_google_oauth2_omniauth_authorize_path) do |f| %>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <div class="form-group">
             <%= f.email_field :email, autofocus: true, autocomplete: "email", :class=>"form-control", :placeholder=>"Username" %>
           </div>
