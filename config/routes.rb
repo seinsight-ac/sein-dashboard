@@ -8,7 +8,6 @@ Rails.application.routes.draw do
       get :ga
       get :mailchimp
       get :fb
-      get :alexa
     end
 
   end
