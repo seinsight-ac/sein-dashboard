@@ -143,24 +143,20 @@ class DashboardsController < ApplicationController
     @fansaddsmonth = @fansadds.third['values'].flat_map{ |i|i.values.first }[29]
     @fansaddslast7d = @fansadds.first['values'].flat_map{ |i|i.values.first }[23..29]
     @fansaddslast30d = @fansadds.first['values'].flat_map{ |i|i.values.first }
-
-    @fansaddsweekratef = @fansaddsweek * 1000 / (@fans - @fansaddsweek).to_f
-    @fansaddsweekrate = @fansaddsweekratef.round(2)
-    @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
-    @fansaddsmonthrate = @fansaddsmonthratef.round(2)
+    @fansaddsweekrate = convert_tenthousandthrate(@fansaddsweek, @fans)
+    @fansaddsmonthrate = convert_tenthousandthrate(@fansaddsmonth, @fans)
     
     # facebook page users
-    @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
-    @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
-    @pageusersweeklastweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
-    @pageusersmonthlastmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").third.first.second.first['value']     
-    @pageusersweekratef = @pageusersweek * 10 / @pageusersweeklastweek.to_f
-    @pageusersweekrate = @pageusersweekratef.round(2)
-    @pageusersmonthratef = @pageusersmonth * 10 / @pageusersmonthlastmonth.to_f
-    @pageusersmonthrate = @pageusersmonthratef.round(2)
-    @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
-    @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
-    
+    @pageusers = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d")
+    @pageusersweek = @pageusers.second['values'].flat_map{ |i|i.values.first }[29]
+    @pageusersmonth = @pageusers.third['values'].flat_map{ |i|i.values.first }[29]     
+    @pageusersweeklastweek = @pageusers.second['values'].flat_map{ |i|i.values.first }[22]
+    @pageusersmonthlastmonth = @pageusers.third['values'].flat_map{ |i|i.values.first }[22]     
+    @pageusersweekrate = convert_percentrate(@pageusersweek, @pageusersweeklastweek) 
+    @pageusersmonthrate = convert_percentrate(@pageusersmonth, @pageusersmonthlastmonth)
+    @pageuserslast7d = @pageusers.first['values'].flat_map{ |i|i.values.first }
+    @pageuserslast30d = @pageusers.first['values'].flat_map{ |i|i.values.first }
+
     # facebook fans retention
     @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }    
     @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map { |i| i.split('T').first.split('-').join()[4..7].to_i }
@@ -192,5 +188,15 @@ class DashboardsController < ApplicationController
 
   def rank(data)
     return data[1].inner_text.delete(',').to_i
+  end
+
+  def convert_tenthousandthrate(molecular,  denominator)
+    rate = molecular * 1000 / (denominator - molecular).to_f
+    return rate = rate.round(2)
+  end
+
+  def convert_percentrate(molecular,  denominator)
+    rate = molecular * 10 / (denominator - molecular).to_f
+    return rate = rate.round(2)
   end
 end
