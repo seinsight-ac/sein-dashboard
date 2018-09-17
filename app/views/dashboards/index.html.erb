@@ -11,11 +11,13 @@
       <div class="col-lg-3">
         <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @webusersweek, rate: @webusersweekrate, linechart: 'sparklinewebusers'} %>
       </div>
-      <div class="col-lg-3">
-        <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @mailusersmonthrate, linechart: 'sparklinemailusers'} %>
-
-      </div>
     <% end %>
+    
+    <div class="col-lg-3">
+      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @mailusersmonthrate, linechart: 'sparklinemailusers'} %>
+
+    </div>
+    
   </div>
   <div class="row">
     <div class="col-lg-4">
