@@ -47,14 +47,14 @@ class DashboardsController < ApplicationController
   end
 
   def mailchimp
-    @campaigns = Mailchimp.campaigns('2018-08-01', '2018-09-01')
+    t = Time.now
+    t.utc
+    month_age = t - 60 * 60 * 24 *30
+    t.strftime("%Y-%m-%d")
+    month_age.strftime("%Y-%m-%d")
+    @campaigns = Mailchimp.campaigns(month_age, t)
     
-    @sein = Alexa.data('seinsights.asia')
-    @newsmarket = Alexa.data("newsmarket.com.tw")
-    @pansci = Alexa.data("pansci.asia")
-    @einfo = Alexa.data("e-info.org.tw")
-    @npost = Alexa.data("npost.tw")
-    @womany = Alexa.data("womany.net")
+    alexa_api
 
     export_xls = ExportXls.new
     
@@ -84,6 +84,7 @@ class DashboardsController < ApplicationController
     @fansaddsweekrate = @fansaddsweekratef.round(2)
     @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
     @fansaddsmonthrate = @fansaddsmonthratef.round(2)
+    
     # facebook page users
     @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
     @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
@@ -96,6 +97,7 @@ class DashboardsController < ApplicationController
 
     @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
     @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
+    
     # facebook fans retention
     @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }    
     @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
@@ -109,6 +111,7 @@ class DashboardsController < ApplicationController
     @fansretentionrate30d = Array.new
     @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map{|x, y| x / y.to_f}
     @fansretentionrate30d = @fansretentionrate30d.map{ |i| i.round(3) }
+    
     #google
     ga = GoogleAnalytics.new
     @webusersweek = ga.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
@@ -121,8 +124,28 @@ class DashboardsController < ApplicationController
     @webusersmonthratef = @webusersmonth.to_i * 10 / @active_users_lastmonth.to_f
     @webusersmonthrate = @webusersmonthratef.round(2)
     @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
-
     
+    #mailchimp
+    t = Time.now
+    t.utc
+    month_age = t - 60 * 60 * 24 * 95 # 要一季的資料就95天 要一個月的資料就31天
+    t.strftime("%Y-%m-%d")
+    month_age.strftime("%Y-%m-%d")
+
+    @campaigns = Mailchimp.campaigns(month_age, t)
+
+    @mailusers = @campaigns[0]["emails_sent"]
+    @mailusersmonthrate = (@campaigns[0]["emails_sent"] - @campaigns[1]["emails_sent"]) * 10000 / @campaigns[1]["emails_sent"]
+    @last12wdate = Array.new
+    (0..3).each do |i| # 看要多少資料量
+        @last12wdate << @campaigns[i]["emails_sent"]
+    end
+
+    @mailsviews = Array.new
+    (0..3).each do |i|
+       @mailsviews << @campaigns[i]["report_summary"]["opens"]
+    end
+
     # alexa
     alexa_api
     @womanyrank = rank(@womany)
