@@ -11,7 +11,7 @@ class Mailchimp
         since_send_time: "#{since}T00:00:00+00:00",
         before_send_time: "#{before}T00:00:00+00:00",
         sort_field: 'send_time',
-        sort_dir: 'ASC',
+        sort_dir: 'DESC',
         status: 'sent'
       } })
     campaigns = JSON.parse(campaigns)
