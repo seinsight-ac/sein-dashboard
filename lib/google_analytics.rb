@@ -23,7 +23,22 @@ class GoogleAnalytics
     self.analytics.authorization = self.credentials
   end
 
-  def active_user
+  def webusersweek
+    
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:7dayUsers" }],
+             dimensions: [{ name: "ga:date" }],
+             date_ranges: [{ start_date: "7daysAgo", 
+                           end_date: "today"}],
+             view_id: "ga:55621750"
+      }]})
+    return convert(request)
+
+  end
+
+  def webusersmonth
+
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:30dayUsers" }],
@@ -32,80 +47,153 @@ class GoogleAnalytics
                            end_date: Time.now.strftime("%Y-%m-%d") }],
              view_id: "ga:55621750"
       }]})
+
     return convert(request)
+
   end
 
-  def avg_session_duration
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:avgSessionDuration" }],
-             dimensions: [ { name: "ga:date" }],
-             date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
-             view_id: "ga:55621750" 
-      }]})
-    return convert(request) 
-  end
+  # def avg_session_duration
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:avgSessionDuration" }],
+  #            dimensions: [ { name: "ga:date" }],
+  #            date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request) 
+  # end
 
-  def pageviews_per_session
+  # def pageviews_per_session
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:pageviewsPerSession" }],
+  #            dimensions: [{ name: "ga:date" }],
+  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
+
+
+  def pageviews_7d
     request = GetReportsRequest.new(
       { report_requests: [
-            { metrics: [{ expression: "ga:pageviewsPerSession" }],
+            { metrics: [{ expression: "ga:pageviews" }],
              dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
+             date_ranges: [{ start_date: "7daysAgo", 
+                           end_date: "today" }],
              view_id: "ga:55621750" 
       }]})
     return convert(request)
   end
 
-  def session_count
+  def pageviews_30d
     request = GetReportsRequest.new(
       { report_requests: [
-            { metrics: [{ expression: "ga:users" }],
-             dimensions: [{ name: "ga:sessionCount" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
+            { metrics: [{ expression: "ga:pageviews" }],
+             dimensions: [{ name: "ga:date" }],
+             date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "today" }],
              view_id: "ga:55621750" 
       }]})
     return convert(request)
   end
 
-  def channel_grouping
+  def session_pageviews_7d
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { view_id: "ga:55621750",
+              page_size: 8,
+              metrics: [{ expression: "ga:pageviews" }],
+             dimensions: [{ name: "ga:sessionCount" }, { name: "ga:date" }],
+             date_ranges: [{ start_date: "7daysAgo", 
+                           end_date: "today" }]
+                  
+      }]})
+    return convert(request)
+  end
+
+  def session_pageviews_30d
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { view_id: "ga:55621750",
+              page_size: 31,
+              metrics: [{ expression: "ga:pageviews" }],
+             dimensions: [{ name: "ga:sessionCount" }, { name: "ga:date" }],
+             date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "today" }]
+                  
+      }]})
+    return convert(request)
+  end
+
+  def session_pageviews_month
+    analytics = AnalyticsReportingService.new  
+    analytics.authorization = @credentials
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:pageviews" }],
+             dimensions: [{ name: "ga:sessionCount" }],
+             date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "today" }],
+             view_id: "ga:55621750", 
+             pageSize: 8
+            
+      }]})
+    return convert(request)
+  end
+
+  def channel_grouping_week
+    analytics = AnalyticsReportingService.new  
+    analytics.authorization = @credentials
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }, { expression: "ga:bounceRate" }],
              dimensions: [{ name: "ga:channelGrouping"}],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
+             date_ranges: [{ start_date: "7daysAgo", 
+                           end_date: "today"}],
              view_id: "ga:55621750" 
       }]})
     return convert(request)
   end
 
-  def user_type
+  def channel_grouping_month
     request = GetReportsRequest.new(
       { report_requests: [
-            { metrics: [{ expression: "ga:users" }],
-             dimensions: [{ name: "ga:userType" }],
-             date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
+            { metrics: [{ expression: "ga:users" }, { expression: "ga:bounceRate" }],
+             dimensions: [{ name: "ga:channelGrouping"}],
+             date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "today"}],
              view_id: "ga:55621750" 
       }]})
     return convert(request)
   end
 
-  def device
-    request = GetReportsRequest.new(
-      { report_requests: [
-        { metrics: [{ expression: "ga:users" }],
-         dimensions: [{ name: "ga:deviceCategory" }],
-         date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-                       end_date: Time.now.strftime("%Y-%m-%d") }],
-         view_id: "ga:55621750" 
-      }]})
-    return convert(request)
-  end
+  # def user_type
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:users" }],
+  #            dimensions: [{ name: "ga:userType" }],
+  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
+
+  # def device
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #       { metrics: [{ expression: "ga:users" }],
+  #        dimensions: [{ name: "ga:deviceCategory" }],
+  #        date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                      end_date: Time.now.strftime("%Y-%m-%d") }],
+  #        view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
 
   private
 

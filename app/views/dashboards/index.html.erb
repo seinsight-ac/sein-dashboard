@@ -6,12 +6,14 @@
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @pageusersweek, rate: @pageusersweekrate, linechart: 'sparklinepageusers'} %>
     </div>
+
     <% if false %>
       <div class="col-lg-3">
         <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @webusersweek, rate: @webusersweekrate, linechart: 'sparklinewebusers'} %>
       </div>
       <div class="col-lg-3">
         <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @mailusersmonthrate, linechart: 'sparklinemailusers'} %>
+
       </div>
     <% end %>
   </div>
@@ -73,6 +75,7 @@ $(function() {
     <%= render partial: "shared/linechartclickmonthonly", locals: { linechartid: 'lineChartmailactivity', dataname: "lineDatamailactivity", label1: "開信數", label2: "連結點擊數", label3: "開信率", label4: "連結點擊率", last12wdate: @last12wdate , monthdata1: @mailsviews, monthdata2: @maillinks, monthrate1: @mailsviewsrate, monthrate2: @maillinksrate,} %> 
   <% end %>
     <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: [@womanyrank, @panscirank, @newsmarketrank, @einforank, @seinrank, @npostrank], dayrate: [@womanyrate, @panscirate, @newsmarketrate, @einforate, @seinrate, @npostrate]} %> 
+
 
 
 
