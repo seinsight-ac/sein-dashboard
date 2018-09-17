@@ -19,7 +19,7 @@ var <%= dataname %> = {
 	]
 };
 
-var barOptions2 = {
+var barOptionsh = {
 	responsive: true,
 	scales: {
 		xAxes: [{
@@ -41,4 +41,4 @@ var barOptions2 = {
 	}
 };
 
-new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptions2});
+new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptionsh});
