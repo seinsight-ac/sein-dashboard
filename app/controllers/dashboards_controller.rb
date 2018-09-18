@@ -125,8 +125,11 @@ class DashboardsController < ApplicationController
 
     @mailsviews = set_mailchimp_array_month("report_summary", "opens")
     @maillinks= set_mailchimp_array_month("report_summary", "subscriber_clicks")
-    @mailsviewsrate = set_mailchimp_array_month("report_summary", "open_rate")
-    @maillinksrate = set_mailchimp_array_month("report_summary", "click_rate")
+    @mailsviewsrate = set_mailchimp_array_month_rate("report_summary", "open_rate")
+    @maillinksrate = []
+    @maillinks.zip(@mailsviews) { |a, b| 
+      @maillinksrate << a / b.to_f 
+    }
 
     #alexa
     alexa_api
@@ -224,6 +227,15 @@ class DashboardsController < ApplicationController
     array = []
     (0..3).each do |i|
         array << @campaigns[i][range1][range2]
+    end
+    array.reverse!
+    return array
+  end
+
+  def set_mailchimp_array_month_rate(range1, range2)
+    array = []
+    (0..3).each do |i|
+        array << @campaigns[i][range1][range2].round(2)
     end
     array.reverse!
     return array
