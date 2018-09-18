@@ -7,16 +7,16 @@ class Mailchimp
       url: "#{CONFIG.MAILCHIMP_URL}/campaigns",
       user: 'anystring', 
       password: CONFIG.MAILCHIMP_KEY,
-      headers: {params: {
-        since_send_time: '2018-08-01T00:00:00+00:00',
-        before_send_time: '2018-09-01T00:00:00+00:00',
+      headers: { params: {
+        since_send_time: "#{since}T00:00:00+00:00",
+        before_send_time: "#{before}T00:00:00+00:00",
         sort_field: 'send_time',
-        sort_dir: 'ASC',
-        status: 'sent'}})
+        sort_dir: 'DESC',
+        status: 'sent'
+      } })
     campaigns = JSON.parse(campaigns)
     campaigns["campaigns"]
   end
-
 
   def self.click_details(id)
     links = RestClient::Request.execute(method: :get, 
@@ -33,7 +33,7 @@ class Mailchimp
       end
     end
 
-    return max_link
+    max_link
   end
 
 end

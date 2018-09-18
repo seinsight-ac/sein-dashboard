@@ -20,6 +20,10 @@ gem 'uglifier', '>= 1.3.0'
 
 # user login
 gem 'devise'
+# 更換devise flash message語言
+gem "rails-i18n"
+# 網頁驗證機制
+gem "recaptcha", require: "recaptcha/rails"
 # 檢查代碼風格
 gem 'rubocop', '~> 0.49.0'
 # HTTP Request
@@ -29,21 +33,26 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 # GA
 gem 'google-api-client'
-# FB login
-gem 'omniauth-facebook'
 # FB API
 gem "koala"
+# export xls
+gem 'spreadsheet'
+
+# web scraping
+gem 'mechanize'
 
 # Debug
 gem "pry"
 
-# bootstrap
-gem 'bootstrap-sass', '~> 3.3.7'
-# font-awesome
-gem "font-awesome-rails"
-gem 'font-awesome-sass', '~> 5.3.1'
-# animate css
+# CSS
 gem "animate-rails"
+gem 'bootstrap-sass', '~> 3.3.7'
+gem "font-awesome-rails"
+gem 'jquery-peity-rails'
+gem 'jquery-rails'
+gem 'jquery-slimscroll-rails'
+gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
+gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
