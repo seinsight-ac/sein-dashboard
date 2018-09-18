@@ -23,7 +23,7 @@ class GoogleAnalytics
     self.analytics.authorization = self.credentials
   end
 
-  def webusersweek
+  def web_users_week
     
     request = GetReportsRequest.new(
       { report_requests: [
@@ -37,7 +37,7 @@ class GoogleAnalytics
 
   end
 
-  def webusersmonth
+  def web_users_month
 
     request = GetReportsRequest.new(
       { report_requests: [
