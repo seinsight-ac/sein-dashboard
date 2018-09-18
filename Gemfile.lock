@@ -244,6 +244,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-i18n (5.1.1)
+      i18n (>= 0.7, < 2)
+      railties (>= 5.0, < 6)
     railties (5.1.6)
       actionpack (= 5.1.6)
       activesupport (= 5.1.6)
@@ -256,6 +259,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    recaptcha (4.12.0)
+      json
     representable (3.0.4)
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
@@ -375,6 +380,8 @@ DEPENDENCIES
   pry
   puma (~> 3.7)
   rails (~> 5.1.6)
+  rails-i18n
+  recaptcha
   rest-client
   rubocop (~> 0.49.0)
   sass-rails (~> 5.0)

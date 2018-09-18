@@ -20,6 +20,10 @@ gem 'uglifier', '>= 1.3.0'
 
 # user login
 gem 'devise'
+# 更換devise flash message語言
+gem "rails-i18n"
+# 網頁驗證機制
+gem "recaptcha", require: "recaptcha/rails"
 # 檢查代碼風格
 gem 'rubocop', '~> 0.49.0'
 # HTTP Request
