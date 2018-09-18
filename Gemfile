@@ -20,6 +20,8 @@ gem 'uglifier', '>= 1.3.0'
 
 # user login
 gem 'devise'
+# 網頁驗證機制
+gem "recaptcha", require: "recaptcha/rails"
 # 檢查代碼風格
 gem 'rubocop', '~> 0.49.0'
 # HTTP Request

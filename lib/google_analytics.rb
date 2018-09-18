@@ -130,8 +130,7 @@ class GoogleAnalytics
   end
 
   def session_pageviews_month
-    analytics = AnalyticsReportingService.new  
-    analytics.authorization = @credentials
+    
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:pageviews" }],
@@ -146,8 +145,7 @@ class GoogleAnalytics
   end
 
   def channel_grouping_week
-    analytics = AnalyticsReportingService.new  
-    analytics.authorization = @credentials
+    
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }, { expression: "ga:bounceRate" }],
