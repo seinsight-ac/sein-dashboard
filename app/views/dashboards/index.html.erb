@@ -6,27 +6,30 @@
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @pageusersweek, rate: @pageusersweekrate, linechart: 'sparklinepageusers'} %>
     </div>
-    <% if false %>
+
+    
       <div class="col-lg-3">
         <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @webusersweek, rate: @webusersweekrate, linechart: 'sparklinewebusers'} %>
       </div>
-      <div class="col-lg-3">
-        <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @mailusersmonthrate, linechart: 'sparklinemailusers'} %>
-      </div>
-    <% end %>
+    
+    
+     <div class="col-lg-3">
+      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mailusers, rate: @mailusersmonthrate, linechart: 'sparklinemailusers'} %>
+
+    </div>     
   </div>
   <div class="row">
     <div class="col-lg-4">
       <%= render partial: "shared/linechart", locals: {id: 'labelfansretention', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
     </div>
-    <% if false %>
+    
       <div class="col-lg-4">
         <%= render partial: "shared/linechart", locals: {id: 'labelwebactivity', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity'} %>
       </div>
       <div class="col-lg-4">
         <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity'} %>
       </div>
-    <% end %>
+    
   </div>
 
   <div class="row">
@@ -34,97 +37,34 @@
     <div class="col-lg-6">
       <%= render partial: "shared/hbarchartdayonly", locals: {id: 'labelcompetitors', title: '競爭對手流量分析', linechartid: 'barChartcompetitors'} %>
     </div>
-
-    <div class="col-lg-6">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>官網流量來源與跳出率分析</h5>
-          <div class="pull-right">
-            <div class="btn-group">
-              <button type="button" class="btn btn-xs btn-white active">Today</button>
-              <button type="button" class="btn btn-xs btn-white">Monthly</button>
-            </div>
-          </div>
-        </div>
-        <div class="ibox-content">
-          <div>
-            <canvas id="barChart1" height="140"></canvas>
-          </div>
-        </div>
+    
+      <div class="col-lg-6">
+        <%= render partial: "shared/barchart", locals: {id: 'labelwebtraffic', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic'} %>
       </div>
-    </div>
+    
+  
 
   </div>
 
 <% content_for :javascript do %>
 
 <script type="text/javascript">
-
 $(function() {
   <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fansaddsweekrate, monthrate: @fansaddsmonthrate, linechartid: '#sparklinefansadds', data7d: @fansaddslast7d, data30d: @fansaddslast30d} %>
   <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @pageusersweek, monthdata: @pageusersmonth, weekrate: @pageusersweekrate, monthrate: @pageusersmonthrate, linechartid: '#sparklinepageusers', data7d: @pageuserslast7d, data30d: @pageuserslast30d} %>
-  <% if false %>
+
     <%= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @webusersweek, monthdata: @webusersmonth, weekrate: @webusersweekrate, monthrate: @webusersmonthrate, linechartid: '#sparklinewebusers', data7d: @webuserslast7d, data30d: @webuserslast30d} %>
     <%= render partial: "shared/tabclickmonthonly", locals: { linechartid: '#sparklinemailusers', data30d: @mailuserslast30d} %>
-  <% end %>
+
   <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @last7ddate, last30ddate: @last30ddate ,weekdata1: @pageimpressionslast7ddata, weekdata2: @postenagementslast7ddata, monthdata1: @pageimpressionslast30ddata, monthdata2: @postenagementslast30ddata, weekrate: @fansretentionrate7d, monthrate: @fansretentionrate30d,} %>
-  <% if false %>
-    <%= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @last7ddate, last30ddate: @last30ddate ,weekdata1: @allusersviewslast7ddata, weekdata2: @activeusersviewslast7ddata, monthdata1: @allusersviewslast30ddata, monthdata2: @activeusersviewslast30ddata, weekrate: @usersactivityrate7d, monthrate: @usersactivityrate30d,} %>
-    <%= render partial: "shared/linechartclickmonthonly", locals: { linechartid: 'lineChartmailactivity', dataname: "lineDatamailactivity", label1: "開信數", label2: "連結點擊數", label3: "開信率", label4: "連結點擊率", last12wdate: @last12wdate , monthdata1: @mailsviews, monthdata2: @maillinks, monthrate1: @mailsviewsrate, monthrate2: @maillinksrate,} %> 
-  <% end %>
-    <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: [@womanyrank, @panscirank, @newsmarketrank, @einforank, @seinrank, @npostrank], dayrate: [@womanyrate, @panscirate, @newsmarketrate, @einforate, @seinrate, @npostrate]} %> 
-
-
-
-  var barData1 = {
-    labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
-    datasets: [
-      {
-        label: "流量數",
-        backgroundColor: 'rgba(220, 220, 220, 0.5)',
-        pointBorderColor: "#fff",
-        yAxisID: 'y-axis-1',
-        data: [15000, 10000, 8000, 5000, 3000]
-      },
-      {
-        label: "跳出率",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        borderColor: "rgba(26,179,148,0.7)",
-        pointBackgroundColor: "rgba(26,179,148,1)",
-        pointBorderColor: "#fff",
-        yAxisID: 'y-axis-2',
-        data: [68, 78, 67, 69, 66]
-      }
-    ]
-  };
-
-  var barOptions1 = {
-    responsive: true,
-    scales: {
-      yAxes: [{
-        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        display: true,
-        position: 'left',
-        id: 'y-axis-1',
-      }, {
-        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        display: true,
-        position: 'right',
-        id: 'y-axis-2',
-        stacked: true,
-        gridLines: {
-          drawOnChartArea: false
-        }
-      }],
-    }
-  };
-
-  var ctx6 = document.getElementById("barChart1").getContext("2d");
-  new Chart(ctx6, {type: 'bar', data: barData1, options:barOptions1});
   
+    <%= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @last7ddateg, last30ddate: @last30ddateg ,weekdata1: @allusersviewslast7ddata, weekdata2: @activeusersviewslast7ddata, monthdata1: @allusersviewslast30ddata, monthdata2: @activeusersviewslast30ddata, weekrate: @usersactivityrate7d, monthrate: @usersactivityrate30d,} %>
+    <%= render partial: "shared/linechartclickmonthonly", locals: { linechartid: 'lineChartmailactivity', dataname: "lineDatamailactivity", label1: "開信數", label2: "連結點擊數", label3: "開信率", label4: "連結點擊率", last12wdate: @last12wdate , monthdata1: @mailsviews, monthdata2: @maillinks, monthrate1: @mailsviewsrate, monthrate2: @maillinksrate,} %> 
+    <%= render partial: "shared/barchartclick", locals: {id: 'labelwebtraffic', barchartid: 'barChartwebtraffic', dataname: "barDatawebtraffic", labelY1: "有機搜尋", labelY2: "社群", labelY3: "自然流量", labelY4: "參照連結", labelY5: "電郵", labelX1: "流量數", labelX2: "跳出率", weekdata1: @channel_user_week, weekdata2: @bounce_rate_week, monthdata1: @channel_user_month, monthdata2: @bounce_rate_month} %>     
+  
+  <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: [@womanyrank, @panscirank, @newsmarketrank, @einforank, @seinrank, @npostrank], dayrate: [@womanyrate, @panscirate, @newsmarketrate, @einforate, @seinrate, @npostrate]} %> 
  
 });
-
 </script>
 
 <% end %>
