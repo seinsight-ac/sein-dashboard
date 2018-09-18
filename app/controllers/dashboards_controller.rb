@@ -53,12 +53,8 @@ class DashboardsController < ApplicationController
   end
 
   def mailchimp
-    t = Time.now
-    t.utc
-    month_age = t - 60 * 60 * 24 *30
-    t.strftime("%Y-%m-%d")
-    month_age.strftime("%Y-%m-%d")
-    @campaigns = Mailchimp.campaigns(month_age, t)
+    set_time
+    @campaigns = Mailchimp.campaigns(@month, @now)
     
     alexa_api
 
@@ -93,25 +89,20 @@ class DashboardsController < ApplicationController
     @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
     
     #mailchimp
-    t = Time.now
-    t.utc
-    month_age = t - 60 * 60 * 24 * 95 # 要一季的資料就95天 要一個月的資料就31天
-    t.strftime("%Y-%m-%d")
-    month_age.strftime("%Y-%m-%d")
+    set_time
 
-    @campaigns = Mailchimp.campaigns(month_age, t)
+    @campaigns = Mailchimp.campaigns(@month, @now)
 
     @mailusers = @campaigns[0]["emails_sent"]
-    @mailusersmonthrate = (@campaigns[0]["emails_sent"] - @campaigns[1]["emails_sent"]) * 10000 / @campaigns[1]["emails_sent"]
-    @last12wdate = Array.new
-    (0..3).each do |i| # 看要多少資料量
-        @last12wdate << @campaigns[i]["emails_sent"]
-    end
+    @mailusersmonthrate = rate_transit(@campaigns[0]["emails_sent"], @campaigns[1]["emails_sent"])
 
-    @mailsviews = Array.new
-    (0..3).each do |i|
-       @mailsviews << @campaigns[i]["report_summary"]["opens"]
-    end
+    @mailuserslast30d = set_mailchimp_array_month_simple("emails_sent")
+    @last12wdate = set_mailchimp_array_month_date("send_time")
+
+    @mailsviews = set_mailchimp_array_month("report_summary", "opens")
+    @maillinks= set_mailchimp_array_month("report_summary", "subscriber_clicks")
+    @mailsviewsrate = set_mailchimp_array_month("report_summary", "open_rate")
+    @maillinksrate = set_mailchimp_array_month("report_summary", "click_rate")
 
     # alexa
     alexa_api
@@ -129,8 +120,19 @@ class DashboardsController < ApplicationController
     @npostrate = convert_rate(@npost)
   end
 
-
   private
+
+  def set_time
+    @now = Time.now
+    @now.utc
+    @month = @now - 60 * 60 * 24 * 35
+    @now.strftime("%Y-%m-%d")
+    @month.strftime("%Y-%m-%d")
+  end
+
+  def rate_transit(datanew, dataold)
+    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
+  end
 
   def fbinformation
 
@@ -154,16 +156,18 @@ class DashboardsController < ApplicationController
     @pageusersmonthlastmonth = @pageusers.third['values'].flat_map{ |i|i.values.first }[22]     
     @pageusersweekrate = convert_percentrate(@pageusersweek, @pageusersweeklastweek) 
     @pageusersmonthrate = convert_percentrate(@pageusersmonth, @pageusersmonthlastmonth)
-    @pageuserslast7d = @pageusers.first['values'].flat_map{ |i|i.values.first }
+    @pageuserslast7d = @pageusers.first['values'].flat_map{ |i|i.values.first }[23..29]
     @pageuserslast30d = @pageusers.first['values'].flat_map{ |i|i.values.first }
 
     # facebook fans retention
-    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }    
-    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map { |i| i.split('T').first.split('-').join()[4..7].to_i }
-    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }    
-    @last30ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
-    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }
-    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }
+    @pageimpressions = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d")
+    @pageimpressionslast7ddata = @pageimpressions.first['values'].flat_map { |i|i.values.first }[23..29]
+    @pageimpressionslast30ddata = @pageimpressions.first['values'].flat_map { |i|i.values.first }
+    @last7ddate = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[23..29].map { |i| divide_date(i) }
+    @last30ddate = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }
+    @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
+    @postenagementslast7ddata = @postenagements.first['values'].flat_map { |i|i.values.first }[23..29]
+    @postenagementslast30ddata = @postenagements.first['values'].flat_map { |i|i.values.first }
     @fansretentionrate7d = []
     @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map { |x, y| x / y.to_f }
     @fansretentionrate7d = @fansretentionrate7d.map{ |i| i.round(3) }
@@ -190,13 +194,43 @@ class DashboardsController < ApplicationController
     return data[1].inner_text.delete(',').to_i
   end
 
-  def convert_tenthousandthrate(molecular,  denominator)
-    rate = molecular * 1000 / (denominator - molecular).to_f
-    return rate = rate.round(2)
+  def convert_tenthousandthrate(datanew,  dataold)
+      return (datanew * 10000 / (dataold - datanew).to_f).round(2)
   end
 
-  def convert_percentrate(molecular,  denominator)
-    rate = molecular * 10 / (denominator - molecular).to_f
-    return rate = rate.round(2)
+  def convert_percentrate(datanew,  dataold)
+    return ((datanew - dataold) / dataold.to_f * 100).round(2)
   end
+
+  def set_mailchimp_array_month(range1, range2)
+    array = []
+    (0..3).each do |i|
+        array << @campaigns[i][range1][range2]
+    end
+    array.reverse!
+    return array
+  end
+
+  def set_mailchimp_array_month_simple(range)
+    array = []
+    (0..3).each do |i|
+        array << @campaigns[i][range]
+    end
+    array.reverse!
+    return array
+  end
+
+  def set_mailchimp_array_month_date(range)
+    array = []
+    (0..3).each do |i|
+        array << divide_date(@campaigns[i][range])
+    end
+    array.reverse!
+    return array
+  end
+
+  def divide_date(date)
+    return date.split('T').first.split('-').join()[4..7].to_i 
+  end
+
 end

@@ -6,7 +6,7 @@
 	<div class="ibox-content">
 		<h1 class="no-margins" style="display: inline-block"><%= data %></h1>
 		<div class="stat-percent font-bold <%= color(rate) %> ">
-			<span><%= rate %></span> ‱
+			<span><%= rate %></span> <%= percent %>
 			<i class="fa <%= arrow(rate) %> "></i>
 		</div>
 		<div id="<%= linechart %>"></div>
