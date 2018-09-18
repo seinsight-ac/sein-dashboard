@@ -61,9 +61,9 @@ $(function() {
     <%= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @last7ddateg, last30ddate: @last30ddateg ,weekdata1: @allusersviewslast7ddata, weekdata2: @activeusersviewslast7ddata, monthdata1: @allusersviewslast30ddata, monthdata2: @activeusersviewslast30ddata, weekrate: @usersactivityrate7d, monthrate: @usersactivityrate30d,} %>
     <%= render partial: "shared/linechartclickmonthonly", locals: { linechartid: 'lineChartmailactivity', dataname: "lineDatamailactivity", label1: "開信數", label2: "連結點擊數", label3: "開信率", label4: "連結點擊率", last12wdate: @last12wdate , monthdata1: @mailsviews, monthdata2: @maillinks, monthrate1: @mailsviewsrate, monthrate2: @maillinksrate,} %> 
     <%= render partial: "shared/barchartclick", locals: {id: 'labelwebtraffic', barchartid: 'barChartwebtraffic', dataname: "barDatawebtraffic", labelY1: "有機搜尋", labelY2: "社群", labelY3: "自然流量", labelY4: "參照連結", labelY5: "電郵", labelX1: "流量數", labelX2: "跳出率", weekdata1: @channel_user_week, weekdata2: @bounce_rate_week, monthdata1: @channel_user_month, monthdata2: @bounce_rate_month} %>     
-  
-  <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: [@womanyrank, @panscirank, @newsmarketrank, @einforank, @seinrank, @npostrank], dayrate: [@womanyrate, @panscirate, @newsmarketrate, @einforate, @seinrate, @npostrate]} %> 
- 
+
+  <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: @rank, dayrate: @rate } %> 
+
 });
 </script>
 
