@@ -2,9 +2,6 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
 
-  def ga_data(data, day)
-    data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
-  end
 
   def index
   
@@ -26,13 +23,16 @@ class DashboardsController < ApplicationController
     @web_users_last_30d = ga_data(web_users_week, 30)
 
     #使用者活躍度分析
-    @all_users_views_last_7d_data = ga_data(ga.pageviews_7d, 7)
-    @all_users_views_last_30d_data = ga_data(ga.pageviews_30d, 30)
+    pageviews_7d, = ga.pageviews_7d
+    pageviews_30d, = ga.pageviews_30d
+
+    @all_users_views_last_7d_data = ga_data(pageviews_7d, 7)
+    @all_users_views_last_30d_data = ga_data(pageviews_30d, 30)
 
     @single_session_pageviews_7d = ga_data(ga.session_pageviews_7d, 7)
     @single_session_pageviews_30d = ga_data(ga.session_pageviews_30d, 30)
 
-    @all_users_views_last_30d_data = ga_data(ga.pageviews_30d, 30)
+    @all_users_views_last_30d_data = ga_data(pageviews_30d, 30)
 
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
     @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
@@ -40,21 +40,24 @@ class DashboardsController < ApplicationController
     @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
     @users_activity_rate_30d = @activeusers_views_last_30d_data.zip(@all_users_views_last_30d_data).map{|k| (k[0] / k[1].to_f).round(2) }
 
-    @ga_last_7d_date = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,7].grep(/\d+/, &:to_i)
-    @ga_last_30d_date = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,30].grep(/\d+/, &:to_i)
+    @ga_last_7d_date = ga_data(pageviews_7d, 7)
+    @ga_last_30d_date = ga_data(pageviews_30d, 30)
 
     #流量管道
-    @channel_user_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_week = @channel_user_week[2],@channel_user_week[4], @channel_user_week[0], @channel_user_week[3], @channel_user_week[1]
+    channel_grouping_week = ga.channel_grouping_week
+    channel_grouping_month = ga.channel_grouping_month
 
-    @bounce_rate_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_week = @bounce_rate_week[2],@bounce_rate_week[4], @bounce_rate_week[0], @bounce_rate_week[3], @bounce_rate_week[1]
+    @channel_user_week = channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @channel_user_week = @channel_user_week[2], @channel_user_week[4], @channel_user_week[0], @channel_user_week[3], @channel_user_week[1]
 
-    @channel_user_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_month = @channel_user_month[2],@channel_user_month[4], @channel_user_month[0], @channel_user_month[3], @channel_user_month[1] 
+    @bounce_rate_week = channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+    @bounce_rate_week = @bounce_rate_week[2], @bounce_rate_week[4], @bounce_rate_week[0], @bounce_rate_week[3], @bounce_rate_week[1]
 
-    @bounce_rate_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_month = @bounce_rate_month[2],@bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
+    @channel_user_month = channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @channel_user_month = @channel_user_month[2], @channel_user_month[4], @channel_user_month[0], @channel_user_month[3], @channel_user_month[1] 
+
+    @bounce_rate_month = channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+    @bounce_rate_month = @bounce_rate_month[2], @bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
     
     #mailchimp
     set_time
@@ -76,19 +79,10 @@ class DashboardsController < ApplicationController
     #alexa
     alexa_api
 
-    @womany_rank = rank(@womany)
-    @pansci_rank = rank(@pansci)
-    @newsmarket_rank = rank(@newsmarket)
-    @einfo_rank = rank(@einfo)
-    @sein_rank = rank(@sein)
-    @npost_rank = rank(@npost)
+    alexa = [@womany, @pansci, @newsmarket, @einfo, @sein, @npost]
 
-    @womany_rate = convert_rate(@womany)
-    @pansci_rate = convert_rate(@pansci)
-    @newsmarket_rate = convert_rate(@newsmarket)
-    @einfo_rate = convert_rate(@einfo)
-    @sein_rate = convert_rate(@sein)
-    @npost_rate = convert_rate(@npost)
+    @rank = rank(alexa)
+    @rate = convert_rate(alexa)
   end
 
   def facebook
@@ -178,6 +172,10 @@ class DashboardsController < ApplicationController
     return ((datanew - dataold) / dataold.to_f * 10000).round(2)
   end
 
+  def divide_date(date)
+    date.split('T').first.split('-').join()[4..7].to_i 
+  end
+
   def fbinformation
 
     # facebook API
@@ -238,11 +236,19 @@ class DashboardsController < ApplicationController
   end
 
   def convert_rate(data)
-    data[2].inner_text.to_i / 100.to_f
+    array = []
+    data.each do |d|
+      array << d[2].inner_text.to_i / 100.to_f
+    end
+    array
   end
 
   def rank(data)
-    data[1].inner_text.delete(',').to_i
+    array = []
+    data.each do |d|
+      array << d[1].inner_text.delete(',').to_i
+    end
+    array
   end
 
   def set_mailchimp_array_month(range1, range2)
@@ -277,8 +283,8 @@ class DashboardsController < ApplicationController
     array.reverse!
   end
 
-  def divide_date(date)
-    date.split('T').first.split('-').join()[4..7].to_i 
+  def ga_data(data, day)
+    data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
   end
 
 end
