@@ -2,99 +2,10 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
 
-  def ga_data(data, day)
-    data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
-  end
-
-  def index
-  
-    #google
-    ga = GoogleAnalytics.new
-    web_users_week = ga.web_users_week
-    web_users_month = ga.web_users_month
-    #官網使用者
-    @web_users_week = web_users_week.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
-    @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-
-    @web_users_month = web_users_month.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
-    @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-
-    @web_users_week_rate = (@web_users_week.to_i * 10 / @web_users_week_last_week.to_f).round(2)
-    @web_users_month_rate = (@web_users_month.to_i * 10 / @web_users_month_last_month.to_f).round(2)
-
-    @web_users_last_7d = ga_data(web_users_week, 7)
-    @web_users_last_30d = ga_data(web_users_week, 30)
-
-    #使用者活躍度分析
-    @all_users_views_last_7d_data = ga_data(ga.pageviews_7d, 7)
-    @all_users_views_last_30d_data = ga_data(ga.pageviews_30d, 30)
-
-    @single_session_pageviews_7d = ga_data(ga.session_pageviews_7d, 7)
-    @single_session_pageviews_30d = ga_data(ga.session_pageviews_30d, 30)
-
-    @all_users_views_last_30d_data = ga_data(ga.pageviews_30d, 30)
-
-    @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
-    @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
-
-    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
-    @users_activity_rate_30d = @activeusers_views_last_30d_data.zip(@all_users_views_last_30d_data).map{|k| (k[0] / k[1].to_f).round(2) }
-
-    @ga_last_7d_date = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,7].grep(/\d+/, &:to_i)
-    @ga_last_30d_date = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,30].grep(/\d+/, &:to_i)
-
-    #流量管道
-    @channel_user_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_week = @channel_user_week[2],@channel_user_week[4], @channel_user_week[0], @channel_user_week[3], @channel_user_week[1]
-
-    @bounce_rate_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_week = @bounce_rate_week[2],@bounce_rate_week[4], @bounce_rate_week[0], @bounce_rate_week[3], @bounce_rate_week[1]
-
-    @channel_user_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_month = @channel_user_month[2],@channel_user_month[4], @channel_user_month[0], @channel_user_month[3], @channel_user_month[1] 
-
-    @bounce_rate_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_month = @bounce_rate_month[2],@bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
-    
-    #mailchimp
-    set_time
-
-    @campaigns = Mailchimp.campaigns(@month, @now)
-
-    @mail_users = @campaigns[0]["emails_sent"]
-    @mail_users_month_rate = rate_transit(@campaigns[0]["emails_sent"], @campaigns[1]["emails_sent"])
-
-    @mail_users_last_30d = set_mailchimp_array_month_simple("emails_sent")
-    @last_12w_date = set_mailchimp_array_month_date("send_time")
-
-    @mail_views = set_mailchimp_array_month("report_summary", "opens")
-    @mail_links= set_mailchimp_array_month("report_summary", "subscriber_clicks")
-    @mail_views_rate = set_mailchimp_array_month_rate("report_summary", "open_rate")
-    @mail_links_rate = []
-    @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << a / b.to_f }
-
-    #alexa
-    alexa_api
-
-    @womany_rank = rank(@womany)
-    @pansci_rank = rank(@pansci)
-    @newsmarket_rank = rank(@newsmarket)
-    @einfo_rank = rank(@einfo)
-    @sein_rank = rank(@sein)
-    @npost_rank = rank(@npost)
-
-    @womany_rate = convert_rate(@womany)
-    @pansci_rate = convert_rate(@pansci)
-    @newsmarket_rate = convert_rate(@newsmarket)
-    @einfo_rate = convert_rate(@einfo)
-    @sein_rate = convert_rate(@sein)
-    @npost_rate = convert_rate(@npost)
-  end
-
   def facebook
-    @fans_gender_age = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values").first.first.second.second["value"]
-    @fans_female = @fans_gender_age.values[0..6].inject(0, :+)
-    @fans_male = @fans_gender_age.values[7..13].inject(0, :+)
+    @fansgenderage = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values").first.first.second.second["value"]
+    @fansfemale = @fansgenderage.values[0..6].inject(0, :+)
+    @fansmale = @fansgenderage.values[7..13].inject(0, :+)
   end
 
   def ga
@@ -164,6 +75,75 @@ class DashboardsController < ApplicationController
 
   end
 
+  def index
+  
+    #google
+    ga = GoogleAnalytics.new
+    #官網使用者
+    @webusersweek = ga.webusersweek.first[1][0]["data"]["rows"][7]["metrics"][0]["values"][0]
+    @webusersweeklastweek = ga.webusersweek.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @webusersweekratef = @webusersweek.to_i * 10 / @webusersweeklastweek.to_f
+    @webusersweekrate = @webusersweekratef.round(2)
+    @webuserslast7d = ga.webusersweek.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @webusersmonth = ga.webusersmonth.first[1][0]["data"]["rows"][30]["metrics"][0]["values"][0]
+    @webusersmonthlastmonth = ga.webusersmonth.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @webusersmonthratef = @webusersmonth.to_i * 10 / @webusersmonthlastmonth.to_f
+    @webusersmonthrate = @webusersmonthratef.round(2)
+    @webuserslast30d = ga.webusersmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+
+    #使用者活躍度分析
+    @allusersviewslast7ddata = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @single_session_pageviews_7d = ga.session_pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,7].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @activeusersviewslast7ddata = @allusersviewslast7ddata.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
+    @usersactivityrate7d = @activeusersviewslast7ddata.zip(@allusersviewslast7ddata).map{|k| (k[0] / k[1].to_f).round(2) }
+    @last7ddateg = ga.pageviews_7d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,7].grep(/\d+/, &:to_i)
+    
+    @allusersviewslast30ddata = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @single_session_pageviews_30d = ga.session_pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[1,30].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @activeusersviewslast30ddata = @allusersviewslast30ddata.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
+    @usersactivityrate30d = @activeusersviewslast30ddata.zip(@allusersviewslast30ddata).map{|k| (k[0] / k[1].to_f).round(2) }
+    @last30ddateg = ga.pageviews_30d.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[1,30].grep(/\d+/, &:to_i)
+    #流量管道
+    @channel_user_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @channel_user_week = @channel_user_week[2],@channel_user_week[4], @channel_user_week[0], @channel_user_week[3], @channel_user_week[1]
+    @bounce_rate_week = ga.channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+    @bounce_rate_week = @bounce_rate_week[2],@bounce_rate_week[4], @bounce_rate_week[0], @bounce_rate_week[3], @bounce_rate_week[1]
+    @channel_user_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
+    @channel_user_month = @channel_user_month[2],@channel_user_month[4], @channel_user_month[0], @channel_user_month[3], @channel_user_month[1]    
+    @bounce_rate_month = ga.channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
+    @bounce_rate_month = @bounce_rate_month[2],@bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
+    #mailchimp
+    set_time
+
+    @campaigns = Mailchimp.campaigns(@month, @now)
+
+    @mailusers = @campaigns[0]["emails_sent"]
+    @mailusersmonthrate = rate_transit(@campaigns[0]["emails_sent"], @campaigns[1]["emails_sent"])
+
+    @mailuserslast30d = set_mailchimp_array_month_simple("emails_sent")
+    @last12wdate = set_mailchimp_array_month_date("send_time")
+
+    @mailsviews = set_mailchimp_array_month("report_summary", "opens")
+    @maillinks= set_mailchimp_array_month("report_summary", "subscriber_clicks")
+    @mailsviewsrate = set_mailchimp_array_month("report_summary", "open_rate")
+    @maillinksrate = set_mailchimp_array_month("report_summary", "click_rate")
+
+    #alexa
+    alexa_api
+    @womanyrank = rank(@womany)
+    @panscirank = rank(@pansci)
+    @newsmarketrank = rank(@newsmarket)
+    @einforank = rank(@einfo)
+    @seinrank = rank(@sein)
+    @npostrank = rank(@npost)
+    @womanyrate = convert_rate(@womany)
+    @panscirate = convert_rate(@pansci)
+    @newsmarketrate = convert_rate(@newsmarket)
+    @einforate = convert_rate(@einfo)
+    @seinrate = convert_rate(@sein)
+    @npostrate = convert_rate(@npost)
+  end
+
   private
 
   def set_time
@@ -184,47 +164,42 @@ class DashboardsController < ApplicationController
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
-    @fans_adds = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d")
+    @fansadds = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d")
+    @fansaddsweek = @fansadds.second['values'].flat_map{ |i|i.values.first }[29]
+    @fansaddsmonth = @fansadds.third['values'].flat_map{ |i|i.values.first }[29]
+    @fansaddslast7d = @fansadds.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @fansaddslast30d = @fansadds.first['values'].flat_map{ |i|i.values.first }
 
-    @fans_adds_week = @fans_adds.second['values'].flat_map{ |i|i.values.first }[29]
-    @fans_adds_month = @fans_adds.third['values'].flat_map{ |i|i.values.first }[29]
-
-    @fans_adds_last_7d = @fans_adds.first['values'].flat_map{ |i|i.values.first }[23..29]
-    @fans_adds_last_30d = @fans_adds.first['values'].flat_map{ |i|i.values.first }
-
-    @fans_adds_week_rate = (@fans_adds_week * 1000 / (@fans - @fans_adds_week).to_f).round(2)
-    @fans_adds_month_rate = (@fans_adds_month * 1000 / (@fans - @fans_adds_month).to_f).round(2)
+    @fansaddsweekratef = @fansaddsweek * 1000 / (@fans - @fansaddsweek).to_f
+    @fansaddsweekrate = @fansaddsweekratef.round(2)
+    @fansaddsmonthratef = @fansaddsmonth * 1000 / (@fans - @fansaddsmonth).to_f
+    @fansaddsmonthrate = @fansaddsmonthratef.round(2)
     
     # facebook page users
-    @page_users_week = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
-    @page_users_month = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
-
-    @page_users_week_last_week = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
-    @page_users_month_last_month = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").third.first.second.first['value']   
-
-    @page_users_week_rate = (@page_users_week * 10 / @page_users_week_last_week.to_f).round(2)
-    @page_users_month_rate = (@page_users_month * 10 / @page_users_month_last_month.to_f).round(2)
-
-    @page_users_last_7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i| i.values.first }
-    @page_users_last_30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i| i.values.first }
+    @pageusersweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").second.first.second.first['value'] 
+    @pageusersmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=today").third.first.second.first['value']     
+    @pageusersweeklastweek = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").second.first.second.first['value'] 
+    @pageusersmonthlastmonth = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").third.first.second.first['value']     
+    @pageusersweekratef = @pageusersweek * 10 / @pageusersweeklastweek.to_f
+    @pageusersweekrate = @pageusersweekratef.round(2)
+    @pageusersmonthratef = @pageusersmonth * 10 / @pageusersmonthlastmonth.to_f
+    @pageusersmonthrate = @pageusersmonthratef.round(2)
+    @pageuserslast7d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.first }
+    @pageuserslast30d = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.first }
     
     # facebook fans retention
-    @page_impressions_last_7d_data = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map { |i| i.values.first } 
-    @page_impressions_last_30d_data = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map { |i| i.values.first } 
-
-    @fb_last_7d_date = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i| i.values.second }.map { |i| divide_date(i) }
-    @fb_last_30d_date = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i| i.values.second }.map{ |i| divide_date(i) }
-
-    @post_enagements_last_7d_data = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map { |i| i.values.first }
-    @post_enagements_last_30d_data = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map { |i| i.values.first }
-
-    @fans_retention_rate_7d = []
-    @fans_retention_rate_7d = @post_enagements_last_7d_data.zip(@page_impressions_last_7d_data).map { |x, y| x / y.to_f }
-    @fans_retention_rate_7d = @fans_retention_rate_7d.map{ |i| i.round(3) }
-
-    @fans_retention_rate_30d = []
-    @fans_retention_rate_30d = @post_enagements_last_30d_data.zip(@page_impressions_last_30d_data).map { |x, y| x / y.to_f }
-    @fans_retention_rate_30d = @fans_retention_rate_30d.map { |i| i.round(3) }
+    @pageimpressionslast7ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }    
+    @last7ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_7d").first['values'].flat_map{ |i|i.values.second }.map { |i| i.split('T').first.split('-').join()[4..7].to_i }
+    @pageimpressionslast30ddata = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }    
+    @last30ddate = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d").first['values'].flat_map{ |i|i.values.second }.map{ |i| i.split('T').first.split('-').join()[4..7].to_i }
+    @postenagementslast7ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_7d").first['values'].flat_map { |i|i.values.first }
+    @postenagementslast30ddata = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d").first['values'].flat_map { |i|i.values.first }
+    @fansretentionrate7d = []
+    @fansretentionrate7d = @postenagementslast7ddata.zip(@pageimpressionslast7ddata).map { |x, y| x / y.to_f }
+    @fansretentionrate7d = @fansretentionrate7d.map{ |i| i.round(3) }
+    @fansretentionrate30d = []
+    @fansretentionrate30d = @postenagementslast30ddata.zip(@pageimpressionslast30ddata).map { |x, y| x / y.to_f }
+    @fansretentionrate30d = @fansretentionrate30d.map { |i| i.round(3) }
 
   end
 
@@ -238,11 +213,11 @@ class DashboardsController < ApplicationController
   end
 
   def convert_rate(data)
-    data[2].inner_text.to_i / 100.to_f
+    return data[2].inner_text.to_i / 100.to_f
   end
 
   def rank(data)
-    data[1].inner_text.delete(',').to_i
+    return data[1].inner_text.delete(',').to_i
   end
 
   def set_mailchimp_array_month(range1, range2)
@@ -251,14 +226,7 @@ class DashboardsController < ApplicationController
         array << @campaigns[i][range1][range2]
     end
     array.reverse!
-  end
-
-  def set_mailchimp_array_month_rate(range1, range2)
-    array = []
-    (0..3).each do |i|
-        array << @campaigns[i][range1][range2].round(2)
-    end
-    array.reverse!
+    return array
   end
 
   def set_mailchimp_array_month_simple(range)
@@ -267,6 +235,7 @@ class DashboardsController < ApplicationController
         array << @campaigns[i][range]
     end
     array.reverse!
+    return array
   end
 
   def set_mailchimp_array_month_date(range)
@@ -275,10 +244,11 @@ class DashboardsController < ApplicationController
         array << divide_date(@campaigns[i][range])
     end
     array.reverse!
+    return array
   end
 
   def divide_date(date)
-    date.split('T').first.split('-').join()[4..7].to_i 
+    return date.split('T').first.split('-').join()[4..7].to_i 
   end
 
 end
