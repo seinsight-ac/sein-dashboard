@@ -8,7 +8,6 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
-=begin
 
 # mailchimp
 MailchimpDb.destroy_all
@@ -33,7 +32,6 @@ end
 before = (Date.today - 2) << 11
 since = (Date.today - 2) << 12
 
-
 campaigns = Mailchimp.campaigns(since.to_s, before.to_s)
 campaigns.reverse!
 set_mailchimp_db(campaigns)
@@ -51,6 +49,8 @@ end
 puts "create #{MailchimpDb.count} mailchimp data"
 
 # alexa
+AlexaDb.destroy_all
+
 @sein = Alexa.data('seinsights.asia')
 @newsmarket = Alexa.data("newsmarket.com.tw")
 @pansci = Alexa.data("pansci.asia")
@@ -101,6 +101,4 @@ AlexaDb.create(
   womany_on_site: site(@womany)
 )
 
-puts "create #{AlecaDb.count} mailchimp data"
-
-=end
+puts "create #{AlexaDb.count} alexa data"
