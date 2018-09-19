@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180919101017) do
+ActiveRecord::Schema.define(version: 20180919153109) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -19,18 +19,18 @@ ActiveRecord::Schema.define(version: 20180919101017) do
     t.integer "einfo_rank"
     t.integer "npost_rank"
     t.integer "womany_rank"
-    t.integer "sein_bounce_rate"
-    t.integer "newsmarket_bounce_rate"
-    t.integer "pansci_bounce_rate"
-    t.integer "einfo_bounce_rate"
-    t.integer "npost_bounce_rate"
-    t.integer "womany_bounce_rate"
-    t.integer "sein_pageview"
-    t.integer "newsmarket_pageview"
-    t.integer "pansci_pageview"
-    t.integer "einfo_pageview"
-    t.integer "npost_pageview"
-    t.integer "womany_pageview"
+    t.float "sein_bounce_rate"
+    t.float "newsmarket_bounce_rate"
+    t.float "pansci_bounce_rate"
+    t.float "einfo_bounce_rate"
+    t.float "npost_bounce_rate"
+    t.float "womany_bounce_rate"
+    t.float "sein_pageview"
+    t.float "newsmarket_pageview"
+    t.float "pansci_pageview"
+    t.float "einfo_pageview"
+    t.float "npost_pageview"
+    t.float "womany_pageview"
     t.integer "sein_on_site"
     t.integer "newsmarket_on_site"
     t.integer "pansci_on_site"
@@ -41,14 +41,19 @@ ActiveRecord::Schema.define(version: 20180919101017) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "dashboards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "mailchimp_dbs", force: :cascade do |t|
     t.datetime "date"
     t.string "title"
     t.integer "email_sent"
     t.integer "open"
-    t.integer "open_rate"
+    t.float "open_rate"
     t.integer "click"
-    t.integer "click_rate"
+    t.float "click_rate"
     t.string "most_click_title"
     t.integer "most_click_time"
     t.datetime "created_at", null: false
