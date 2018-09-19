@@ -1,0 +1,2 @@
+class AlexaDb < ApplicationRecord
+end

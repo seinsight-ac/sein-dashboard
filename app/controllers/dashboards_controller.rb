@@ -120,6 +120,18 @@ class DashboardsController < ApplicationController
 
   private
 
+  # 上個月星期一的日期 往後推七天
+  def last_month_mon
+    d = Date.today
+    d = d << 1
+    d = d.to_s
+    @last = Date.new(d[0..3].to_i, d[5..6].to_i, 1)
+    while @last.strftime("%a") != "Mon"
+      @last -= 1
+    end
+    @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
+  end
+
   def set_time
     @now = Time.now
     @now.utc
