@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180916163750) do
+ActiveRecord::Schema.define(version: 20180919071312) do
+
+  create_table "dashboards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "mailchimp_dbs", force: :cascade do |t|
+    t.datetime "date"
+    t.string "title"
+    t.integer "email_sent"
+    t.integer "open"
+    t.integer "open_rate"
+    t.integer "click"
+    t.integer "click_rate"
+    t.string "most_click_title"
+    t.integer "most_click_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
