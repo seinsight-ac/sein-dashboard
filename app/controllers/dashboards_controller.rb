@@ -208,6 +208,7 @@ class DashboardsController < ApplicationController
     @pageimpressions = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d")
     @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[23..29]
     @page_impressions_last_30d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }
+    @page_impressions_last_30d_data.values_at(8,15,22,29)
     @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[23..29].map { |i| divide_date(i) }
     @fb_last_30d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }
     @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
