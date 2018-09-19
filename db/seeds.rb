@@ -33,7 +33,6 @@ end
 before = (Date.today - 2) << 11
 since = (Date.today - 2) << 12
 
-
 campaigns = Mailchimp.campaigns(since.to_s, before.to_s)
 campaigns.reverse!
 set_mailchimp_db(campaigns)
