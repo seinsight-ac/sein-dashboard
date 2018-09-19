@@ -41,11 +41,6 @@ ActiveRecord::Schema.define(version: 20180919153109) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dashboards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "mailchimp_dbs", force: :cascade do |t|
     t.datetime "date"
     t.string "title"

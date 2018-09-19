@@ -6,27 +6,15 @@ var <%= dataname %> = {
 			backgroundColor: 'rgba(220, 220, 220, 0.3)',
 			pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 			pointBorderColor: "#fff",
-			data: <%= monthdata1 %>,
+			data: <%= monthrate1 %>,
 			yAxisID: 'y-axis-1',
 		},{
 			label: "<%= label2 %>", 
 			backgroundColor: 'rgba(26,179,148,0.5)',
 			pointBorderColor: "#fff",
-			data:  <%= monthdata2 %>,
+			data:  <%= monthrate2 %>,
 			yAxisID: 'y-axis-1',
-		},{
-			label: "<%= label3 %>",
-			backgroundColor: 'rgba(30,144,225,0.7)',
-			pointBorderColor: "#fff",
-			data: <%= monthrate1 %>,
-			yAxisID: 'y-axis-2',
-		},{
-			label: "<%= label4 %>",
-			backgroundColor: 'rgba(0,77,153,1)',
-			pointBorderColor: "#fff",
-			data: <%= monthrate2 %>,
-			yAxisID: 'y-axis-2',
-		}
+		},
 	]
 };
 
@@ -38,14 +26,6 @@ var lineOptions = {
 			display: true,
 			position: 'left',
 			id: 'y-axis-1',
-		}, {
-			type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			display: true,
-			position: 'right',
-			id: 'y-axis-2',
-			gridLines: {
-				drawOnChartArea: false
-			}
 		}],
 	}
 };
