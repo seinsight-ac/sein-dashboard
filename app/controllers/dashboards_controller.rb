@@ -169,7 +169,7 @@ class DashboardsController < ApplicationController
     while @last.strftime("%a") != "Mon"
       @last -= 1
     end
-    @last = @last.strftime("%Y-%m-%d")
+    @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
   end
 
   def set_time
