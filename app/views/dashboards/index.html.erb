@@ -4,7 +4,7 @@
       <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉絲專頁曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
     </div>    
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
