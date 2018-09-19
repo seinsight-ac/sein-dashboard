@@ -43,8 +43,8 @@ class GoogleAnalytics
       { report_requests: [
             { metrics: [{ expression: "ga:30dayUsers" }],
              dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: (Date.today - 30).strftime("%Y-%m-%d"), 
-                           end_date: Time.now.strftime("%Y-%m-%d") }],
+             date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "today"}],
              view_id: "ga:55621750"
       }]})
 

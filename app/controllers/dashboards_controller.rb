@@ -87,7 +87,7 @@ class DashboardsController < ApplicationController
   end
 
   def ga
-
+    ga = GoogleAnalytics.new
     # @user_type = ga.user_type
     # @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
     # @new = @user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
