@@ -29,7 +29,7 @@ class GoogleAnalytics
       { report_requests: [
             { metrics: [{ expression: "ga:7dayUsers" }],
              dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: "7daysAgo", 
+             date_ranges: [{ start_date: "30daysAgo", 
                            end_date: "today"}],
              view_id: "ga:55621750"
       }]})
@@ -77,19 +77,8 @@ class GoogleAnalytics
   # end
 
 
-  def pageviews_7d
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:pageviews" }],
-             dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: "7daysAgo", 
-                           end_date: "today" }],
-             view_id: "ga:55621750" 
-      }]})
-    return convert(request)
-  end
 
-  def pageviews_30d
+  def pageviews
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:pageviews" }],
@@ -101,21 +90,8 @@ class GoogleAnalytics
     return convert(request)
   end
 
-  def session_pageviews_7d
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { view_id: "ga:55621750",
-              page_size: 8,
-              metrics: [{ expression: "ga:pageviews" }],
-             dimensions: [{ name: "ga:sessionCount" }, { name: "ga:date" }],
-             date_ranges: [{ start_date: "7daysAgo", 
-                           end_date: "today" }]
-                  
-      }]})
-    return convert(request)
-  end
 
-  def session_pageviews_30d
+  def session_pageviews
     request = GetReportsRequest.new(
       { report_requests: [
             { view_id: "ga:55621750",
@@ -129,20 +105,7 @@ class GoogleAnalytics
     return convert(request)
   end
 
-  def session_pageviews_month
-    
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:pageviews" }],
-             dimensions: [{ name: "ga:sessionCount" }],
-             date_ranges: [{ start_date: "30daysAgo", 
-                           end_date: "today" }],
-             view_id: "ga:55621750", 
-             pageSize: 8
-            
-      }]})
-    return convert(request)
-  end
+  
 
   def channel_grouping_week
     
