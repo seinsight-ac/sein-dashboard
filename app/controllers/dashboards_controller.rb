@@ -121,6 +121,18 @@ class DashboardsController < ApplicationController
 
   private
 
+  # 上個月星期一的日期 往後推七天
+  def last_month_mon
+    d = Date.today
+    d = d << 1
+    d = d.to_s
+    @last = Date.new(d[0..3].to_i, d[5..6].to_i, 1)
+    while @last.strftime("%a") != "Mon"
+      @last -= 1
+    end
+    @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
+  end
+
   def set_time
     @now = Time.now
     @now.utc
@@ -167,6 +179,7 @@ class DashboardsController < ApplicationController
     @pageimpressions = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d")
     @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[23..29]
     @page_impressions_last_30d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }
+    @page_impressions_last_30d_data.values_at(8,15,22,29)
     @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[23..29].map { |i| divide_date(i) }
     @fb_last_30d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }
     @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
