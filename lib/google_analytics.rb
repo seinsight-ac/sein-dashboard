@@ -156,6 +156,21 @@ class GoogleAnalytics
   #   return convert(request)
   # end
 
+  #excel資料
+
+  #網站總造訪人數
+
+  #工作階段
+  #不重複訪客
+  #新訪客(只造訪一次)
+  #回訪客(來2次以上)
+  #回訪客比例
+  #網站瀏覽量
+  #平均瀏覽頁數
+  #平均停留時間
+  #星期幾最多訪客
+  #平均網頁停留時間
+
   private
 
   def convert(request)
