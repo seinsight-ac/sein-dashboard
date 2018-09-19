@@ -37,6 +37,8 @@ gem 'google-api-client'
 gem "koala"
 # export xls
 gem 'spreadsheet'
+# 固定排程
+gem 'whenever', :require => false
 
 # web scraping
 gem 'mechanize'
@@ -72,6 +74,7 @@ group :development, :test do
   # 自動化部屬
   gem 'capistrano-passenger'
   gem 'capistrano-rails'
+  gem 'capistrano-sidekiq'
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

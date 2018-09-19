@@ -2,10 +2,7 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
 
-
   def index
-    
-  
     #google
     ga = GoogleAnalytics.new
     
@@ -56,29 +53,29 @@ class DashboardsController < ApplicationController
     @bounce_rate_month = @bounce_rate_month[2], @bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
     
     #mailchimp
-    set_time
+    @mail_users = MailchimpDb.last.email_sent
+    @mail_users_month_rate = rate_transit(@mail_users, MailchimpDb.last(2).first.email_sent)
 
-    @campaigns = Mailchimp.campaigns(@month, @now)
+    @last_12w_date = []
+    MailchimpDb.last(4).pluck(:date).each do |d|
+      @last_12w_date << d.strftime("%m%d").to_i
+    end
+    @mail_users_last_30d = MailchimpDb.last(4).pluck(:email_sent)
 
-    @mail_users = @campaigns[0]["emails_sent"]
-    @mail_users_month_rate = rate_transit(@campaigns[0]["emails_sent"], @campaigns[1]["emails_sent"])
+    @mail_views = MailchimpDb.last(4).pluck(:open)
+    @mail_links= MailchimpDb.last(4).pluck(:click)
 
-    @mail_users_last_30d = set_mailchimp_array_month_simple("emails_sent")
-    @last_12w_date = set_mailchimp_array_month_date("send_time")
+    @mail_views_rate = []
+    MailchimpDb.last(4).pluck(:open_rate).each do |open|
+      @mail_views_rate << open.round(2)
+    end
 
-    @mail_views = set_mailchimp_array_month("report_summary", "opens")
-    @mail_links= set_mailchimp_array_month("report_summary", "subscriber_clicks")
-    @mail_views_rate = set_mailchimp_array_month_rate("report_summary", "open_rate")
     @mail_links_rate = []
     @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << a / b.to_f }
 
     #alexa
-    alexa_api
-
-    alexa = [@womany, @pansci, @newsmarket, @einfo, @sein, @npost]
-
-    @rank = rank(alexa)
-    @rate = convert_rate(alexa)
+    @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
+    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0]
   end
 
   def facebook
@@ -191,32 +188,6 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @post_enagements_last_30d_data.zip(@post_enagements_last_30d_data).map { |x, y| x / y.to_f }
     @fans_retention_rate_30d = @fans_retention_rate_30d.map { |i| i.round(3) }
-
-  end
-
-  def alexa_api
-    @sein = Alexa.data('seinsights.asia')
-    @newsmarket = Alexa.data("newsmarket.com.tw")
-    @pansci = Alexa.data("pansci.asia")
-    @einfo = Alexa.data("e-info.org.tw")
-    @npost = Alexa.data("npost.tw")
-    @womany = Alexa.data("womany.net")
-  end
-
-  def convert_rate(data)
-    array = []
-    data.each do |d|
-      array << d[2].inner_text.to_i / 100.to_f
-    end
-    array
-  end
-
-  def rank(data)
-    array = []
-    data.each do |d|
-      array << d[1].inner_text.delete(',').to_i
-    end
-    array
   end
 
   def convert_tenthousandthrate(datanew,  dataold)
@@ -227,38 +198,6 @@ class DashboardsController < ApplicationController
     return ((datanew - dataold) / dataold.to_f * 100).round(2)
   end
 
-  def set_mailchimp_array_month(range1, range2)
-    array = []
-    (0..3).each do |i|
-        array << @campaigns[i][range1][range2]
-    end
-    array.reverse!
-  end
-
-  def set_mailchimp_array_month_rate(range1, range2)
-    array = []
-    (0..3).each do |i|
-        array << @campaigns[i][range1][range2].round(2)
-    end
-    array.reverse!
-  end
-
-  def set_mailchimp_array_month_simple(range)
-    array = []
-    (0..3).each do |i|
-        array << @campaigns[i][range]
-    end
-    array.reverse!
-  end
-
-  def set_mailchimp_array_month_date(range)
-    array = []
-    (0..3).each do |i|
-        array << divide_date(@campaigns[i][range])
-    end
-    array.reverse!
-  end
-
   # def ga_data_week(data, s, e)
   #   data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[s..e].flat_map{|i|i}.grep(/\d+/, &:to_i)
   # end
@@ -266,7 +205,5 @@ class DashboardsController < ApplicationController
   # def ga_data_month(data, z, x, c ,v)
   #   data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(z, x, c, v).flat_map{|i|i}.grep(/\d+/, &:to_i)
   # end
-
-  
 
 end
