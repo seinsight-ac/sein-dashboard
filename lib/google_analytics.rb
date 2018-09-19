@@ -52,29 +52,9 @@ class GoogleAnalytics
 
   end
 
-  # def avg_session_duration
-  #   request = GetReportsRequest.new(
-  #     { report_requests: [
-  #           { metrics: [{ expression: "ga:avgSessionDuration" }],
-  #            dimensions: [ { name: "ga:date" }],
-  #            date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
-  #            view_id: "ga:55621750" 
-  #     }]})
-  #   return convert(request) 
-  # end
+  
 
-  # def pageviews_per_session
-  #   request = GetReportsRequest.new(
-  #     { report_requests: [
-  #           { metrics: [{ expression: "ga:pageviewsPerSession" }],
-  #            dimensions: [{ name: "ga:date" }],
-  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
-  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
-  #            view_id: "ga:55621750" 
-  #     }]})
-  #   return convert(request)
-  # end
+  
 
 
 
@@ -132,6 +112,24 @@ class GoogleAnalytics
     return convert(request)
   end
 
+  
+
+
+  #excel資料
+
+  #網站總造訪人數
+  #ga:users
+
+  #工作階段
+  #ga:sessions
+
+  #不重複訪客
+  #ga:7dayUsers
+  #ga:30dayUsers
+
+  #新訪客(只造訪一次)
+  #回訪客(來2次以上)
+  #回訪客比例
   # def user_type
   #   request = GetReportsRequest.new(
   #     { report_requests: [
@@ -143,7 +141,48 @@ class GoogleAnalytics
   #     }]})
   #   return convert(request)
   # end
+  
+  #網站瀏覽量
+  #ga:pageviews
 
+  
+
+
+  #平均停留時間
+  # def avg_session_duration
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:avgSessionDuration" }],
+  #            dimensions: [ { name: "ga:date" }],
+  #            date_ranges: [ { start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request) 
+  # end
+
+  #星期幾最多訪客
+  #ga:dayOfWeekName
+  #ga:user
+
+  #平均網頁停留時間
+  #ga:avgTimeOnPage
+
+  #平均瀏覽頁數
+  #每次工作階段頁數
+  # def pageviews_per_session
+  #   request = GetReportsRequest.new(
+  #     { report_requests: [
+  #           { metrics: [{ expression: "ga:pageviewsPerSession" }],
+  #            dimensions: [{ name: "ga:date" }],
+  #            date_ranges: [{ start_date: (Date.today - 7).strftime("%Y-%m-%d"), 
+  #                          end_date: Time.now.strftime("%Y-%m-%d") }],
+  #            view_id: "ga:55621750" 
+  #     }]})
+  #   return convert(request)
+  # end
+
+  #官網使用裝置分析
   # def device
   #   request = GetReportsRequest.new(
   #     { report_requests: [
@@ -156,20 +195,6 @@ class GoogleAnalytics
   #   return convert(request)
   # end
 
-  #excel資料
-
-  #網站總造訪人數
-
-  #工作階段
-  #不重複訪客
-  #新訪客(只造訪一次)
-  #回訪客(來2次以上)
-  #回訪客比例
-  #網站瀏覽量
-  #平均瀏覽頁數
-  #平均停留時間
-  #星期幾最多訪客
-  #平均網頁停留時間
 
   private
 
