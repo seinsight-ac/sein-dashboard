@@ -9,7 +9,7 @@ $("#<%= id %>").click(function(){
 			datasets: [
 				{
 					label: "<%= labelX1 %>",
-					backgroundColor: 'rgba(220, 220, 220, 0.5)',
+					backgroundColor: 'rgba(220, 220, 220, 1)',
 					pointBorderColor: "#fff",
 					data: <%= monthdata1 %>,
 					yAxisID: 'y-axis-1',
@@ -59,7 +59,7 @@ $("#<%= id %>").click(function(){
 			datasets: [
 				{
 					label: "<%= labelX1 %>",
-					backgroundColor: 'rgba(220, 220, 220, 0.5)',
+					backgroundColor: 'rgba(220, 220, 220, 1)',
 					pointBorderColor: "#fff",
 					data: <%= weekdata1 %>,
 					yAxisID: 'y-axis-1',
@@ -105,7 +105,7 @@ var <%= dataname %> = {
 	datasets: [
 		{
 			label: "<%= labelX1 %>",
-			backgroundColor: 'rgba(220, 220, 220, 0.5)',
+			backgroundColor: 'rgba(220, 220, 220, 1)',
 			pointBorderColor: "#fff",
 			data: <%= weekdata1 %>,
 			yAxisID: 'y-axis-1',

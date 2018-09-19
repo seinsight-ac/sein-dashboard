@@ -177,19 +177,16 @@ class DashboardsController < ApplicationController
     # facebook fans retention
     @pageimpressions = @graph.get_object("278666028863859/insights/page_impressions?fields=values&date_preset=last_30d")
     @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[23..29]
-    @page_impressions_last_30d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }
-    @page_impressions_last_30d_data.values_at(8,15,22,29)
+    @page_impressions_last_4w_data = @pageimpressions.second['values'].flat_map { |i|i.values.first }.values_at(8,15,22,29)
     @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[23..29].map { |i| divide_date(i) }
-    @fb_last_30d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }
+    @fb_last_4w_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }.values_at(8,15,22,29)
     @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
     @post_enagements_last_7d_data = @postenagements.first['values'].flat_map { |i|i.values.first }[23..29]
-    @post_enagements_last_30d_data = @postenagements.first['values'].flat_map { |i|i.values.first }
+    @post_enagements_last_4w_data = @postenagements.second['values'].flat_map { |i|i.values.first }.values_at(8,15,22,29)
     @fans_retention_rate_7d = []
-    @fans_retention_rate_7d = @post_enagements_last_7d_data.zip(@post_enagements_last_7d_data).map { |x, y| x / y.to_f }
-    @fans_retention_rate_7d = @fans_retention_rate_7d.map{ |i| i.round(3) }
+    @fans_retention_rate_7d = @post_enagements_last_7d_data.zip(@page_impressions_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
-    @fans_retention_rate_30d = @post_enagements_last_30d_data.zip(@post_enagements_last_30d_data).map { |x, y| x / y.to_f }
-    @fans_retention_rate_30d = @fans_retention_rate_30d.map { |i| i.round(3) }
+    @fans_retention_rate_30d = @post_enagements_last_4w_data.zip(@page_impressions_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
 
   end
 
