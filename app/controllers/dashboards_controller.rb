@@ -43,7 +43,7 @@ class DashboardsController < ApplicationController
     @ga_last_7d_date = ga_data(pageviews_7d, 7)
     @ga_last_30d_date = ga_data(pageviews_30d, 30)
 
-    #流量管道
+    #流量管道ra
     channel_grouping_week = ga.channel_grouping_week
     channel_grouping_month = ga.channel_grouping_month
 
@@ -159,6 +159,18 @@ class DashboardsController < ApplicationController
   end
 
   private
+
+  # 上個月星期一的日期 往後推七天
+  def last_month_mon
+    d = Date.today
+    d = d << 1
+    d = d.to_s
+    @last = Date.new(d[0..3].to_i, d[5..6].to_i, 1)
+    while @last.strftime("%a") != "Mon"
+      @last -= 1
+    end
+    @last = @last.strftime("%Y-%m-%d")
+  end
 
   def set_time
     @now = Time.now
