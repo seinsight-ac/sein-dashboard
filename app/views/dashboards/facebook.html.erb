@@ -1,18 +1,14 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-success pull-right"><%= @fansmale%></span>
-          <h5>粉絲專頁曝光使用者數</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins" style="display: inline-block"><%= @fansfemale%></h1>
-          <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-          <div id="sparkline1"></div>
-        </div>
-      </div>
+      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
     </div>
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
+    </div>    
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {id: 'labelpostsusers', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%'} %>
+    </div>    
     <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -46,66 +42,8 @@
       </div>
     </div>
 
-    <div class="col-lg-8">
-      <div class="ibox float-e-margins">
-
-        <div class="ibox-title">
-          <h5>粉絲黏著度分析</h5>
-          <div class="pull-right">
-            <div class="btn-group">
-              <button type="button" class="btn btn-xs btn-white active">Today</button>
-              <button type="button" class="btn btn-xs btn-white">Monthly</button>
-              <button type="button" class="btn btn-xs btn-white">Annual</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="ibox-content">
-          <div class="row">
-
-            <div class="col-lg-9">
-              <div>
-                <canvas id="lineChart1" height="135"></canvas>
-              </div>
-            </div>
-
-            <div class="col-lg-3">
-              <ul class="stat-list">
-
-                <li>
-                  <h2 class="no-margins">3246</h2>
-                  <small>心情數</small>
-                  <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i></div>
-                  <div class="progress progress-mini">
-                    <div style="width: 48%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-                <li>
-                  <h2 class="no-margins ">522</h2>
-                  <small>留言數</small>
-                  <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
-                  <div class="progress progress-mini">
-                    <div style="width: 60%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-                <li>
-                  <h2 class="no-margins ">80</h2>
-                  <small>分享數</small>
-                  <div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
-                  <div class="progress progress-mini">
-                      <div style="width: 22%;" class="progress-bar"></div>
-                  </div>
-                </li>
-
-              </ul>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
+    <div class="col-lg-4">
+      <%= render partial: "shared/linechart", locals: {id: 'labelfansretention', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
     </div>
 
   </div>
@@ -116,38 +54,15 @@
 <script type="text/javascript">
 
 $(function() {
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d, data30d: @fans_adds_last_30d} %>
 
-  $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
-  $("#sparkline2").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpostsusers', weekdata: @posts_users_week, monthdata: @posts_users_month, weekrate: @posts_users_week_rate, monthrate: @posts_users_month_rate, linechartid: '#sparklinepostsusers', data7d: @posts_users_last_7d, data30d: @posts_users_last_30d} %>
 
-  $("#sparkline3").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
-  $("#sparkline4").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-    type: 'line',
-    width: '100%',
-    height: '60',
-    lineColor: '#1ab394',
-    fillColor: "#ffffff"
-  });
+
   
   var lineData1 = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -197,25 +112,7 @@ $(function() {
     ]
   };
 
-  var lineData3 = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
 
-      {
-        label: "一次工作階段使用者",
-        backgroundColor: 'rgba(220, 220, 220, 0.5)',
-        pointBorderColor: "#fff",
-        data: [65, 59, 80, 81, 56, 55, 40]
-      },{
-        label: "多次工作階段使用者",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        borderColor: "rgba(26,179,148,0.7)",
-        pointBackgroundColor: "rgba(26,179,148,1)",
-        pointBorderColor: "#fff",
-        data: [28, 48, 40, 19, 86, 27, 90]
-      }
-    ]
-  };
 
   var lineOptions = {
     responsive: true
