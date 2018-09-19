@@ -63,7 +63,7 @@ def rank(data)
 end
 
 def convert_rate(data)
-  data[2].inner_text.to_i / 100.to_f
+  data[2].inner_text.to_f / 100
 end
 
 def pageview(data)
