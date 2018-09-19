@@ -17,9 +17,9 @@ class DashboardsController < ApplicationController
     @web_users_month = web_users_month.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
     @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i  
     @web_users_week_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)  
-    @web_users_month_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)
-    @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29]
-    @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29]
+    @web_users_month_rate = convert_percentrate(@web_users_month, @web_users_month_last_month)
+    @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
     
     #使用者活躍度分析
     pageviews = ga.pageviews
@@ -87,30 +87,6 @@ class DashboardsController < ApplicationController
   end
 
   def ga
-
-    ga = GoogleAnalytics.new
-    pageviews = ga.pageviews
-    
-    session_pageviews = ga.session_pageviews
-    @all_users_views_last_7d_data = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @all_users_views_last_30d_data = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[2..29].flat_map{|i|i}.grep(/\d+/, &:to_i).in_groups_of(7).flat_map{|i|i.sum}
-    @single_session_pageviews_30d = session_pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[2..29].flat_map{|i|i}.grep(/\d+/, &:to_i).in_groups_of(7).flat_map{|i|i.sum}
-    @ga_last_7d_date = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[23..29].flat_map{|i|i}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
-    @ga_last_30d_date = pageviews.first[1][0]["data"]["rows"].values_at(8,15,23,29).flat_map{|i|i.values.first}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
-    web_users_week = ga.web_users_week
-    web_users_month = ga.web_users_month
-    #官網使用者
-    @web_users_week = web_users_week.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    
-    @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
-
-    @web_users_month = web_users_month.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
-    
-    @web_users_week_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)
-    
-    @web_users_month_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)
-    binding.pry
 
     # @user_type = ga.user_type
     # @vistor = @user_type.first[1][0]["data"]["totals"][0]["values"][0]
