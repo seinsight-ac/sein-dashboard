@@ -17,23 +17,11 @@
   <div class="row">
 
     <div class="col-lg-4">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>
-            粉專讚數趨勢
-          </h5>
-          <div ibox-tools></div>
-        </div>
-        <div class="ibox-content">
-          <div>
-            <canvas id="lineChart2" height="215"></canvas>
-          </div>
-        </div>
-      </div>
+      <%= render partial: "shared/linechart", locals: {id: 'labelfansretention', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
     </div>
 
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {id: 'labelfansretention', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
+      <%= render partial: "shared/linechart", locals: {id: 'labelfansadds', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds'} %>
     </div>
 
   </div>
@@ -54,6 +42,7 @@ $(function() {
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
+  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansadds', linechartid: 'lineChartfansadds', dataname: "lineDatafansadds", label1: "讚數", label2: "退讚數", label3: "淨讚數", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
   
   var lineData1 = {

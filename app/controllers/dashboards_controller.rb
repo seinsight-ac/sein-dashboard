@@ -84,24 +84,24 @@ class DashboardsController < ApplicationController
 
     # posts users
     @postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
-    @posts_users_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[29]
-    @posts_users_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[29]     
-    @posts_users_week_last_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[22]
-    @posts_users_month_last_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[22]     
+    @posts_users_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[28]
+    @posts_users_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[28]     
+    @posts_users_week_last_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[21]
+    @posts_users_month_last_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[21]     
     @posts_users_week_rate = convert_percentrate(@posts_users_week, @posts_users_week_last_week) 
     @posts_users_month_rate = convert_percentrate(@posts_users_month, @posts_users_month_last_month)
-    @posts_users_last_7d = @postsusers.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @posts_users_last_7d = @postsusers.first['values'].flat_map{ |i|i.values.first }[22..28]
     @posts_users_last_30d = @postsusers.first['values'].flat_map{ |i|i.values.first }
 
     # negative users
     @negativeusers = @graph.get_object("278666028863859/insights/page_negative_feedback_unique?fields=values&date_preset=last_30d")
-    @negative_users_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[29]
-    @negative_users_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[29]     
-    @negative_users_week_last_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[22]
-    @negative_users_month_last_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[22]     
+    @negative_users_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[28]
+    @negative_users_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[28]     
+    @negative_users_week_last_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[21]
+    @negative_users_month_last_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[21]     
     @negative_users_week_rate = convert_percentrate(@negative_users_week, @negative_users_week_last_week) 
     @negative_users_month_rate = convert_percentrate(@negative_users_month, @negative_users_month_last_month)
-    @negative_users_last_7d = @negativeusers.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @negative_users_last_7d = @negativeusers.first['values'].flat_map{ |i|i.values.first }[22..28]
     @negative_users_last_30d = @negativeusers.first['values'].flat_map{ |i|i.values.first }
 
 
@@ -176,9 +176,9 @@ class DashboardsController < ApplicationController
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fans_adds = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d")
-    @fans_adds_week = @fans_adds.second['values'].flat_map{ |i|i.values.first }[29]
-    @fans_adds_month = @fans_adds.third['values'].flat_map{ |i|i.values.first }[29]
-    @fans_adds_last_7d = @fans_adds.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @fans_adds_week = @fans_adds.second['values'].flat_map{ |i|i.values.first }[28]
+    @fans_adds_month = @fans_adds.third['values'].flat_map{ |i|i.values.first }[28]
+    @fans_adds_last_7d = @fans_adds.first['values'].flat_map{ |i|i.values.first }[22..28]
     @fans_adds_last_30d = @fans_adds.first['values'].flat_map{ |i|i.values.first }
     @fans_adds_week_rate = convert_tenthousandthrate(@fans_adds_week, @fans)
     @fans_adds_month_rate = convert_tenthousandthrate(@fans_adds_month, @fans)
@@ -186,24 +186,24 @@ class DashboardsController < ApplicationController
 
     # facebook page users
     @pageusers = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d")
-    @page_users_week = @pageusers.second['values'].flat_map{ |i|i.values.first }[29]
-    @page_users_month = @pageusers.third['values'].flat_map{ |i|i.values.first }[29]     
-    @page_users_week_last_week = @pageusers.second['values'].flat_map{ |i|i.values.first }[22]
-    @page_users_month_last_month = @pageusers.third['values'].flat_map{ |i|i.values.first }[22]     
+    @page_users_week = @pageusers.second['values'].flat_map{ |i|i.values.first }[28]
+    @page_users_month = @pageusers.third['values'].flat_map{ |i|i.values.first }[28]     
+    @page_users_week_last_week = @pageusers.second['values'].flat_map{ |i|i.values.first }[21]
+    @page_users_month_last_month = @pageusers.third['values'].flat_map{ |i|i.values.first }[21]     
     @page_users_week_rate = convert_percentrate(@page_users_week, @page_users_week_last_week) 
     @page_users_month_rate = convert_percentrate(@page_users_month, @page_users_month_last_month)
-    @page_users_last_7d = @pageusers.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @page_users_last_7d = @pageusers.first['values'].flat_map{ |i|i.values.first }[22..28]
     @page_users_last_30d = @pageusers.first['values'].flat_map{ |i|i.values.first }
 
     # facebook fans retention
     @pageimpressions = @graph.get_object("278666028863859/insights/page_posts_impressions?fields=values&date_preset=last_30d")
-    @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[23..29]
-    @page_impressions_last_4w_data = @pageimpressions.second['values'].flat_map { |i|i.values.first }.values_at(8,15,22,29)
-    @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[23..29].map { |i| divide_date(i) }
-    @fb_last_4w_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }.values_at(8,15,22,29)
+    @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[22..28]
+    @page_impressions_last_4w_data = @pageimpressions.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
+    @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[22..28].map { |i| divide_date(i) }
+    @fb_last_4w_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }.values_at(7,14,21,28)
     @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
-    @post_enagements_last_7d_data = @postenagements.first['values'].flat_map { |i|i.values.first }[23..29]
-    @post_enagements_last_4w_data = @postenagements.second['values'].flat_map { |i|i.values.first }.values_at(8,15,22,29)
+    @post_enagements_last_7d_data = @postenagements.first['values'].flat_map { |i|i.values.first }[22..28]
+    @post_enagements_last_4w_data = @postenagements.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
     @fans_retention_rate_7d = []
     @fans_retention_rate_7d = @post_enagements_last_7d_data.zip(@page_impressions_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
