@@ -1,0 +1,2 @@
+class FbDb < ApplicationRecord
+end

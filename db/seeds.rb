@@ -8,6 +8,130 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
+=begin
+
+# fb
+
+FbDb.create(
+  date: ,
+  fans: ,
+  fans_adds_day: ,
+  fans_losts_day: ,
+  page_users_day: ,
+  posts_users_day: ,
+  fans_adds_week: ,
+  fans_losts_week: ,
+  page_users_week: ,
+  posts_users_week: ,
+  fans_adds_month: ,
+  fans_losts_month: ,
+  page_users_month: ,
+  posts_users_month: ,
+  post_enagements_day: ,
+  post_users_day: ,
+  negative_activity_day: ,
+  negative_users_day: ,
+  post_enagements_week: ,
+  post_users_week: ,
+  negative_activity_week: ,
+  negative_users_week: ,
+  post_enagements_month: ,
+  post_users_month: ,
+  negative_activity_month: ,
+  negative_users_month: ,
+  link_clicks_day: ,
+  link_clicks_week: ,
+  link_clicks_month: ,
+  fans_female_day: ,
+  fans_male_day: ,
+  fans_13_17: ,
+  fans_18_24: ,
+  fans_25_34: ,
+  fans_35_44: ,
+  fans_45_54: ,
+  fans_55_64: ,
+  fans_65: ,
+  page_impressions_day: ,
+  post_impressions_day: ,
+  page_impressions_week: ,
+  post_impressions_week: ,
+  page_impressions_month: ,
+  post_impressions_month: 
+  )
+
+
+
+# ga
+
+GaDb.create(
+  date: ,
+  web_users_day: ,
+  web_users_week: ,
+  web_users_month: ,
+  session_pageviews_day: ,
+  session_pageviews_week: ,
+  session_pageviews_month: ,
+  users_day: ,
+  users_week: ,
+  users_month: ,
+  sessions_day: ,
+  sessions_week: ,
+  sessions_month: ,
+  active_users_day: ,
+  active_users_week: ,
+  active_users_month: ,
+  bouce_rate_day: ,
+  bouce_rate_week: ,
+  bouce_rate_month: ,
+  user_type_day: ,
+  user_type_week: ,
+  user_type_month: ,
+  pageviews_day: ,
+  pageviews_week: ,
+  pageviews_month: ,
+  avg_session_duration_day: ,
+  avg_session_duration_week: ,
+  avg_session_duration_month: ,
+  avg_time_on_page_day: ,
+  avg_time_on_page_week: ,
+  avg_time_on_page_month: ,
+  pageviews_per_session_day: ,
+  pageviews_per_session_week: ,
+  pageviews_per_session_month: ,
+  desktop_user: ,
+  mobile_user: ,
+  tablet_user: ,
+  female_user: ,
+  male_user: ,
+  user_18_24: ,
+  user_25_34: ,
+  user_35_44: ,
+  user_45_54: ,
+  user_55_64: ,
+  user_65: ,
+  session_count_day: ,
+  session_count_week: ,
+  session_count_month: ,
+  referral_user_day: ,
+  referral_user_week: ,
+  referral_user_month: ,
+  direct_user_day: ,
+  direct_user_week: ,
+  direct_user_month: ,
+  social_user_day: ,
+  social_user_week: ,
+  social_user_month: ,
+  email_user_day: ,
+  email_user_week: ,
+  email_user_month: ,
+  oganic_search_day: ,
+  oganic_search_week: ,
+  oganic_search_month: 
+  )
+
+=end
+
+=begin
 
 # mailchimp
 MailchimpDb.destroy_all
@@ -102,3 +226,5 @@ AlexaDb.create(
 )
 
 puts "create #{AlexaDb.count} alexa data"
+
+=end

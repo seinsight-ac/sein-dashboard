@@ -1,0 +1,2 @@
+class GaDb < ApplicationRecord
+end
