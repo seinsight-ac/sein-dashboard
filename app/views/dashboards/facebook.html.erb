@@ -24,6 +24,10 @@
       <%= render partial: "shared/linechart", locals: {id: 'labelfansadds', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds'} %>
     </div>
 
+    <div class="col-lg-4">
+      <%= render partial: "shared/linechart", locals: {id: 'labellinkclicks', title: '貼文點擊分析', linechartid: 'lineChartlinkclicks'} %>
+    </div>
+
   </div>
 </div>
 
@@ -32,7 +36,7 @@
 <script type="text/javascript">
 
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d, data30d: @fans_adds_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
 
   <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
@@ -42,71 +46,12 @@ $(function() {
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
-  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansadds', linechartid: 'lineChartfansadds', dataname: "lineDatafansadds", label1: "讚數", label2: "退讚數", label3: "淨讚數", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
+  <%= render partial: "shared/linechartclick2", locals: {id: 'labelfansadds', linechartid: 'lineChartfansadds', dataname: "lineDatafansadds", label1: "淨讚數", label2: "退讚數", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @fans_adds_last_7d_data, weekdata2: @fans_losts_last_7d_data, monthdata1: @fans_adds_last_4w_data, monthdata2: @fans_losts_last_4w_data} %>
+
+  <%= render partial: "shared/linechartclick", locals: {id: 'labellinkclicks', linechartid: 'lineChartlinkclicks', dataname: "lineDatalinkclicks", label1: "貼文互動總數", label2: "連結點擊數", label3: "連結點擊率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @post_enagements_last_7d_data, weekdata2: @link_clicks_last_7d_data, monthdata1: @post_enagements_last_4w_data, monthdata2: @link_clicks_last_4w_data, weekrate: @link_clicks_rate_7d, monthrate: @link_clicks_rate_30d} %>
+
 
   
-  var lineData1 = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-
-      {
-        label: "心情數",
-        backgroundColor: 'rgba(220, 220, 220, 0.3)',
-        pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
-        pointBorderColor: "#fff",
-        data: [78, 87, 94, 83, 73, 84, 90]
-      },{
-        label: "留言數",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        pointBorderColor: "#fff",
-        data: [65, 59, 60, 71, 56, 55, 40]
-      },{
-        label: "分享數",
-        backgroundColor: 'rgba(225,225,225,1)',
-        pointBorderColor: "#fff",
-        data: [11, 23, 14, 26, 24, 17, 25]
-      }
-    ]
-  };
-
-  var lineData2 = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-
-      {
-        label: "讚數",
-        backgroundColor: 'rgba(220, 220, 220, 0.3)',
-        pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
-        pointBorderColor: "#fff",
-        data: [78, 87, 94, 83, 73, 84, 90]
-      },{
-        label: "淨讚數",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        pointBorderColor: "#fff",
-        data: [65, 59, 60, 71, 56, 55, 40]
-      },{
-        label: "退讚數",
-        backgroundColor: 'rgba(225,225,225,1)',
-        pointBorderColor: "#fff",
-        data: [-10, -12, -14, -26, -24, -17, -25]
-      }
-    ]
-  };
-
-
-
-  var lineOptions = {
-    responsive: true
-  };
-
-  var ctx1 = document.getElementById("lineChart1").getContext("2d");
-  new Chart(ctx1, {type: 'line', data: lineData1, options:lineOptions});
-
-  var ctx2 = document.getElementById("lineChart2").getContext("2d");
-  new Chart(ctx2, {type: 'line', data: lineData2, options:lineOptions});
-
-  var ctx3 = document.getElementById("lineChart3").getContext("2d");
-  new Chart(ctx3, {type: 'line', data: lineData3, options:lineOptions});
 
 
   var polarData = {

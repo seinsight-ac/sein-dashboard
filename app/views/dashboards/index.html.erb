@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d, data30d: @fans_adds_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
 
   <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
