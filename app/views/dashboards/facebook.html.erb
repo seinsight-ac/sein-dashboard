@@ -10,17 +10,7 @@
       <%= render partial: "shared/tab", locals: {id: 'labelpostsusers', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%'} %>
     </div>    
     <div class="col-lg-3">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <span class="label label-success pull-right">Monthly</span>
-          <h5>粉絲專頁</h5>
-        </div>
-        <div class="ibox-content">
-          <h1 class="no-margins">3.03%</h1>
-          <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-          <small>連結點擊率</small>
-        </div>
-      </div>
+      <%= render partial: "shared/tab", locals: {id: 'labelnegativeusers', title: '粉專負面行動人數', data: @negative_users_week, rate: @negative_users_week_rate, linechart: 'sparklinenegativeusers', percent: '%'} %>
     </div>
   </div>
 
@@ -59,6 +49,8 @@ $(function() {
   <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
   <%= render partial: "shared/tabclick", locals: {id: '#labelpostsusers', weekdata: @posts_users_week, monthdata: @posts_users_month, weekrate: @posts_users_week_rate, monthrate: @posts_users_month_rate, linechartid: '#sparklinepostsusers', data7d: @posts_users_last_7d, data30d: @posts_users_last_30d} %>
+
+  <%= render partial: "shared/tabclick", locals: {id: '#labelnegativeusers', weekdata: @negative_users_week, monthdata: @negative_users_month, weekrate: @negative_users_week_rate, monthrate: @negative_users_month_rate, linechartid: '#sparklinenegativeusers', data7d: @negative_users_last_7d, data30d: @negative_users_last_30d} %>
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 

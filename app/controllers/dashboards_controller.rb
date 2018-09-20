@@ -82,7 +82,7 @@ class DashboardsController < ApplicationController
     @fans_female = @fans_gender_age.values[0..6].inject(0, :+)
     @fans_male = @fans_gender_age.values[7..13].inject(0, :+)
 
-    # facebook post users
+    # posts users
     @postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
     @posts_users_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[29]
     @posts_users_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[29]     
@@ -92,6 +92,19 @@ class DashboardsController < ApplicationController
     @posts_users_month_rate = convert_percentrate(@posts_users_month, @posts_users_month_last_month)
     @posts_users_last_7d = @postsusers.first['values'].flat_map{ |i|i.values.first }[23..29]
     @posts_users_last_30d = @postsusers.first['values'].flat_map{ |i|i.values.first }
+
+    # negative users
+    @negativeusers = @graph.get_object("278666028863859/insights/page_negative_feedback_unique?fields=values&date_preset=last_30d")
+    @negative_users_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[29]
+    @negative_users_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[29]     
+    @negative_users_week_last_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[22]
+    @negative_users_month_last_month = @negativeusers.third['values'].flat_map{ |i|i.values.first }[22]     
+    @negative_users_week_rate = convert_percentrate(@negative_users_week, @negative_users_week_last_week) 
+    @negative_users_month_rate = convert_percentrate(@negative_users_month, @negative_users_month_last_month)
+    @negative_users_last_7d = @negativeusers.first['values'].flat_map{ |i|i.values.first }[23..29]
+    @negative_users_last_30d = @negativeusers.first['values'].flat_map{ |i|i.values.first }
+
+
   end
 
   def ga
