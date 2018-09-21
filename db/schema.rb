@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180920140423) do
+ActiveRecord::Schema.define(version: 20180921141620) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -62,16 +62,10 @@ ActiveRecord::Schema.define(version: 20180920140423) do
     t.integer "page_users_month"
     t.integer "posts_users_month"
     t.integer "post_enagements_day"
-    t.integer "post_users_day"
-    t.integer "negative_activity_day"
     t.integer "negative_users_day"
     t.integer "post_enagements_week"
-    t.integer "post_users_week"
-    t.integer "negative_activity_week"
     t.integer "negative_users_week"
     t.integer "post_enagements_month"
-    t.integer "post_users_month"
-    t.integer "negative_activity_month"
     t.integer "negative_users_month"
     t.integer "link_clicks_day"
     t.integer "link_clicks_week"
@@ -85,14 +79,11 @@ ActiveRecord::Schema.define(version: 20180920140423) do
     t.integer "fans_45_54"
     t.integer "fans_55_64"
     t.integer "fans_65"
-    t.integer "page_impressions_day"
-    t.integer "post_impressions_day"
-    t.integer "page_impressions_week"
-    t.integer "post_impressions_week"
-    t.integer "page_impressions_month"
-    t.integer "post_impressions_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "enagements_users_day"
+    t.integer "enagements_users_week"
+    t.integer "enagements_users_month"
   end
 
   create_table "ga_dbs", force: :cascade do |t|
