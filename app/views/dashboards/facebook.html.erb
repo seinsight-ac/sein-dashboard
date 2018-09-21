@@ -16,19 +16,27 @@
 
   <div class="row">
 
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <%= render partial: "shared/linechart", locals: {id: 'labelfansretention', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
     </div>
-
-    <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {id: 'labelfansadds', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds'} %>
-    </div>
-
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <%= render partial: "shared/linechart", locals: {id: 'labellinkclicks', title: '貼文點擊分析', linechartid: 'lineChartlinkclicks'} %>
     </div>
 
   </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <%= render partial: "shared/linechart", locals: {id: 'labelfansadds', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds'} %>
+    </div>
+    <div class="col-lg-4">
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '粉絲男女比例', linechartid: 'lineChartfansgender'} %>
+    </div>
+    <div class="col-lg-4">
+      <%= render partial: "shared/hbarchartlifetimeonly", locals: {id: 'labelfansage', title: '粉絲年齡比例', linechartid: 'barChartfansage'} %>
+    </div>
+
+  </div>
+
 </div>
 
 <% content_for :javascript do %>
@@ -44,136 +52,17 @@ $(function() {
 
   <%= render partial: "shared/tabclick", locals: {id: '#labelnegativeusers', weekdata: @negative_users_week, monthdata: @negative_users_month, weekrate: @negative_users_week_rate, monthrate: @negative_users_month_rate, linechartid: '#sparklinenegativeusers', data7d: @negative_users_last_7d, data30d: @negative_users_last_30d} %>
 
-  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光總數", label2: "貼文互動總數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @page_impressions_last_7d_data, weekdata2: @post_enagements_last_7d_data, monthdata1: @page_impressions_last_4w_data, monthdata2: @post_enagements_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
+  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光人數", label2: "貼文互動人數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @posts_users_last_7d_data, weekdata2: @enagements_users_last_7d_data, monthdata1: @posts_users_last_4w_data, monthdata2: @enagements_users_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
   <%= render partial: "shared/linechartclick2", locals: {id: 'labelfansadds', linechartid: 'lineChartfansadds', dataname: "lineDatafansadds", label1: "淨讚數", label2: "退讚數", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @fans_adds_last_7d_data, weekdata2: @fans_losts_last_7d_data, monthdata1: @fans_adds_last_4w_data, monthdata2: @fans_losts_last_4w_data} %>
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labellinkclicks', linechartid: 'lineChartlinkclicks', dataname: "lineDatalinkclicks", label1: "貼文互動總數", label2: "連結點擊數", label3: "連結點擊率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @post_enagements_last_7d_data, weekdata2: @link_clicks_last_7d_data, monthdata1: @post_enagements_last_4w_data, monthdata2: @link_clicks_last_4w_data, weekrate: @link_clicks_rate_7d, monthrate: @link_clicks_rate_30d} %>
-
-
   
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", data1: @fans_male, data2: @fans_female} %>
+  
+  <%= render partial: "shared/hbarchartclicklifetimeonly", locals: { barchartid: 'barChartfansage', dataname: "barDatafansage", labelY1: "15-17", labelY2: "18-24", labelY3: "25-34", labelY4: "35-44", labelY5: "45-54", labelY6: "55-64", labelY7: "64+",labelX1: "人數", lifetimedata: @fans_age } %> 
 
-
-  var polarData = {
-    datasets: [{
-      data: [
-        300,250,200,
-      ],
-      backgroundColor: [
-        "#a3e1d4", "#dedede", "#b5b8cf"
-      ],
-      label: [
-        "My Radar chart"
-      ]
-    }],
-    labels: [
-      "手機","桌電","平板"
-    ]
-  };
-
-  var polarOptions = {
-    segmentStrokeWidth: 2,
-    responsive: true,
-    scale: {
-      ticks: {
-        beginAtZero: true
-      },
-      reverse: false
-    },
-  };
-
-  var ctx5 = document.getElementById("polarChart").getContext("2d");
-  new Chart(ctx5, {type: 'polarArea', data: polarData, options:polarOptions});
-
-  var doughnutData1 = {
-    labels: ["新訪客","回訪客"],
-    datasets: [{
-      data: [300,100],
-      backgroundColor: ["#a3e1d4","#b5b8cf"]
-    }]
-  } ;
-
-  var doughnutOptions = {
-    responsive: true
-  };
-
-  var ctx4 = document.getElementById("doughnutChart1").getContext("2d");
-  new Chart(ctx4, {type: 'doughnut', data: doughnutData1, options:doughnutOptions});
-
-
-  var barData1 = {
-    labels: ["有機搜尋", "社群", "自然流量", "參照連結", "其他"],
-    datasets: [
-      {
-        label: "流量數",
-        backgroundColor: 'rgba(220, 220, 220, 0.5)',
-        pointBorderColor: "#fff",
-        yAxisID: 'y-axis-1',
-        data: [15000, 10000, 8000, 5000, 3000]
-      },
-      {
-        label: "跳出率",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        borderColor: "rgba(26,179,148,0.7)",
-        pointBackgroundColor: "rgba(26,179,148,1)",
-        pointBorderColor: "#fff",
-        yAxisID: 'y-axis-2',
-        data: [68, 78, 67, 69, 66]
-      }
-    ]
-  };
-
-  var barOptions1 = {
-    responsive: true,
-    scales: {
-      yAxes: [{
-        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        display: true,
-        position: 'left',
-        id: 'y-axis-1',
-      }, {
-        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        display: true,
-        position: 'right',
-        id: 'y-axis-2',
-        stacked: true,
-        gridLines: {
-          drawOnChartArea: false
-        }
-      }],
-    }
-  };
-
-  var ctx6 = document.getElementById("barChart1").getContext("2d");
-  new Chart(ctx6, {type: 'bar', data: barData1, options:barOptions1});
-
-  var barData2 = {
-  labels: ["社企流", "上下游", "泛科學", "環境資訊中心", "NPOst", "Womany"],
-  datasets: [
-      {
-        label: "流量",
-        backgroundColor: 'rgba(26,179,148,0.5)',
-        borderColor: "rgba(26,179,148,0.7)",
-        pointBackgroundColor: "rgba(26,179,148,1)",
-        pointBorderColor: "#fff",
-        data: [1248, 1084, 658, 539, 1300, 334]
-      }
-    ]
-  };
-
-  var barOptions2 = {
-    responsive: true,
-    scales: {
-      xAxes: [{
-        stacked: true,
-      }]
-    }
-  };
-
-  var ctx7 = document.getElementById("barChart2").getContext("2d");
-  new Chart(ctx7, {type: 'horizontalBar', data: barData2, options:barOptions2});
 });
-
 </script>
 
 <% end %>

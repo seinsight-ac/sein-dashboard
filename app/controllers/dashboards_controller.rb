@@ -78,21 +78,20 @@ class DashboardsController < ApplicationController
   end
 
   def facebook
-    @fans_gender_age = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values").first.first.second.second["value"]
-    @fans_female = @fans_gender_age.values[0..6].inject(0, :+)
-    @fans_male = @fans_gender_age.values[7..13].inject(0, :+)
-
-    # posts users
-    @postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
-    @posts_users_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[28]
-    @posts_users_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[28]     
-    @posts_users_week_last_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[21]
-    @posts_users_month_last_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[21]     
-    @posts_users_week_rate = convert_percentrate(@posts_users_week, @posts_users_week_last_week) 
-    @posts_users_month_rate = convert_percentrate(@posts_users_month, @posts_users_month_last_month)
-    @posts_users_last_7d = @postsusers.first['values'].flat_map{ |i|i.values.first }[22..28]
-    @posts_users_last_30d = @postsusers.first['values'].flat_map{ |i|i.values.first }
-
+    # fb gender
+    @fans_gender_age = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values")
+    @fans_gender = @fans_gender_age.first.first.second.first['value']
+    @fans_female = @fans_gender.values[0..6].inject(0, :+)
+    @fans_male = @fans_gender.values[7..13].inject(0, :+)
+    @fans_13_17 = @fans_gender.values.values_at(0,7).inject(0, :+)
+    @fans_18_24 = @fans_gender.values.values_at(1,8).inject(0, :+)
+    @fans_25_34 = @fans_gender.values.values_at(2,9).inject(0, :+)
+    @fans_35_44 = @fans_gender.values.values_at(3,10).inject(0, :+)
+    @fans_45_54 = @fans_gender.values.values_at(4,11).inject(0, :+)
+    @fans_55_64 = @fans_gender.values.values_at(5,12).inject(0, :+)
+    @fans_65 = @fans_gender.values.values_at(6,13).inject(0, :+)
+    @fans_age = []
+    @fans_age.push(@fans_13_17).push(@fans_18_24).push(@fans_25_34).push(@fans_35_44).push(@fans_45_54).push(@fans_55_64).push(@fans_65)
     # negative users
     @negativeusers = @graph.get_object("278666028863859/insights/page_negative_feedback_unique?fields=values&date_preset=last_30d")
     @negative_users_week = @negativeusers.second['values'].flat_map{ |i|i.values.first }[28]
@@ -211,19 +210,27 @@ class DashboardsController < ApplicationController
     @page_users_last_7d = @pageusers.first['values'].flat_map{ |i|i.values.first }[22..28]
     @page_users_last_30d = @pageusers.first['values'].flat_map{ |i|i.values.first }
 
-    # facebook fans retention
-    @pageimpressions = @graph.get_object("278666028863859/insights/page_posts_impressions?fields=values&date_preset=last_30d")
-    @page_impressions_last_7d_data = @pageimpressions.first['values'].flat_map { |i|i.values.first }[22..28]
-    @page_impressions_last_4w_data = @pageimpressions.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
-    @fb_last_7d_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }[22..28].map { |i| divide_date(i) }
-    @fb_last_4w_date = @pageimpressions.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }.values_at(7,14,21,28)
-    @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
-    @post_enagements_last_7d_data = @postenagements.first['values'].flat_map { |i|i.values.first }[22..28]
-    @post_enagements_last_4w_data = @postenagements.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
+    # facebook fans retention    
+    @postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
+    @posts_users_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[28]
+    @posts_users_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[28]     
+    @posts_users_week_last_week = @postsusers.second['values'].flat_map{ |i|i.values.first }[21]
+    @posts_users_month_last_month = @postsusers.third['values'].flat_map{ |i|i.values.first }[21]     
+    @posts_users_week_rate = convert_percentrate(@posts_users_week, @posts_users_week_last_week) 
+    @posts_users_month_rate = convert_percentrate(@posts_users_month, @posts_users_month_last_month)
+    @posts_users_last_7d = @postsusers.first['values'].flat_map{ |i|i.values.first }[22..28]
+    @posts_users_last_30d = @postsusers.first['values'].flat_map{ |i|i.values.first }
+    @posts_users_last_7d_data = @postsusers.first['values'].flat_map { |i|i.values.first }[22..28]
+    @posts_users_last_4w_data = @postsusers.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
+    @fb_last_7d_date = @postsusers.first['values'].flat_map{ |i|i.values.second }[22..28].map { |i| divide_date(i) }
+    @fb_last_4w_date = @postsusers.first['values'].flat_map{ |i|i.values.second }.map{ |i| divide_date(i) }.values_at(7,14,21,28)
+    @enagementsusers = @graph.get_object("278666028863859/insights/page_engaged_users?fields=values&date_preset=last_30d")
+    @enagements_users_last_7d_data = @enagementsusers.first['values'].flat_map { |i|i.values.first }[22..28]
+    @enagements_users_last_4w_data = @enagementsusers.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
     @fans_retention_rate_7d = []
-    @fans_retention_rate_7d = @post_enagements_last_7d_data.zip(@page_impressions_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
-    @fans_retention_rate_30d = @post_enagements_last_4w_data.zip(@page_impressions_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
   end
 
   def convert_tenthousandthrate(datanew,  dataold)
