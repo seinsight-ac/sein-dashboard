@@ -180,18 +180,23 @@ class DashboardsController < ApplicationController
     date.split('T').first.split('-').join()[4..7].to_i 
   end
 
+  def get_week_data(db, data)
+    a = []
+    a << db.last(22).pluck(:data)[22, 15]
+    a << db.last(22).pluck(:data)[8, 1]
+  end
+
   def fbinformation
 
     # facebook API
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
-    @fans_adds = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d")
-    @fans_adds_week_data = @fans_adds.second['values'].flat_map{ |i|i.values.first }[28]
-    @fans_adds_month_data = @fans_adds.third['values'].flat_map{ |i|i.values.first }[28]
-    @fans_adds_last_7d_data = @fans_adds.first['values'].flat_map{ |i|i.values.first }[22..28]
-    @fans_adds_last_30d_data = @fans_adds.first['values'].flat_map{ |i|i.values.first }
-    @fans_adds_last_4w_data = @fans_adds.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
+    @fans_adds_week_data = FbDb.last(7).pluck(:fans).first
+    @fans_adds_month_data = FbDb.last(30).pluck(:fans).first
+    @fans_adds_last_7d_data = FbDb.last(7).pluck(:fans_adds_day)
+    @fans_adds_last_30d_data = FbDb.last(30).pluck(:fans_adds_day)
+    @fans_adds_last_4w_data = get_week_data(FbDb, "fans_adds_week")
     @fans_adds_week_rate = convert_tenthousandthrate(@fans_adds_week_data, @fans)
     @fans_adds_month_rate = convert_tenthousandthrate(@fans_adds_month_data, @fans)    
 
