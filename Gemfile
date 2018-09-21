@@ -84,6 +84,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   #測試
   gem 'rspec-rails', '~> 3.6'
+  gem "factory_bot_rails", "~> 4.0"
 end
 
 group :development do
