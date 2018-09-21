@@ -249,5 +249,5 @@ class DashboardsController < ApplicationController
   # def ga_data_month(data, z, x, c ,v)
   #   data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(z, x, c, v).flat_map{|i|i}.grep(/\d+/, &:to_i)
   # end
-
+  
 end
