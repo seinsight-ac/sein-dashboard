@@ -1,0 +1,82 @@
+$("#<%= id %>").click(function(){
+	if ($(this).html() == 'Weekly') {
+		$(this).removeClass('label-info');
+		$(this).addClass('label-success');
+		$(this).html('Monthly');
+
+		var <%= dataname %> = {
+			labels: <%= last30ddate %>,
+			datasets: [
+				{
+					label: "<%= label1 %>", 
+					backgroundColor: 'rgba(220, 220, 220, 0.3)',
+					pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+					pointBorderColor: "#fff",
+					data: <%= monthdata1 %>,
+				},{
+					label: "<%= label2 %>",  
+					backgroundColor: 'rgba(26,179,148,0.5)',
+					pointBorderColor: "#fff",
+					data:  <%= monthdata2 %>,
+				},
+			]
+		};
+
+		var lineOptions = {
+			responsive: true,
+		};
+ 		new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+	}
+
+	else if ($(this).html() == 'Monthly') {
+		$(this).removeClass('label-success');
+		$(this).addClass('label-info');
+		$(this).html('Weekly');
+		
+		var <%= dataname %> = {
+			labels: <%= last7ddate %>,
+			datasets: [
+				{
+					label: "<%= label1 %>", 
+					backgroundColor: 'rgba(220, 220, 220, 0.3)',
+					pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+					pointBorderColor: "#fff",
+					data: <%= weekdata1 %>,
+				},{
+					label: "<%= label2 %>", 
+					backgroundColor: 'rgba(26,179,148,0.5)',
+					pointBorderColor: "#fff",
+					data:  <%= weekdata2 %>,
+				},
+			]
+		};
+
+		var lineOptions = {
+			responsive: true,
+		};
+ 		new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+	}
+});
+
+var <%= dataname %> = {
+	labels: <%= last7ddate %>,
+	datasets: [
+		{
+			label: "<%= label1 %>", 
+			backgroundColor: 'rgba(220, 220, 220, 0.3)',
+			pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+			pointBorderColor: "#fff",
+			data: <%= weekdata1 %>,
+		},{
+			label: "<%= label2 %>", 
+			backgroundColor: 'rgba(26,179,148,0.5)',
+			pointBorderColor: "#fff",
+			data:  <%= weekdata2 %>,
+		}
+	]
+};
+
+var lineOptions = {
+	responsive: true,
+};
+new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 

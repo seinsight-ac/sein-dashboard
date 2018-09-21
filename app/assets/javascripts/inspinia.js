@@ -98,6 +98,7 @@ $(document).ready(function () {
   // Minimalize menu
   $('.navbar-minimalize').on('click', function (event) {
     event.preventDefault();
+    console.log('hi')
     $("body").toggleClass("mini-navbar");
     SmoothlyMenu();
   });
