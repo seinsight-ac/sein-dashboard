@@ -2,55 +2,41 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :index, :only => [:googleanalytics]
+
   def index
     # google
-    ga = GoogleAnalytics.new
-    
-    web_users_week = ga.web_users_week
-    web_users_month = ga.web_users_month
-    # 官網使用者
-    @web_users_week = web_users_week.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    
-    @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
-    @web_users_month = web_users_month.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i  
-    @web_users_week_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)  
-    @web_users_month_rate = convert_percentrate(@web_users_month, @web_users_month_last_month)
-    @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    
-    # 使用者活躍度分析
-    pageviews = ga.pageviews
-    session_pageviews = ga.session_pageviews
+    @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
+    @web_users_month = GaDb.last(30).pluck(:web_users_week).reduce(:+)
 
-    @all_users_views_last_7d_data = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @all_users_views_last_30d_data = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[2..29].flat_map{|i|i}.grep(/\d+/, &:to_i).in_groups_of(7).flat_map{|i|i.sum}
-    @single_session_pageviews_7d = session_pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @single_session_pageviews_30d = session_pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[2..29].flat_map{|i|i}.grep(/\d+/, &:to_i).in_groups_of(7).flat_map{|i|i.sum}
+    @web_users_last_7d = GaDb.last(7).pluck(:web_users_week)
+    @web_users_last_30d = GaDb.last(30).pluck(:web_users_week)
+    
+    @web_users_week_rate = convert_percentrate(@web_users_week, GaDb.last(14).first(7).pluck(:web_users_week).reduce(:+))  
+    @web_users_month_rate = convert_percentrate(@web_users_month, GaDb.last(60).first(30).pluck(:web_users_week).reduce(:+))
+
+    @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
+    @all_users_views_last_30d_data = GaDb.last(30).pluck(:pageviews_day)
+
+    @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
+    @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
+
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
     @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
   
-    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
-    @users_activity_rate_30d = @activeusers_views_last_30d_data.zip(@all_users_views_last_30d_data).map{|k| (k[0] / k[1].to_f).round(2) }
+    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f) }
+    @users_activity_rate_30d = @activeusers_views_last_30d_data.zip(@all_users_views_last_30d_data).map{|k| (k[0] / k[1].to_f) }
     
-    @ga_last_7d_date = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[23..29].flat_map{|i|i}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
-    @ga_last_30d_date = pageviews.first[1][0]["data"]["rows"].values_at(8,15,23,29).flat_map{|i|i.values.first}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
-    
-    # 流量管道
-    channel_grouping_week = ga.channel_grouping_week
-    channel_grouping_month = ga.channel_grouping_month
+    @ga_last_7d_date = GaDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
+    @ga_last_30d_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }
 
-    @channel_user_week = channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_week = @channel_user_week[2], @channel_user_week[4], @channel_user_week[0], @channel_user_week[3], @channel_user_week[1]
+    @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
+    @bounce_rate_week = [GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7,  GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/7]
 
-    @bounce_rate_week = channel_grouping_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_week = @bounce_rate_week[2], @bounce_rate_week[4], @bounce_rate_week[0], @bounce_rate_week[3], @bounce_rate_week[1]
+    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
+    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30,  GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30]
 
-    @channel_user_month = channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.first}.grep(/\d+/, &:to_i)
-    @channel_user_month = @channel_user_month[2], @channel_user_month[4], @channel_user_month[0], @channel_user_month[3], @channel_user_month[1] 
-
-    @bounce_rate_month = channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
-    @bounce_rate_month = @bounce_rate_month[2], @bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
+    @bounce_rate_week = GaDb.last(7).pluck(:bouce_rate_day)
+    @bounce_rate_month = GaDb.last(30).pluck(:bouce_rate_day)
     
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
@@ -142,7 +128,6 @@ class DashboardsController < ApplicationController
 
   def googleanalytics
     ga = GoogleAnalytics.new
-
     
     @user_age_bracket_month = ga.user_age_bracket_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
     
@@ -195,112 +180,22 @@ class DashboardsController < ApplicationController
     @mobile = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[1]
     @tablet = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[2]
     
-
   end
-
-  def ga
-    ga = GoogleAnalytics.new
-    # #不重複訪客
-    # web_users_week = ga.web_users_week
-    # web_users_month = ga.web_users_month
-    # @web_users_week = web_users_week.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    # @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
-    # @web_users_month = web_users_month.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    # @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i  
-    # @web_users_week_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)  
-    # @web_users_month_rate = convert_percentrate(@web_users_month, @web_users_month_last_month)
-    # @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    # @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    
-    # @user_type_month = ga.user_type_month
-    # @vistor_month = @user_type_month.first[1][0]["data"]["totals"][0]["values"][0]
-    # @new_user_month = @user_type_month.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    # @old_user_month = @user_type_month.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    # @new_user_month_rate = @new_user_week / @vistor_week
-    # @old_user_month_rate = @old_user_week / @vistor_week
-    # #瀏覽量
-    # 
-    # #每次工作階段頁數
-      # @pageviews_per_session_week = ga.pageviews_per_session.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0]
-      # @pageviews_per_session_last_week = ga.pageviews_per_session.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0]
-
-    
-
-    #gadb
-    # @users_day = ga.users_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}
-    # @user_date = ga.users_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @pageviews_day = ga.pageviews_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @pageviews_date = ga.pageviews_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @avg_session_duration_day = ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_f)
-    # @avg_session_duration_date = ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @sessions_day = ga.sessions_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @sessions_date = ga.sessions_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @avg_time_on_page_day = ga.avg_time_on_page_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i}.grep(/\d+/, &:to_f)
-    # @avg_time_on_page_date = ga.avg_time_on_page_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @pageviews_per_session_day = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i}.grep(/\d+/, &:to_f) 
-    # @pageviews_per_session_date = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @female_user = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
-    # @female_user_date = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @male_user = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-    # @male_user_date = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @desktop = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
-    # @desktop_date = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..364].grep(/\d+/, &:to_i)
-    # @mobile = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-    # @mobile_date = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[365..729].grep(/\d+/, &:to_i)
-    # @tablet_1 = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[730..999].grep(/\d+/, &:to_i)
-    # @tablet_1_date = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[730..999].grep(/\d+/, &:to_i)
-    # @tablet_2 = ga.device_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..94].grep(/\d+/, &:to_i)
-    # @tablet_2_date = ga.device_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..94].grep(/\d+/, &:to_i)
-    
-    # @user_18_24 = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
-    # @user_18_24_date = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..364].grep(/\d+/, &:to_i)
-    # @user_25_34 = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-    # @user_25_34_date = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[365..729].grep(/\d+/, &:to_i)
-    # @user_35_44_1 = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[730..999].grep(/\d+/, &:to_i)
-    # @user_35_44_1_date = ga.user_age_bracket_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[730..999].grep(/\d+/, &:to_i)
-    # #20170921-20180617
-    # @user_35_44_2 = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..94].grep(/\d+/, &:to_i)
-    # @user_35_44_2_date = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..94].grep(/\d+/, &:to_i)
-    # #20180618-20180920
-    # @user_45_54 = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[95..459].grep(/\d+/, &:to_i)
-    # @user_45_54_date = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[95..459].grep(/\d+/, &:to_i)
-    # @user_55_64 = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[460..824].grep(/\d+/, &:to_i)
-    # @user_55_64_date = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[460..824].grep(/\d+/, &:to_i)
-    # @user_65_1 = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[825..999].grep(/\d+/, &:to_i)
-    # @user_65_1_date = ga.user_age_bracket_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[825..999].grep(/\d+/, &:to_i)
-    # #20170921-20180314
-    # @user_65_2 = ga.user_age_bracket_3.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..189].grep(/\d+/, &:to_i)
-    # @user_65_2_date = ga.user_age_bracket_3.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..189].grep(/\d+/, &:to_i)
-    # #20180315-20180920
-    
-    # @new_vistor = ga.user_type_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
-    # @new_vistor_date = ga.user_type_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @returning_vistor = ga.user_type_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-    # @returning_vistor_date = ga.user_type_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @bounce_rate_day = ga.bounce_rate_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_f)
-    # @bounce_rate_date = ga.bounce_rate_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    # @direct = ga.channel_grouping_day_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-   
-    # @direct_date = ga.channel_grouping_day_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[365..729].grep(/\d+/, &:to_i)
-    # @oganic_search_1 = ga.channel_grouping_day_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[819..999].grep(/\d+/, &:to_i)
-    # @oganic_search_1_date = ga.channel_grouping_day_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[819..999].grep(/\d+/, &:to_i)
-    # #20170921-20180320
-    # @oganic_search_2 = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..183].grep(/\d+/, &:to_i)
-    # @oganic_search_2_date = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..183].grep(/\d+/, &:to_i)
-    # #20170321-20180920
-    # @referral = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[184..548].grep(/\d+/, &:to_i)
-    # @referral_date = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[184..548].grep(/\d+/, &:to_i)
-    # @social = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[549..913].grep(/\d+/, &:to_i)
-    # @social_date = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[549..913].grep(/\d+/, &:to_i)
-    # @active_user_day = ga.active_user_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    # @active_user_date = ga.active_user_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-  end  
-    
-
-
 
 
   private
+
+  def convert_percentrate(datanew,  dataold)
+    return ((datanew - dataold) / dataold.to_f * 100).round(2)
+  end
+
+  def rate_transit(datanew, dataold)
+    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
+  end
+
+  def divide_date(date)
+    date.split('T').first.split('-').join()[4..7].to_i 
+  end
 
   # 上個月星期一的日期 往後推七天
   def last_month_mon
@@ -320,14 +215,6 @@ class DashboardsController < ApplicationController
     @month = @now - 60 * 60 * 24 * 35
     @now.strftime("%Y-%m-%d")
     @month.strftime("%Y-%m-%d")
-  end
-
-  def rate_transit(datanew, dataold)
-    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
-  end
-
-  def divide_date(date)
-    date.split('T').first.split('-').join()[4..7].to_i 
   end
 
   def get_week_data(db, data)
@@ -388,16 +275,8 @@ class DashboardsController < ApplicationController
       return (datanew * 10000 / (dataold - datanew).to_f).round(2)
   end
 
-  def convert_percentrate(datanew,  dataold)
-    return ((datanew - dataold) / dataold.to_f * 100).round(2)
-  end
-
   def ga_data_date
     first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
   end
-
-  # def ga_data_month(data, z, x, c ,v)
-  #   data.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(z, x, c, v).flat_map{|i|i}.grep(/\d+/, &:to_i)
-  # end
   
 end

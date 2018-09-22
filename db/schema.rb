@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180921141620) do
+ActiveRecord::Schema.define(version: 20180922125419) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -92,35 +92,12 @@ ActiveRecord::Schema.define(version: 20180921141620) do
     t.integer "web_users_week"
     t.integer "web_users_month"
     t.float "session_pageviews_day"
-    t.float "session_pageviews_week"
-    t.float "session_pageviews_month"
-    t.integer "users_day"
-    t.integer "users_week"
-    t.integer "users_month"
     t.integer "sessions_day"
-    t.integer "sessions_week"
-    t.integer "sessions_month"
-    t.integer "active_users_day"
-    t.integer "active_users_week"
-    t.integer "active_users_month"
     t.float "bouce_rate_day"
-    t.float "bouce_rate_week"
-    t.float "bouce_rate_month"
-    t.float "user_type_day"
-    t.float "user_type_week"
-    t.float "user_type_month"
     t.integer "pageviews_day"
-    t.integer "pageviews_week"
-    t.integer "pageviews_month"
     t.float "avg_session_duration_day"
-    t.float "avg_session_duration_week"
-    t.float "avg_session_duration_month"
     t.float "avg_time_on_page_day"
-    t.float "avg_time_on_page_week"
-    t.float "avg_time_on_page_month"
     t.float "pageviews_per_session_day"
-    t.float "pageviews_per_session_week"
-    t.float "pageviews_per_session_month"
     t.integer "desktop_user"
     t.integer "mobile_user"
     t.integer "tablet_user"
@@ -132,26 +109,20 @@ ActiveRecord::Schema.define(version: 20180921141620) do
     t.integer "user_45_54"
     t.integer "user_55_64"
     t.integer "user_65"
-    t.integer "session_count_day"
-    t.integer "session_count_week"
-    t.integer "session_count_month"
     t.integer "referral_user_day"
-    t.integer "referral_user_week"
-    t.integer "referral_user_month"
     t.integer "direct_user_day"
-    t.integer "direct_user_week"
-    t.integer "direct_user_month"
     t.integer "social_user_day"
-    t.integer "social_user_week"
-    t.integer "social_user_month"
     t.integer "email_user_day"
-    t.integer "email_user_week"
-    t.integer "email_user_month"
     t.integer "oganic_search_day"
-    t.integer "oganic_search_week"
-    t.integer "oganic_search_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "direct_bounce"
+    t.float "email_bounce"
+    t.float "social_bounce"
+    t.float "oganic_search_bounce"
+    t.integer "new_visitor"
+    t.integer "return_visitor"
+    t.float "referral_bounce"
   end
 
   create_table "mailchimp_dbs", force: :cascade do |t|
