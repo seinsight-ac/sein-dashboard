@@ -8,7 +8,6 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
-=begin
 
 # fb
 FbDb.destroy_all
@@ -182,8 +181,6 @@ end
 set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
 
 puts "create #{FbDb.count} fb data"
-
-=end
 
 # ga
 
