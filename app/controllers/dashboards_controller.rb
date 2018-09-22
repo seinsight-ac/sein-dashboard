@@ -127,58 +127,100 @@ class DashboardsController < ApplicationController
   end
 
   def googleanalytics
-    ga = GoogleAnalytics.new
-    
-    @user_age_bracket_month = ga.user_age_bracket_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    
-    #性別
-    @female_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0].to_i
-    @male_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[1].to_i
-    
-    #新舊訪客
-    user_type = ga.user_type_month
-    @vistor = user_type.first[1][0]["data"]["totals"][0]["values"][0]
-    @new_vistor = user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @returning_vistor = user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    @new_vistor_rate = (@new_vistor.to_f / @vistor.to_i).round(2)
-    @returning_vistor_rate = (@returning_vistor.to_f / @vistor.to_i).round(2)
+    @pageviews_week = GaDb.last(7).pluck(:pageviews_day).reduce(:+)
+    @pageviews_month = GaDb.last(30).pluck(:pageviews_day).reduce(:+)
 
-    #瀏覽量
-    @pageviews_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_month = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
+    @pageviews_last_7d = GaDb.last(7).pluck(:pageviews_day)
+    @pageviews_last_30d = GaDb.last(30).pluck(:pageviews_day)
 
-    @pageviews_last_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[16..22].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_last_month = ga.pageviews_lastmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_week_rate = convert_percentrate(@pageviews_week, @pageviews_last_week)
-    @pageviews_month_rate = convert_percentrate(@pageviews_month, @pageviews_last_month)
-    @pageviews_last_7d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @pageviews_last_30d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).flat_map{|i|i}
+    @pageviews_week_rate = convert_percentrate(@pageviews_week, GaDb.last(14).first(7).pluck(:pageviews_day).reduce(:+))  
+    @pageviews_month_rate = convert_percentrate(@pageviews_month, GaDb.last(60).first(30).pluck(:pageviews_day).reduce(:+))
     
-    #官網平均瀏覽頁數
-    @pageviews_per_session_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @pageviews_per_session_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @pageviews_per_session_last_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @pageviews_per_session_last_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @pageviews_per_session_week_rate = convert_percentrate(@pageviews_per_session_week, @pageviews_per_session_last_week)
-    @pageviews_per_session_month_rate = convert_percentrate(@pageviews_per_session_month, @pageviews_per_session_last_month)
-    @pageviews_per_session_7d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    @pageviews_per_session_30d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    #平均停留時間
-    @avg_session_duration_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @avg_session_duration_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @avg_session_duration_last_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @avg_session_duration_last_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_week, @avg_session_duration_last_week)
-    @avg_session_duration_month_rate = convert_percentrate(@avg_session_duration_month, @avg_session_duration_last_month)
-    @avg_session_duration_7d = ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    @avg_session_duration_30d =  ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    #裝置
+    @pageviews_per_session_week = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/7).round(2)
+    @pageviews_per_session_month = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/30).round(2)
+
+    @pageviews_per_session_7d = GaDb.last(7).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
+    @pageviews_per_session_30d = GaDb.last(30).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
+
+    @pageviews_per_session_week_rate = convert_percentrate(@pageviews_per_session_week, (GaDb.last(14).first(7).pluck(:pageviews_per_session_day).reduce(:+)/7).round(2))  
+    @pageviews_per_session_month_rate = convert_percentrate(@pageviews_per_session_month, (GaDb.last(60).first(30).pluck(:pageviews_per_session_day).reduce(:+)/30).round(2))  
+
+    @avg_session_duration_week = ((GaDb.last(7).pluck(:avg_session_duration_day).reduce(:+))/7).round(2)
+    @avg_session_duration_month = ((GaDb.last(30).pluck(:avg_session_duration_day).reduce(:+))/30).round(2)
+
+    @avg_session_duration_7d = GaDb.last(7).pluck(:avg_session_duration_day).flat_map{|i|i.round(2)}
+    @avg_session_duration_30d = GaDb.last(30).pluck(:avg_session_duration_day).flat_map{|i|i.round(2)}
+
+    @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_week, (GaDb.last(14).first(7).pluck(:avg_session_duration_day).reduce(:+)/7).round(2))  
+    @avg_session_duration_month_rate = convert_percentrate(@avg_session_duration_month, (GaDb.last(60).first(30).pluck(:avg_session_duration_day).reduce(:+)/30).round(2))  
     
-    @tool = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}
-    @device_user_total = ga.device_month.first[1][0]["data"]["totals"][0]["values"][0]
-    @desktop = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[0]
-    @mobile = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[1]
-    @tablet = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[2]
+    @user_age_bracket_month = [GaDb.last(30).pluck(:user_18_24).compact.reduce(:+), GaDb.last(30).pluck(:user_25_34).compact.reduce(:+), GaDb.last(30).pluck(:user_35_44).compact.reduce(:+), GaDb.last(30).pluck(:user_45_54).compact.reduce(:+), GaDb.last(30).pluck(:user_55_64).compact.reduce(:+), GaDb.last(30).pluck(:user_65).compact.reduce(:+)]
+    
+    @desktop = GaDb.last(30).pluck(:desktop_user).reduce(:+)
+    @mobile = GaDb.last(30).pluck(:mobile_user).reduce(:+)
+    @tablet = GaDb.last(30).pluck(:tablet_user).reduce(:+)
+
+    @male_user = GaDb.last(30).pluck(:male_user).reduce(:+)
+    @female_user = GaDb.last(30).pluck(:female_user).reduce(:+)
+
+    @new_visitor = GaDb.last(30).pluck(:new_visitor).reduce(:+)
+    @returning_visitor = GaDb.last(30).pluck(:return_visitor).reduce(:+)
+
+  
+
+
+    # ga = GoogleAnalytics.new
+    
+    # @user_age_bracket_month = ga.user_age_bracket_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
+    
+    # #性別
+    # @female_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0].to_i
+    # @male_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[1].to_i
+    
+    # #新舊訪客
+    # user_type = ga.user_type_month
+    # @vistor = user_type.first[1][0]["data"]["totals"][0]["values"][0]
+    # @new_vistor = user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    # @returning_vistor = user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
+    # @new_vistor_rate = (@new_vistor.to_f / @vistor.to_i).round(2)
+    # @returning_vistor_rate = (@returning_vistor.to_f / @vistor.to_i).round(2)
+
+    # #瀏覽量
+    # @pageviews_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
+    # @pageviews_month = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
+
+    # @pageviews_last_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[16..22].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
+    # @pageviews_last_month = ga.pageviews_lastmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i).inject(0, :+)
+    # @pageviews_week_rate = convert_percentrate(@pageviews_week, @pageviews_last_week)
+    # @pageviews_month_rate = convert_percentrate(@pageviews_month, @pageviews_last_month)
+    # @pageviews_last_7d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
+    # @pageviews_last_30d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).flat_map{|i|i}
+    
+    # #官網平均瀏覽頁數
+    # @pageviews_per_session_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
+    # @pageviews_per_session_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
+    # @pageviews_per_session_last_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
+    # @pageviews_per_session_last_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
+    # @pageviews_per_session_week_rate = convert_percentrate(@pageviews_per_session_week, @pageviews_per_session_last_week)
+    # @pageviews_per_session_month_rate = convert_percentrate(@pageviews_per_session_month, @pageviews_per_session_last_month)
+    # @pageviews_per_session_7d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
+    # @pageviews_per_session_30d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
+    # #平均停留時間
+    # @avg_session_duration_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
+    # @avg_session_duration_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
+    # @avg_session_duration_last_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
+    # @avg_session_duration_last_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
+    # @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_week, @avg_session_duration_last_week)
+    # @avg_session_duration_month_rate = convert_percentrate(@avg_session_duration_month, @avg_session_duration_last_month)
+    # @avg_session_duration_7d = ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
+    # @avg_session_duration_30d =  ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
+    # #裝置
+    
+    # @tool = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}
+    # @device_user_total = ga.device_month.first[1][0]["data"]["totals"][0]["values"][0]
+    # @desktop = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[0]
+    # @mobile = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[1]
+    # @tablet = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[2]
     
   end
 
