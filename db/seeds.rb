@@ -8,6 +8,252 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
+=begin
+
+# fb
+FbDb.destroy_all
+
+def set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
+  while i < fan.length
+
+    date = fan[i]["end_time"]
+    if fan_add[0]["values"][i]["end_time"] != date
+      puts "fan_add"
+      puts date
+      puts fan_add[0]["values"][i]["end_time"]
+      break
+    elsif fan_lost[0]["values"][i]["end_time"] != date 
+      puts "fan_lost"
+      puts date
+      puts fan_lost[0]["values"][i]["end_time"]
+      break
+    elsif page[0]["values"][i]["end_time"] != date 
+      puts "page"
+      puts date
+      puts page[0]["values"][i]["end_time"]
+      break
+    elsif post[0]["values"][i]["end_time"] != date 
+      puts "post"
+      puts date
+      puts post[0]["values"][i]["end_time"]
+      break
+    elsif enagement[0]["values"][i]["end_time"] != date 
+      puts "enagement"
+      puts date
+      puts enagement[0]["values"][i]["end_time"]
+      break
+    elsif negative[0]["values"][i]["end_time"] != date 
+      puts "negative"
+      puts date
+      puts negative[0]["values"][i]["end_time"]
+      break
+    elsif post_enagement[0]["values"][i]["end_time"] != date 
+      puts "fan_lost"
+      puts date
+      puts post_enagement[0]["values"][i]["end_time"]
+      break
+    elsif link_click[0]["values"][i]["end_time"] != date 
+      puts "link_click"
+      puts date
+      puts link_click[0]["values"][i]["end_time"]
+      break
+    elsif gender[i] == nil
+      FbDb.create(
+        date: fan[i]["end_time"],
+        fans: fan[i]["value"],
+        fans_adds_day: fan_add[0]["values"][i]["value"],
+        fans_losts_day: fan_lost[0]["values"][i]["value"],
+        page_users_day: page[0]["values"][i]["value"],
+        posts_users_day: post[0]["values"][i]["value"],
+        fans_adds_week: fan_add[1]["values"][i]["value"],
+        fans_losts_week: fan_lost[1]["values"][i]["value"],
+        page_users_week: page[1]["values"][i]["value"],
+        posts_users_week: post[1]["values"][i]["value"],
+        fans_adds_month: fan_add[2]["values"][i]["value"],
+        fans_losts_month: fan_lost[2]["values"][i]["value"],
+        page_users_month: page[2]["values"][i]["value"],
+        posts_users_month: post[2]["values"][i]["value"],
+        post_enagements_day: post_enagement[0]["values"][i]["value"],
+        negative_users_day: negative[0]["values"][i]["value"],
+        post_enagements_week: post_enagement[1]["values"][i]["value"],
+        negative_users_week: negative[1]["values"][i]["value"],
+        post_enagements_month: post_enagement[2]["values"][i]["value"],
+        negative_users_month: negative[2]["values"][i]["value"],
+        link_clicks_day: link_click[0]["values"][i]["value"]["link clicks"],
+        link_clicks_week: link_click[1]["values"][i]["value"]["link clicks"],
+        link_clicks_month: link_click[2]["values"][i]["value"]["link clicks"],
+        enagements_users_day: enagement[0]["values"][i]["value"],
+        enagements_users_week: enagement[1]["values"][i]["value"],
+        enagements_users_month: enagement[2]["values"][i]["value"]
+        )
+      i += 1
+    elsif gender[i]["end_time"] != date
+      puts "gender"
+      puts date
+      puts gender[i]["end_time"]
+      break
+    else
+      FbDb.create(
+        date: fan[i]["end_time"],
+        fans: fan[i]["value"],
+        fans_adds_day: fan_add[0]["values"][i]["value"],
+        fans_losts_day: fan_lost[0]["values"][i]["value"],
+        page_users_day: page[0]["values"][i]["value"],
+        posts_users_day: post[0]["values"][i]["value"],
+        fans_adds_week: fan_add[1]["values"][i]["value"],
+        fans_losts_week: fan_lost[1]["values"][i]["value"],
+        page_users_week: page[1]["values"][i]["value"],
+        posts_users_week: post[1]["values"][i]["value"],
+        fans_adds_month: fan_add[2]["values"][i]["value"],
+        fans_losts_month: fan_lost[2]["values"][i]["value"],
+        page_users_month: page[2]["values"][i]["value"],
+        posts_users_month: post[2]["values"][i]["value"],
+        post_enagements_day: post_enagement[0]["values"][i]["value"],
+        negative_users_day: negative[0]["values"][i]["value"],
+        post_enagements_week: post_enagement[1]["values"][i]["value"],
+        negative_users_week: negative[1]["values"][i]["value"],
+        post_enagements_month: post_enagement[2]["values"][i]["value"],
+        negative_users_month: negative[2]["values"][i]["value"],
+        link_clicks_day: link_click[0]["values"][i]["value"]["link clicks"],
+        link_clicks_week: link_click[1]["values"][i]["value"]["link clicks"],
+        link_clicks_month: link_click[2]["values"][i]["value"]["link clicks"],
+        fans_female_day: gender[i]["value"].values[0..6].inject(0, :+),
+        fans_male_day: gender[i]["value"].values[7..13].inject(0, :+),
+        fans_13_17: gender[i]["value"].values[0, 7].inject(0, :+),
+        fans_18_24: gender[i]["value"].values[1, 8].inject(0, :+),
+        fans_25_34: gender[i]["value"].values[2, 9].inject(0, :+),
+        fans_35_44: gender[i]["value"].values[3, 10].inject(0, :+),
+        fans_45_54: gender[i]["value"].values[4, 11].inject(0, :+),
+        fans_55_64: gender[i]["value"].values[5, 12].inject(0, :+),
+        fans_65: gender[i]["value"].values[6, 13].inject(0, :+),
+        enagements_users_day: enagement[0]["values"][i]["value"],
+        enagements_users_week: enagement[1]["values"][i]["value"],
+        enagements_users_month: enagement[2]["values"][i]["value"]
+        )
+    end
+
+    i += 1
+
+  end
+end
+
+@fb = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+
+def get_year_data(what)
+  years_ago = (Date.today << 12).to_s
+
+  @fb.get_object("278666028863859/insights/#{what}?fields=values&since=#{years_ago}")
+end
+
+def get_3_days_data(what)
+  @fb.get_object("278666028863859/insights/#{what}?fields=values&date_preset=last_3_days")
+end
+
+fan = get_year_data("page_fans").first.first.second
+fan_add = get_year_data("page_fan_adds_unique")
+fan_lost = get_year_data("page_fan_removes_unique")
+page = get_year_data("page_impressions_unique")
+post = get_year_data("page_posts_impressions_unique")
+enagement = get_year_data("page_engaged_users")
+negative = get_year_data("page_negative_feedback_unique")
+gender = get_year_data("page_fans_gender_age").first.first.second
+post_enagement = get_year_data("page_post_engagements")
+link_click = get_year_data("page_consumptions_by_consumption_type")
+
+set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, 0)
+
+fan = get_3_days_data("page_fans").first.first.second
+fan_add = get_3_days_data("page_fan_adds_unique")
+fan_lost = get_3_days_data("page_fan_removes_unique")
+page = get_3_days_data("page_impressions_unique")
+post = get_3_days_data("page_posts_impressions_unique")
+enagement = get_3_days_data("page_engaged_users")
+negative = get_3_days_data("page_negative_feedback_unique")
+post_enagement = get_3_days_data("page_post_engagements")
+link_click = get_3_days_data("page_consumptions_by_consumption_type")
+gender = get_3_days_data("page_fans_gender_age").first.first.second
+
+i = 0
+
+while FbDb.last.date >= fan[i]["end_time"]
+  i += 1
+end
+
+set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
+
+puts "create #{FbDb.count} fb data"
+
+=end
+
+# ga
+
+GaDb.create(
+  date: ,
+  web_users_day: ,
+  web_users_week: ,
+  web_users_month: ,
+  session_pageviews_day: ,
+  session_pageviews_week: ,
+  session_pageviews_month: ,
+  users_day: ,
+  users_week: ,
+  users_month: ,
+  sessions_day: ,
+  sessions_week: ,
+  sessions_month: ,
+  active_users_day: ,
+  active_users_week: ,
+  active_users_month: ,
+  bouce_rate_day: ,
+  bouce_rate_week: ,
+  bouce_rate_month: ,
+  user_type_day: ,
+  user_type_week: ,
+  user_type_month: ,
+  pageviews_day: ,
+  pageviews_week: ,
+  pageviews_month: ,
+  avg_session_duration_day: ,
+  avg_session_duration_week: ,
+  avg_session_duration_month: ,
+  avg_time_on_page_day: ,
+  avg_time_on_page_week: ,
+  avg_time_on_page_month: ,
+  pageviews_per_session_day: ,
+  pageviews_per_session_week: ,
+  pageviews_per_session_month: ,
+  desktop_user: ,
+  mobile_user: ,
+  tablet_user: ,
+  female_user: ,
+  male_user: ,
+  user_18_24: ,
+  user_25_34: ,
+  user_35_44: ,
+  user_45_54: ,
+  user_55_64: ,
+  user_65: ,
+  session_count_day: ,
+  session_count_week: ,
+  session_count_month: ,
+  referral_user_day: ,
+  referral_user_week: ,
+  referral_user_month: ,
+  direct_user_day: ,
+  direct_user_week: ,
+  direct_user_month: ,
+  social_user_day: ,
+  social_user_week: ,
+  social_user_month: ,
+  email_user_day: ,
+  email_user_week: ,
+  email_user_month: ,
+  oganic_search_day: ,
+  oganic_search_week: ,
+  oganic_search_month: 
+  )
+
+=begin
 
 # mailchimp
 MailchimpDb.destroy_all
@@ -63,7 +309,7 @@ def rank(data)
 end
 
 def convert_rate(data)
-  data[2].inner_text.to_i / 100.to_f
+  data[2].inner_text.to_f / 100
 end
 
 def pageview(data)
@@ -102,3 +348,5 @@ AlexaDb.create(
 )
 
 puts "create #{AlexaDb.count} alexa data"
+
+=end

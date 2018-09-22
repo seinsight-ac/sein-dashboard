@@ -6,9 +6,7 @@ Rails.application.routes.draw do
 
     collection do
       get :googleanalytics
-      get :mailchimp
       get :facebook
-      get :alexa
     end
 
   end
