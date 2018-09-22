@@ -3,12 +3,12 @@ class DashboardsController < ApplicationController
   before_action :fbinformation, :only => [:index, :facebook]
 
   def index
-    #google
+    # google
     ga = GoogleAnalytics.new
     
     web_users_week = ga.web_users_week
     web_users_month = ga.web_users_month
-    #官網使用者
+    # 官網使用者
     @web_users_week = web_users_week.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
     
     @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
@@ -19,7 +19,7 @@ class DashboardsController < ApplicationController
     @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
     @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
     
-    #使用者活躍度分析
+    # 使用者活躍度分析
     pageviews = ga.pageviews
     session_pageviews = ga.session_pageviews
 
@@ -36,7 +36,7 @@ class DashboardsController < ApplicationController
     @ga_last_7d_date = pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}[23..29].flat_map{|i|i}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
     @ga_last_30d_date = pageviews.first[1][0]["data"]["rows"].values_at(8,15,23,29).flat_map{|i|i.values.first}.flat_map { |i|i.slice(5..7)}.grep(/\d+/, &:to_i)
     
-    #流量管道
+    # 流量管道
     channel_grouping_week = ga.channel_grouping_week
     channel_grouping_month = ga.channel_grouping_month
 
@@ -52,7 +52,7 @@ class DashboardsController < ApplicationController
     @bounce_rate_month = channel_grouping_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.values_at(1,3,4,5,6).flat_map{|i|i.second}.grep(/\d+/, &:to_i)
     @bounce_rate_month = @bounce_rate_month[2], @bounce_rate_month[4], @bounce_rate_month[0], @bounce_rate_month[3], @bounce_rate_month[1]
     
-    #mailchimp
+    # mailchimp
     @mail_users = MailchimpDb.last.email_sent
     @mail_users_month_rate = rate_transit(@mail_users, MailchimpDb.last(2).first.email_sent)
 
@@ -73,9 +73,26 @@ class DashboardsController < ApplicationController
     @mail_links_rate = []
     @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << a / b.to_f }
 
-    #alexa
+    # alexa
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
-    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0]
+    @rate = []
+    AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].each do |rate|
+      @rate << rate.round(2)
+    end
+
+    # export to xls
+    export_xls = ExportXls.new
+    
+    #export_xls.mailchimp_xls(@campaigns)
+    #export_xls.alexa_xls(@sein, @newsmarket, @pansci, @einfo, @npost, @womany)
+    
+    respond_to do |format|
+      format.xls { send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+      }
+      format.html
+    end
   end
 
   def facebook
@@ -242,27 +259,6 @@ class DashboardsController < ApplicationController
 
 
 
-  def mailchimp
-    set_time
-    @campaigns = Mailchimp.campaigns(@month, @now)
-    
-    alexa_api
-
-    export_xls = ExportXls.new
-    
-    export_xls.mailchimp_xls(@campaigns)
-    export_xls.alexa_xls(@sein, @newsmarket, @pansci, @einfo, @npost, @womany)
-    
-    respond_to do |format|
-      format.xls { send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "社企流#{Date.today}資料分析.xls")
-      }
-      format.html
-    end
-
-  end
-
   private
 
   # 上個月星期一的日期 往後推七天
@@ -293,18 +289,23 @@ class DashboardsController < ApplicationController
     date.split('T').first.split('-').join()[4..7].to_i 
   end
 
+  def get_week_data(db, data)
+    a = []
+    a << db.last(22).pluck(:data)[22, 15]
+    a << db.last(22).pluck(:data)[8, 1]
+  end
+
   def fbinformation
 
     # facebook API
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
-    @fans_adds = @graph.get_object("278666028863859/insights/page_fan_adds_unique?fields=values&date_preset=last_30d")
-    @fans_adds_week_data = @fans_adds.second['values'].flat_map{ |i|i.values.first }[28]
-    @fans_adds_month_data = @fans_adds.third['values'].flat_map{ |i|i.values.first }[28]
-    @fans_adds_last_7d_data = @fans_adds.first['values'].flat_map{ |i|i.values.first }[22..28]
-    @fans_adds_last_30d_data = @fans_adds.first['values'].flat_map{ |i|i.values.first }
-    @fans_adds_last_4w_data = @fans_adds.second['values'].flat_map { |i|i.values.first }.values_at(7,14,21,28)
+    @fans_adds_week_data = FbDb.last(7).pluck(:fans).first
+    @fans_adds_month_data = FbDb.last(30).pluck(:fans).first
+    @fans_adds_last_7d_data = FbDb.last(7).pluck(:fans_adds_day)
+    @fans_adds_last_30d_data = FbDb.last(30).pluck(:fans_adds_day)
+    @fans_adds_last_4w_data = get_week_data(FbDb, "fans_adds_week")
     @fans_adds_week_rate = convert_tenthousandthrate(@fans_adds_week_data, @fans)
     @fans_adds_month_rate = convert_tenthousandthrate(@fans_adds_month_data, @fans)    
 
