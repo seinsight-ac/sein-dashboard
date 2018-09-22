@@ -1,13 +1,13 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw', idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw', idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
     </div>
     <div class="col-lg-3">
       <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '‱'} %>
@@ -43,11 +43,11 @@
 
 <script type="text/javascript">
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelpagefansw', idm: '#labelpagefansm', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
 
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelpageusersw', idm: '#labelpageusersm', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
-  <%= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelwebusersw', idm: '#labelwebusersm', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
 
   <%= render partial: "shared/tabclickmonthonly", locals: { linechartid: '#sparklinemailusers', data30d: @mail_users_last_30d} %>
 
