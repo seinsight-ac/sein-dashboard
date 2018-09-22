@@ -1,16 +1,16 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw',idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpostsusers', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpostsusersw',idm: 'labelpostsusersm', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%'} %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelnegativeusers', title: '粉專負面行動人數', data: @negative_users_week, rate: @negative_users_week_rate, linechart: 'sparklinenegativeusers', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelnegativeusersw',idm: 'labelnegativeusersm', title: '粉專負面行動人數', data: @negative_users_week, rate: @negative_users_week_rate, linechart: 'sparklinenegativeusers', percent: '%'} %>
     </div>
   </div>
 
@@ -44,13 +44,13 @@
 <script type="text/javascript">
 
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelpagefansw',idm: '#labelpagefansm', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
 
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelpageusersw',idm: '#labelpageusersm', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
 
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpostsusers', weekdata: @posts_users_week, monthdata: @posts_users_month, weekrate: @posts_users_week_rate, monthrate: @posts_users_month_rate, linechartid: '#sparklinepostsusers', data7d: @posts_users_last_7d, data30d: @posts_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelpostsusersw',idm: '#labelpostsusersm', weekdata: @posts_users_week, monthdata: @posts_users_month, weekrate: @posts_users_week_rate, monthrate: @posts_users_month_rate, linechartid: '#sparklinepostsusers', data7d: @posts_users_last_7d, data30d: @posts_users_last_30d} %>
 
-  <%= render partial: "shared/tabclick", locals: {id: '#labelnegativeusers', weekdata: @negative_users_week, monthdata: @negative_users_month, weekrate: @negative_users_week_rate, monthrate: @negative_users_month_rate, linechartid: '#sparklinenegativeusers', data7d: @negative_users_last_7d, data30d: @negative_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: '#labelnegativeusersw',idm: '#labelnegativeusersm', weekdata: @negative_users_week, monthdata: @negative_users_month, weekrate: @negative_users_week_rate, monthrate: @negative_users_month_rate, linechartid: '#sparklinenegativeusers', data7d: @negative_users_last_7d, data30d: @negative_users_last_30d} %>
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光人數", label2: "貼文互動人數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @posts_users_last_7d_data, weekdata2: @enagements_users_last_7d_data, monthdata1: @posts_users_last_4w_data, monthdata2: @enagements_users_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
 
@@ -58,7 +58,7 @@ $(function() {
 
   <%= render partial: "shared/linechartclick", locals: {id: 'labellinkclicks', linechartid: 'lineChartlinkclicks', dataname: "lineDatalinkclicks", label1: "貼文互動總數", label2: "連結點擊數", label3: "連結點擊率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @post_enagements_last_7d_data, weekdata2: @link_clicks_last_7d_data, monthdata1: @post_enagements_last_4w_data, monthdata2: @link_clicks_last_4w_data, weekrate: @link_clicks_rate_7d, monthrate: @link_clicks_rate_30d} %>
   
-  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", data1: @fans_male, data2: @fans_female} %>
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", data1: @fans_male_day, data2: @fans_female_day} %>
   
   <%= render partial: "shared/hbarchartclicklifetimeonly", locals: { barchartid: 'barChartfansage', dataname: "barDatafansage", labelY1: "15-17", labelY2: "18-24", labelY3: "25-34", labelY4: "35-44", labelY5: "45-54", labelY6: "55-64", labelY7: "64+",labelX1: "人數", lifetimedata: @fans_age } %> 
 

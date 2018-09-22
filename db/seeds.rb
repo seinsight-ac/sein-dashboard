@@ -420,6 +420,7 @@ end
 
 puts "create #{MailchimpDb.count} mailchimp data"
 
+
 # alexa
 AlexaDb.destroy_all
 
