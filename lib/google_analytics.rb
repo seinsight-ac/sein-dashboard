@@ -102,7 +102,7 @@ class GoogleAnalytics
             end_date: @before
           }
         ],page_token: "#{token}"
-
+      }]})
     return convert(request)
   end
 
@@ -127,7 +127,7 @@ class GoogleAnalytics
             end_date: @before
           }
         ],page_token: "#{token}"
-
+      }]})
     return convert(request)
   end
 
@@ -154,7 +154,7 @@ class GoogleAnalytics
             end_date: @before
           }
         ],page_token: "#{token}"
-
+      }]})
     return convert(request)
   end
 
