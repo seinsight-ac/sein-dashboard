@@ -21,5 +21,6 @@
 //= require chartjs/Chart.min.js
 //= require jquery_ujs
 //= require turbolinks
+//= require bootstrapTour/bootstrap-tour.min.js
 //= require_tree .
 

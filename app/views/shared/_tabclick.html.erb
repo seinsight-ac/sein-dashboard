@@ -1,4 +1,21 @@
 $(window).resize(function() {
+	if ($("<%= idw %>").hasClass("active")) {
+		$("<%= linechartid %>").sparkline(<%= data7d %>, {
+			type: 'line',
+			width: '100%',
+			height: '60',
+			lineColor: '#1ab394',
+			fillColor: "#ffffff"
+		}); 
+	}	else if ($("<%= idm %>").hasClass("active")) {
+		$("<%= linechartid %>").sparkline(<%= data7d %>, {
+			type: 'line',
+			width: '100%',
+			height: '60',
+			lineColor: '#1ab394',
+			fillColor: "#ffffff"
+		}); 
+	}
 });
 
 $("<%= idw %>").click(function(){
