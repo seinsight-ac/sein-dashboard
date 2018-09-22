@@ -1,3 +1,43 @@
+$(".navbar-header").click(function() {
+	if ($("<%= idw %>").hasClass("active")) {
+		if ($("body").hasClass("mini-navbar")) {
+			$("<%= linechartid %>").sparkline(<%= data7d %>, {
+				type: 'line',
+				width: '110%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			}); 
+		}	else {
+			$("<%= linechartid %>").sparkline(<%= data7d %>, {
+				type: 'line',
+				width: '90%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			}); 
+		}
+	}	else if ($("<%= idm %>").hasClass("active")) {
+				if ($("body").hasClass("mini-navbar")) {
+			$("<%= linechartid %>").sparkline(<%= data30d %>, {
+				type: 'line',
+				width: '110%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			}); 
+		}	else {
+			$("<%= linechartid %>").sparkline(<%= data30d %>, {
+				type: 'line',
+				width: '90%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			}); 
+		}
+	};
+});
+
 $(window).resize(function() {
 	if ($("<%= idw %>").hasClass("active")) {
 		$("<%= linechartid %>").sparkline(<%= data7d %>, {
@@ -8,7 +48,7 @@ $(window).resize(function() {
 			fillColor: "#ffffff"
 		}); 
 	}	else if ($("<%= idm %>").hasClass("active")) {
-		$("<%= linechartid %>").sparkline(<%= data7d %>, {
+		$("<%= linechartid %>").sparkline(<%= data30d %>, {
 			type: 'line',
 			width: '100%',
 			height: '60',

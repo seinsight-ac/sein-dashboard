@@ -182,6 +182,8 @@ set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_
 
 puts "create #{FbDb.count} fb data"
 
+=begin
+
 # ga
 
 GaDb.create(
@@ -250,7 +252,6 @@ GaDb.create(
   oganic_search_month: 
   )
 
-=begin
 
 # mailchimp
 MailchimpDb.destroy_all
@@ -290,6 +291,8 @@ set_mailchimp_db(campaigns)
 end
 
 puts "create #{MailchimpDb.count} mailchimp data"
+
+=end
 
 # alexa
 AlexaDb.destroy_all
@@ -346,4 +349,3 @@ AlexaDb.create(
 
 puts "create #{AlexaDb.count} alexa data"
 
-=end
