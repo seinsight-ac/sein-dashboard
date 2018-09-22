@@ -52,6 +52,8 @@ class GoogleAnalytics
 
   end
 
+  
+
   def pageviews
     request = GetReportsRequest.new(
       { report_requests: [
@@ -63,6 +65,7 @@ class GoogleAnalytics
       }]})
     return convert(request)
   end
+
 
 
   def session_pageviews
@@ -79,6 +82,16 @@ class GoogleAnalytics
     return convert(request)
   end
 
+  def pageviews_lastmonth
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:pageviews" }],
+             date_ranges: [{ start_date: "60daysAgo", 
+                           end_date: "31daysAgo" }],
+             view_id: "ga:55621750" 
+      }]})
+    return convert(request)
+  end
   
 
   def channel_grouping_week
@@ -132,26 +145,13 @@ class GoogleAnalytics
     return convert(request) 
   end
 
-  
-  
-  def user_type
-    request = GetReportsRequest.new(
-      { report_requests: [
-            { metrics: [{ expression: "ga:users" }],
-             dimensions: [{ name: "ga:userType" }],
-             date_ranges: [{ start_date: "today", 
-                           end_date: "today"}],
-             view_id: "ga:55621750" 
-      }]})
-    return convert(request)
-  end
 
-  def user_gender
+  def user_gender_month
     request = GetReportsRequest.new(
       { report_requests: [
             { metrics: [{ expression: "ga:users" }],
              dimensions: [ { name: "ga:userGender" }],
-             date_ranges: [ { start_date: "today", 
+             date_ranges: [ { start_date: "30daysAgo", 
                            end_date: "today"} ],
              view_id: "ga:55621750" 
       }]})
@@ -168,6 +168,28 @@ class GoogleAnalytics
              view_id: "ga:55621750" 
       }]})
     return convert(request)
+  end
+  def pageviews_per_session_day                  
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:pageviewsPerSession" }],
+             dimensions: [{ name: "ga:date" }],
+             date_ranges: [{ start_date: "365daysAgo", 
+                           end_date: "yesterday"}],
+             view_id: "ga:55621750" 
+      }]})
+    return convert(request)
+  end
+  def avg_session_duration_week
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { metrics: [{ expression: "ga:avgSessionDuration", formatting_Type: "FLOAT"}],
+             dimensions: [ { name: "ga:date" }],
+             date_ranges: [ { start_date: "365daysAgo", 
+                           end_date: "yesterday"}],
+             view_id: "ga:55621750" 
+      }]})
+    return convert(request) 
   end
   
   #網站瀏覽量
@@ -435,15 +457,14 @@ class GoogleAnalytics
 
   #平均瀏覽頁數
   #每次工作階段頁數
-
-  def pageviews_per_session_day                  
+  def device_month
     request = GetReportsRequest.new(
       { report_requests: [
-            { metrics: [{ expression: "ga:pageviewsPerSession" }],
-             dimensions: [{ name: "ga:date" }],
-             date_ranges: [{ start_date: "30daysAgo", 
-                           end_date: "today"}],
-             view_id: "ga:55621750" 
+        { metrics: [{ expression: "ga:users" }],
+         dimensions: [{ name: "ga:deviceCategory" }],
+         date_ranges: [{ start_date: "30daysAgo", 
+                           end_date: "yesterday"}],
+         view_id: "ga:55621750" 
       }]})
     return convert(request)
   end
