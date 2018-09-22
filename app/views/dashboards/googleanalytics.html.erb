@@ -1,19 +1,7 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-			<%= render partial: "shared/tab", locals: {id: 'labelwebusers', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
-    </div>
-    <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelpageusers', title: '官網瀏覽量', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%'} %>
-    </div>    
-    <div class="col-lg-3">
-			<%= render partial: "shared/tab", locals: {id: 'labelpagefans', title: '官網平均瀏覽頁數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '‱'} %>
-    </div>
-    <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {id: 'labelmailusers', title: '官網平均停留時間', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '‱'} %>
-    </div>
-  </div>
-
+		
   <div class="row">
 		<div class="col-lg-4">
 	    <%= render partial: "shared/barchart", locals: {id: 'labelwebtraffic', title: '官網使用者年齡分佈', linechartid: 'barChartwebtraffic'} %>
@@ -43,19 +31,20 @@
 
 <script type="text/javascript">
 $(function() {
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
-  <%= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
-  <%= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
-  <%= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
 
-  <%= render partial: "shared/hbarchartclicklifetime4only", locals: { barchartid: 'barChartfansage', dataname: "barDatafansage", labelY1: "15-17", labelY2: "18-24", labelY3: "25-34", labelY4: "35-44",labelX1: "人數", lifetimedata: @fans_age } %> 
-  <%= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "瀏覽量", label2: "多工作階段瀏覽量", label3: "活躍度", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @posts_users_last_7d_data, weekdata2: @enagements_users_last_7d_data, monthdata1: @posts_users_last_4w_data, monthdata2: @enagements_users_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
-  <%= render partial: "shared/polarchartclick", locals: {polarchartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", label3: "粉絲女性", data1: @fans_male, data2: @fans_female, data3: @fans_female} %>
+  <%#= render partial: "shared/tabclick", locals: {id: '#labelpagefans', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
+  <%#= render partial: "shared/tabclick", locals: {id: '#labelpageusers', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
+  <%#= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
+  <%#= render partial: "shared/tabclick", locals: {id: '#labelwebusers', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
+
+  <%#= render partial: "shared/hbarchartclicklifetime4only", locals: { barchartid: 'barChartfansage', dataname: "barDatafansage", labelY1: "15-17", labelY2: "18-24", labelY3: "25-34", labelY4: "35-44",labelX1: "人數", lifetimedata: @fans_age } %> 
+  <%#= render partial: "shared/linechartclick", locals: {id: 'labelfansretention', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "瀏覽量", label2: "多工作階段瀏覽量", label3: "活躍度", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @posts_users_last_7d_data, weekdata2: @enagements_users_last_7d_data, monthdata1: @posts_users_last_4w_data, monthdata2: @enagements_users_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
+  <%#= render partial: "shared/polarchartclick", locals: {polarchartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", label3: "粉絲女性", data1: @fans_male, data2: @fans_female, data3: @fans_female} %>
 
 
-  <%= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @ga_last_7d_date, last30ddate: @ga_last_30d_date ,weekdata1: @all_users_views_last_7d_data, weekdata2: @activeusers_views_last_7d_data, monthdata1: @all_users_views_last_30d_data, monthdata2: @activeusers_views_last_30d_data, weekrate: @users_activity_rate_7d, monthrate: @users_activity_rate_30d} %>
-  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", data1: @fans_male, data2: @fans_female} %>
-  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "粉絲男性", label2: "粉絲女性", data1: @fans_male, data2: @fans_female} %>
+  <%#= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @ga_last_7d_date, last30ddate: @ga_last_30d_date ,weekdata1: @all_users_views_last_7d_data, weekdata2: @activeusers_views_last_7d_data, monthdata1: @all_users_views_last_30d_data, monthdata2: @activeusers_views_last_30d_data, weekrate: @users_activity_rate_7d, monthrate: @users_activity_rate_30d} %>
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "男性", label2: "女性", data1: @male_user, data2: @female_user} %>
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "新訪客", label2: "舊訪客", data1: @new_vistor_rate, data2: @returning_vistor_rate} %>
 
 
 });

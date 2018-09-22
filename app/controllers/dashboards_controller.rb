@@ -123,6 +123,25 @@ class DashboardsController < ApplicationController
   
   end
 
+  def googleanalytics
+    ga = GoogleAnalytics.new
+
+    @user_age_bracket_week = ga.user_age_bracket_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
+    @user_age_bracket_month = ga.user_age_bracket_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
+    #性別
+    @female_user = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0].to_i
+    @male_user = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[1].to_i
+    
+    #新舊訪客
+    user_type = ga.user_type
+    @vistor = user_type.first[1][0]["data"]["totals"][0]["values"][0]
+    @new_vistor = user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
+    @returning_vistor = user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
+    @new_vistor_rate = (@new_vistor.to_f / @vistor.to_i).round(2)
+    @returning_vistor_rate = (@returning_vistor.to_f / @vistor.to_i).round(2)
+    
+  end
+
   def ga
     ga = GoogleAnalytics.new
     # #不重複訪客
@@ -136,13 +155,7 @@ class DashboardsController < ApplicationController
     # @web_users_month_rate = convert_percentrate(@web_users_month, @web_users_month_last_month)
     # @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
     # @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    # #新舊訪客
-    # @user_type_week = ga.user_type_week
-    # @vistor_week = @user_type_week.first[1][0]["data"]["totals"][0]["values"][0]
-    # @new_user_week = @user_type_week.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    # @old_user_week = @user_type_week.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    # @new_user_week_rate = @new_user_week / @vistor_week
-    # @old_user_week_rate = @old_user_week / @vistor_week
+    
     # @user_type_month = ga.user_type_month
     # @vistor_month = @user_type_month.first[1][0]["data"]["totals"][0]["values"][0]
     # @new_user_month = @user_type_month.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
@@ -181,10 +194,10 @@ class DashboardsController < ApplicationController
     @avg_time_on_page_date = ga.avg_time_on_page_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
     @pageviews_per_session_day = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i}.grep(/\d+/, &:to_f) 
     @pageviews_per_session_date = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    @female_user = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
-    @female_user_date = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
-    @male_user = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
-    @male_user_date = ga.user_gender.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
+    @female_user = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
+    @female_user_date = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
+    @male_user = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
+    @male_user_date = ga.user_gender_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
     @desktop = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0..364].grep(/\d+/, &:to_i)
     @desktop_date = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..364].grep(/\d+/, &:to_i)
     @mobile = ga.device_1.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[365..729].grep(/\d+/, &:to_i)
