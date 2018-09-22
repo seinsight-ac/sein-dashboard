@@ -8,7 +8,6 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
-
 # fb
 FbDb.destroy_all
 
@@ -182,76 +181,205 @@ set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_
 
 puts "create #{FbDb.count} fb data"
 
-=begin
-
 # ga
 
-GaDb.create(
-  date: ,
-  web_users_day: ,
-  web_users_week: ,
-  web_users_month: ,
-  session_pageviews_day: ,
-  session_pageviews_week: ,
-  session_pageviews_month: ,
-  users_day: ,
-  users_week: ,
-  users_month: ,
-  sessions_day: ,
-  sessions_week: ,
-  sessions_month: ,
-  active_users_day: ,
-  active_users_week: ,
-  active_users_month: ,
-  bouce_rate_day: ,
-  bouce_rate_week: ,
-  bouce_rate_month: ,
-  user_type_day: ,
-  user_type_week: ,
-  user_type_month: ,
-  pageviews_day: ,
-  pageviews_week: ,
-  pageviews_month: ,
-  avg_session_duration_day: ,
-  avg_session_duration_week: ,
-  avg_session_duration_month: ,
-  avg_time_on_page_day: ,
-  avg_time_on_page_week: ,
-  avg_time_on_page_month: ,
-  pageviews_per_session_day: ,
-  pageviews_per_session_week: ,
-  pageviews_per_session_month: ,
-  desktop_user: ,
-  mobile_user: ,
-  tablet_user: ,
-  female_user: ,
-  male_user: ,
-  user_18_24: ,
-  user_25_34: ,
-  user_35_44: ,
-  user_45_54: ,
-  user_55_64: ,
-  user_65: ,
-  session_count_day: ,
-  session_count_week: ,
-  session_count_month: ,
-  referral_user_day: ,
-  referral_user_week: ,
-  referral_user_month: ,
-  direct_user_day: ,
-  direct_user_week: ,
-  direct_user_month: ,
-  social_user_day: ,
-  social_user_week: ,
-  social_user_month: ,
-  email_user_day: ,
-  email_user_week: ,
-  email_user_month: ,
-  oganic_search_day: ,
-  oganic_search_week: ,
-  oganic_search_month: 
-  )
+GaDb.destroy_all
 
+def set_ga_db(user, user_7, user_30, session_pageview, 
+  bounce, pageview, session, channel, avg_session, avg_time_page, 
+  bracket, gender, page_per_session, device, user_type)
+  i = 0
+  b = 0
+  c = 0
+  d = 0
+  e = 0
+
+  while i < user.size
+    date = user[i]["dimensions"][0]
+
+    if user_7[i]["dimensions"][0] != date
+      puts "user_7"
+      puts date
+      puts user_7[i]["dimensions"][0]
+      break
+    elsif session_pageview[i]["dimensions"][0] != date
+      puts "session pageview"
+      puts date
+      puts session_pageview[i]["dimensions"][0]
+      break
+    elsif bounce[i]["dimensions"][0] != date
+      puts "bounce"
+      puts date
+      puts bounce[i]["dimensions"][0]
+      break
+    elsif pageview[i]["dimensions"][0] != date
+      puts "pageview"
+      puts date
+      puts pageview[i]["dimensions"][0]
+      break
+    elsif session[i]["dimensions"][0] != date
+      puts "session"
+      puts date
+      puts session[i]["dimensions"][0]
+      break
+    elsif channel[c]["dimensions"][0] != date
+      puts "channel"
+      puts date
+      puts channel[c]["dimensions"][0]
+      break
+    elsif bracket[e]["dimensions"][0] != date
+      puts "bracket"
+      puts date
+      puts bracket[e]["dimensions"][0]
+      break
+    elsif avg_session[i]["dimensions"][0] != date
+      puts "avg_session"
+      puts date
+      puts avg_session[i]["dimensions"][0]
+      break
+    elsif avg_time_page[i]["dimensions"][0] != date
+      puts "avg_time_page"
+      puts date
+      puts avg_time_page[i]["dimensions"][0]
+      break
+    elsif page_per_session[i]["dimensions"][0] != date
+      puts "page_per_session"
+      puts date
+      puts page_per_session[i]["dimensions"][0]
+      break
+    elsif gender[d]["dimensions"][0] != date
+      puts "gender"
+      puts date
+      puts gender[d]["dimensions"][0]
+      break
+    elsif user_type[d]["dimensions"][0] != date
+      puts "user_typ"
+      puts date
+      puts user_typ[d]["dimensions"][0]
+      break
+    elsif device[b]["dimensions"][0] != date
+      puts "device"
+      puts date
+      puts device[b]["dimensions"][0]
+      break
+    else
+      GaDb.create(
+      date: user[i]["dimensions"][0],
+      web_users_day: user[i]["metrics"][0]["values"][0].to_f,
+      web_users_week: user_7[i]["metrics"][0]["values"][0].to_f,
+      web_users_month: user_30[i]["metrics"][0]["values"][0].to_f,
+      session_pageviews_day: session_pageview[i]["metrics"][0]["values"][0].to_f,
+      sessions_day: session[i]["metrics"][0]["values"][0].to_f,
+      bouce_rate_day: bounce[i]["metrics"][0]["values"][0].to_f,
+      pageviews_day: pageview[i]["metrics"][0]["values"][0].to_f,
+      avg_session_duration_day: avg_session[i]["metrics"][0]["values"][0].to_f,
+      avg_time_on_page_day: avg_time_page[i]["metrics"][0]["values"][0].to_f,
+      pageviews_per_session_day: page_per_session[i]["metrics"][0]["values"][0].to_f,
+      desktop_user: device[b]["metrics"][0]["values"][0].to_f,
+      mobile_user: device[b + 1]["metrics"][0]["values"][0].to_f,
+      tablet_user: device[b + 2]["metrics"][0]["values"][0].to_f,
+      new_visitor: user_type[d]["metrics"][0]["values"][0].to_f,
+      return_visitor: user_type[d + 1]["metrics"][0]["values"][0].to_f,
+      female_user: gender[d]["metrics"][0]["values"][0].to_f,
+      male_user: gender[d + 1]["metrics"][0]["values"][0].to_f,
+      user_18_24: bracket[e]["metrics"][0]["values"][0].to_f,
+      user_25_34: bracket[e + 1]["metrics"][0]["values"][0].to_f,
+      user_35_44: bracket[e + 2]["metrics"][0]["values"][0].to_f,
+      user_45_54: bracket[e + 3]["metrics"][0]["values"][0].to_f,
+      user_55_64: bracket[e + 4]["metrics"][0]["values"][0].to_f,
+      user_65: bracket[e + 5]["metrics"][0]["values"][0].to_f,
+      direct_user_day: 
+      if channel[c]["dimensions"][1] == "Direct" 
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+        c += 1
+      elsif channel[c]["dimensions"][1] == "(Other)"
+        c += 1
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+      end,
+      direct_bounce: channel[t]["metrics"][0]["values"][1],
+      email_user_day: 
+      if channel[c]["dimensions"][1] == "Email" 
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+        c += 1
+      elsif channel[c]["dimensions"][1] == "Display"
+        c += 1
+        if channel[c]["dimensions"][1] == "Email" 
+          channel[c]["metrics"][0]["values"][0].to_f 
+          t = c
+          c += 1
+        end
+      else
+        c += 1
+      end,
+      email_bounce: channel[t]["metrics"][0]["values"][1],
+      oganic_search_day: 
+      if channel[c]["dimensions"][1] == "Organic Search" 
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+        c += 1
+      else
+        c += 1
+      end,
+      oganic_search_bounce: channel[t]["metrics"][0]["values"][1],
+      referral_user_day: 
+      if channel[c]["dimensions"][1] == "Referral" 
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+        c += 1
+      else
+        c += 1
+      end,
+      referral_bounce: channel[t]["metrics"][0]["values"][1],
+      social_user_day:
+      if channel[c]["dimensions"][1] == "Social" 
+        channel[c]["metrics"][0]["values"][0].to_f 
+        t = c
+        c += 1
+      else
+        c += 1
+      end,
+      social_bounce: channel[t]["metrics"][0]["values"][1]
+      )
+    end
+
+    i += 1
+    b += 3
+    e += 6
+    d += 2
+    c += 1
+
+  end
+end
+
+years_ago = (Date.today << 12).to_s
+today = (Date.today - 1).to_s
+
+ga = GoogleAnalytics.new(years_ago, today)
+
+user = ga.users
+user_7 = ga.users_7
+user_30 = ga.users_30
+session_pageview = ga.page_per_session
+bounce = ga.bounce
+pageview = ga.pageview
+session = ga.session
+user_type = ga.user_type
+channel = ga.channel + ga.channel(1000)
+avg_session = ga.avg_session
+avg_time_page = ga.avg_time_page
+bracket = ga.bracket + ga.bracket(1000) + ga.bracket(2000)
+gender = ga.gender
+page_per_session = ga.page_per_session
+device = ga.device + ga.device(1000)
+
+set_ga_db(user, user_7, user_30, session_pageview, bounce, 
+  pageview, session, channel, avg_session, avg_time_page, 
+  bracket, gender, page_per_session, device, user_type)
+
+puts "create #{GaDb.count} ga data"
 
 # mailchimp
 MailchimpDb.destroy_all
@@ -292,7 +420,6 @@ end
 
 puts "create #{MailchimpDb.count} mailchimp data"
 
-=end
 
 # alexa
 AlexaDb.destroy_all
@@ -348,4 +475,3 @@ AlexaDb.create(
 )
 
 puts "create #{AlexaDb.count} alexa data"
-
