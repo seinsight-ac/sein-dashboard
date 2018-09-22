@@ -157,7 +157,7 @@ class DashboardsController < ApplicationController
     # @user_type_week = ga.user_type_week
     # @vistor_week = @user_type_week.first[1][0]["data"]["totals"][0]["values"][0]
     # @new_user_week = @user_type_week.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    # @old_user_week = @user_type_week.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
+    # @old_user_week = @user_type_week.first[1][0]["data"]["rows"][1]["metrics"][0]rails ["values"][0]
     # @new_user_week_rate = @new_user_week / @vistor_week
     # @old_user_week_rate = @old_user_week / @vistor_week
     # @user_type_month = ga.user_type_month
