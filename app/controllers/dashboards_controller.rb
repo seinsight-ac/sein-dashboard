@@ -183,32 +183,6 @@ class DashboardsController < ApplicationController
 
   def ga
     ga = GoogleAnalytics.new
-    # #不重複訪客
-    # web_users_week = ga.web_users_week
-    # web_users_month = ga.web_users_month
-    # @web_users_week = web_users_week.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    # @web_users_week_last_week = web_users_week.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i
-    # @web_users_month = web_users_month.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0].to_i
-    # @web_users_month_last_month = web_users_month.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0].to_i  
-    # @web_users_week_rate = convert_percentrate(@web_users_week, @web_users_week_last_week)  
-    # @web_users_month_rate = convert_percentrate(@web_users_month, @web_users_month_last_month)
-    # @web_users_last_7d = web_users_week.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    # @web_users_last_30d = web_users_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    
-    # @user_type_month = ga.user_type_month
-    # @vistor_month = @user_type_month.first[1][0]["data"]["totals"][0]["values"][0]
-    # @new_user_month = @user_type_month.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    # @old_user_month = @user_type_month.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    # @new_user_month_rate = @new_user_week / @vistor_week
-    # @old_user_month_rate = @old_user_week / @vistor_week
-    # #瀏覽量
-    # 
-    # #每次工作階段頁數
-      # @pageviews_per_session_week = ga.pageviews_per_session.first[1][0]["data"]["rows"][29]["metrics"][0]["values"][0]
-      # @pageviews_per_session_last_week = ga.pageviews_per_session.first[1][0]["data"]["rows"][22]["metrics"][0]["values"][0]
-
-    
-
     #gadb
     # @users_day = ga.users_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}
     # @user_date = ga.users_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
@@ -277,6 +251,10 @@ class DashboardsController < ApplicationController
     # @social_date = ga.channel_grouping_day_2.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[549..913].grep(/\d+/, &:to_i)
     # @active_user_day = ga.active_user_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
     # @active_user_date = ga.active_user_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i) 
+    # @session_pageviews = @session_pageviews = ga.session_pageviews_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
+    # @session_pageviews_date = ga.session_pageviews_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.first.split}.flat_map{|i|i[1]}[0..364].grep(/\d+/, &:to_i)
+    
+    
   end  
     
 

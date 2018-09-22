@@ -348,6 +348,20 @@ class GoogleAnalytics
     return convert(request)
   end
 
+  def session_pageviews_day
+    request = GetReportsRequest.new(
+      { report_requests: [
+            { view_id: "ga:55621750",
+              page_size: 365,
+              metrics: [{ expression: "ga:pageviews" }],
+             dimensions: [{ name: "ga:sessionCount" }, { name: "ga:date" }],
+             date_ranges: [{ start_date: "365daysAgo", 
+                           end_date: "yesterday" }]
+                  
+      }]})
+    return convert(request)
+  end
+
 
 
 
