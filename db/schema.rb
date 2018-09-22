@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180919153109) do
+ActiveRecord::Schema.define(version: 20180922125419) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -39,6 +39,90 @@ ActiveRecord::Schema.define(version: 20180919153109) do
     t.integer "womany_on_site"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "dashboards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "fb_dbs", force: :cascade do |t|
+    t.datetime "date"
+    t.integer "fans"
+    t.integer "fans_adds_day"
+    t.integer "fans_losts_day"
+    t.integer "page_users_day"
+    t.integer "posts_users_day"
+    t.integer "fans_adds_week"
+    t.integer "fans_losts_week"
+    t.integer "page_users_week"
+    t.integer "posts_users_week"
+    t.integer "fans_adds_month"
+    t.integer "fans_losts_month"
+    t.integer "page_users_month"
+    t.integer "posts_users_month"
+    t.integer "post_enagements_day"
+    t.integer "negative_users_day"
+    t.integer "post_enagements_week"
+    t.integer "negative_users_week"
+    t.integer "post_enagements_month"
+    t.integer "negative_users_month"
+    t.integer "link_clicks_day"
+    t.integer "link_clicks_week"
+    t.integer "link_clicks_month"
+    t.integer "fans_female_day"
+    t.integer "fans_male_day"
+    t.integer "fans_13_17"
+    t.integer "fans_18_24"
+    t.integer "fans_25_34"
+    t.integer "fans_35_44"
+    t.integer "fans_45_54"
+    t.integer "fans_55_64"
+    t.integer "fans_65"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "enagements_users_day"
+    t.integer "enagements_users_week"
+    t.integer "enagements_users_month"
+  end
+
+  create_table "ga_dbs", force: :cascade do |t|
+    t.datetime "date"
+    t.integer "web_users_day"
+    t.integer "web_users_week"
+    t.integer "web_users_month"
+    t.float "session_pageviews_day"
+    t.integer "sessions_day"
+    t.float "bouce_rate_day"
+    t.integer "pageviews_day"
+    t.float "avg_session_duration_day"
+    t.float "avg_time_on_page_day"
+    t.float "pageviews_per_session_day"
+    t.integer "desktop_user"
+    t.integer "mobile_user"
+    t.integer "tablet_user"
+    t.integer "female_user"
+    t.integer "male_user"
+    t.integer "user_18_24"
+    t.integer "user_25_34"
+    t.integer "user_35_44"
+    t.integer "user_45_54"
+    t.integer "user_55_64"
+    t.integer "user_65"
+    t.integer "referral_user_day"
+    t.integer "direct_user_day"
+    t.integer "social_user_day"
+    t.integer "email_user_day"
+    t.integer "oganic_search_day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "direct_bounce"
+    t.float "email_bounce"
+    t.float "social_bounce"
+    t.float "oganic_search_bounce"
+    t.integer "new_visitor"
+    t.integer "return_visitor"
+    t.float "referral_bounce"
   end
 
   create_table "mailchimp_dbs", force: :cascade do |t|
