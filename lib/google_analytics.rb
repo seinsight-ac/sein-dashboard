@@ -83,6 +83,7 @@ class GoogleAnalytics
 
   private
 
+
   def request_simple(metrics, token = 0)
     request = GetReportsRequest.new(
       { report_requests: [{
@@ -104,6 +105,7 @@ class GoogleAnalytics
       }]})
     return convert(request)
   end
+
 
   def request_two_dim(metrics, dimensions, token = 0)
     request = GetReportsRequest.new(
@@ -128,6 +130,7 @@ class GoogleAnalytics
       }]})
     return convert(request)
   end
+
 
   def request_two(metrics1, metrics2, dimensions, token = 0)
     request = GetReportsRequest.new(

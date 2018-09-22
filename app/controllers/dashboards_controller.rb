@@ -183,6 +183,7 @@ class DashboardsController < ApplicationController
   end
 
 
+
   private
 
   def convert_percentrate(datanew,  dataold)
