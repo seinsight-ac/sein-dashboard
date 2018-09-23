@@ -5,6 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+=begin
 
 User.create(email: "test@example.com", password: "12345678")
 
@@ -180,7 +181,7 @@ end
 set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
 
 puts "create #{FbDb.count} fb data"
-
+=end
 # ga
 
 GaDb.destroy_all
@@ -295,58 +296,66 @@ def set_ga_db(user, user_7, user_30, session_pageview,
       user_65: bracket[e + 5]["metrics"][0]["values"][0].to_f,
       direct_user_day: 
       if channel[c]["dimensions"][1] == "Direct" 
-        channel[c]["metrics"][0]["values"][0].to_f 
         t = c
         c += 1
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       elsif channel[c]["dimensions"][1] == "(Other)"
-        c += 1
-        channel[c]["metrics"][0]["values"][0].to_f 
-        t = c
+        t = c + 1
+        c += 2
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       end,
-      direct_bounce: channel[t]["metrics"][0]["values"][1],
+      direct_bounce: 
+      if channel[t]["dimensions"][1] == "Direct" 
+        channel[t]["metrics"][0]["values"][1].to_f
+      end,
       email_user_day: 
       if channel[c]["dimensions"][1] == "Email" 
-        channel[c]["metrics"][0]["values"][0].to_f 
         t = c
         c += 1
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       elsif channel[c]["dimensions"][1] == "Display"
         c += 1
         if channel[c]["dimensions"][1] == "Email" 
-          channel[c]["metrics"][0]["values"][0].to_f 
           t = c
           c += 1
+          channel[c - 1]["metrics"][0]["values"][0].to_f
         end
-      else
-        c += 1
       end,
-      email_bounce: channel[t]["metrics"][0]["values"][1],
+      email_bounce: 
+      if channel[t]["dimensions"][1] == "Email" 
+        channel[t]["metrics"][0]["values"][1].to_f
+      end,
       oganic_search_day: 
       if channel[c]["dimensions"][1] == "Organic Search" 
-        channel[c]["metrics"][0]["values"][0].to_f 
         t = c
         c += 1
-      else
-        c += 1
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       end,
-      oganic_search_bounce: channel[t]["metrics"][0]["values"][1],
+      oganic_search_bounce: 
+      if channel[t]["dimensions"][1] == "Organic Search" 
+        channel[t]["metrics"][0]["values"][1].to_f
+      end,
       referral_user_day: 
       if channel[c]["dimensions"][1] == "Referral" 
-        channel[c]["metrics"][0]["values"][0].to_f 
         t = c
         c += 1
-      else
-        c += 1
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       end,
-      referral_bounce: channel[t]["metrics"][0]["values"][1],
+      referral_bounce: 
+      if channel[t]["dimensions"][1] == "Referral" 
+        channel[t]["metrics"][0]["values"][1].to_f
+      end,
       social_user_day:
       if channel[c]["dimensions"][1] == "Social" 
-        channel[c]["metrics"][0]["values"][0].to_f 
         t = c
         c += 1
-      else
-        c += 1
+        channel[c - 1]["metrics"][0]["values"][0].to_f
       end,
-      social_bounce: channel[t]["metrics"][0]["values"][1],
+      social_bounce: 
+      if channel[t]["dimensions"][1] == "Social" 
+        channel[t]["metrics"][0]["values"][1].to_f
+      end,
+
       single_session: single[i]["metrics"][0]["values"][0].to_f
       )
     end
@@ -387,7 +396,7 @@ set_ga_db(user, user_7, user_30, session_pageview, bounce,
   bracket, gender, page_per_session, device, user_type, single)
 
 puts "create #{GaDb.count} ga data"
-
+=begin
 # mailchimp
 MailchimpDb.destroy_all
 
@@ -482,3 +491,4 @@ AlexaDb.create(
 )
 
 puts "create #{AlexaDb.count} alexa data"
+=end
