@@ -10,7 +10,11 @@
 </div>
 
 <script type="text/javascript">
+
+// Minimalize menu
+
 $('.navbar-minimalize').on('click', function (event) {
+	console.log('toggle')
 	event.preventDefault();
 	$("body").toggleClass("mini-navbar");
 	SmoothlyMenu();
