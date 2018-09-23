@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180922125419) do
+ActiveRecord::Schema.define(version: 20180923100123) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(version: 20180922125419) do
     t.integer "new_visitor"
     t.integer "return_visitor"
     t.float "referral_bounce"
+    t.integer "single_session"
   end
 
   create_table "mailchimp_dbs", force: :cascade do |t|

@@ -19,9 +19,9 @@ class DashboardsController < ApplicationController
 
     @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
     @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
+
     ga = GoogleAnalytics.new("2017-09-23","2018-09-22")
     @single = ga.session_pageviews.flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i}.grep(/\d+/, &:to_i)
-    
 
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
     @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
@@ -38,16 +38,11 @@ class DashboardsController < ApplicationController
     @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
     @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2),  (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30).round(2)]
     
-    
-    
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
     @mail_users_month_rate = convert_percentrate(MailchimpDb.last(4).first.email_sent - @mail_users, MailchimpDb.last(12).first.email_sent - MailchimpDb.last(8).first.email_sent)
 
-    @last_12w_date = []
-    MailchimpDb.last(4).pluck(:date).each do |d|
-      @last_12w_date << d.strftime("%m%d").to_i
-    end
+    @last_12w_date = MailchimpDb.last(4).pluck(:date).map { |a| a.strftime("%m%d").to_i }
     @mail_users_last_30d = MailchimpDb.last(4).pluck(:email_sent)
 
     @mail_views = MailchimpDb.last(4).pluck(:open)
@@ -187,20 +182,6 @@ class DashboardsController < ApplicationController
     @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
   end
 
-  def set_time
-    @now = Time.now
-    @now.utc
-    @month = @now - 60 * 60 * 24 * 35
-    @now.strftime("%Y-%m-%d")
-    @month.strftime("%Y-%m-%d")
-  end
-
-  def get_week_data(db, data)
-    a = []
-    a << db.last(22).pluck(:data)[22, 15]
-    a << db.last(22).pluck(:data)[8, 1]
-  end
-
   def fbinformation
 
     # facebook API
@@ -248,14 +229,6 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
-  end
-
-  def convert_tenthousandthrate(datanew,  dataold)
-      return (datanew * 10000 / (dataold - datanew).to_f).round(2)
-  end
-
-  def ga_data_date
-    first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
   end
   
 end
