@@ -7,8 +7,6 @@ class RemoveColumnFromGaDb < ActiveRecord::Migration[5.1]
     remove_column :ga_dbs, :users_month
     remove_column :ga_dbs, :sessions_week
     remove_column :ga_dbs, :sessions_month
-    remove_column :ga_dbs, :bounce_rate_week
-    remove_column :ga_dbs, :bounce_rate_month
     remove_column :ga_dbs, :user_type_day
     remove_column :ga_dbs, :user_type_week
     remove_column :ga_dbs, :user_type_month
