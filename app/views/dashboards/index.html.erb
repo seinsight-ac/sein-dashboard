@@ -10,15 +10,15 @@
       <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '‱'} %>
+      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '%'} %>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention'} %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:213 } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity'} %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213 } %>
     </div>
     <div class="col-lg-4">
       <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity'} %>
