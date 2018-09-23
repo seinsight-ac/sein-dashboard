@@ -347,7 +347,7 @@ def set_ga_db(user, user_7, user_30, session_pageview,
         c += 1
       end,
       social_bounce: channel[t]["metrics"][0]["values"][1],
-      single_session: channel[t]["metrics"][0]["values"][0].to_f
+      single_session: single[i]["metrics"][0]["values"][0].to_f
       )
     end
 
