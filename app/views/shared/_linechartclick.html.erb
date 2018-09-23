@@ -1,3 +1,4 @@
+
 $("<%= idw %>").click(function(){
 	$(this).siblings().removeClass('active');
 	$(this).addClass('active');
@@ -49,6 +50,7 @@ $("<%= idw %>").click(function(){
 	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 });
 
+
 $("<%= idm %>").click(function(){
 	$(this).siblings().removeClass('active');
 	$(this).addClass('active');
@@ -97,6 +99,7 @@ $("<%= idm %>").click(function(){
 			}],
 		}
 	};
+	
 	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions});   
 });
 
@@ -145,4 +148,5 @@ var lineOptions = {
 		}],
 	}
 };
+
 new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 

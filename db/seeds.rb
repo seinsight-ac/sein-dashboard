@@ -355,6 +355,7 @@ def set_ga_db(user, user_7, user_30, session_pageview,
       if channel[t]["dimensions"][1] == "Social" 
         channel[t]["metrics"][0]["values"][1].to_f
       end,
+
       single_session: single[i]["metrics"][0]["values"][0].to_f
       )
     end
