@@ -54,7 +54,7 @@ class GoogleAnalytics
   end
 
   def channel(token = 0)
-    request_two("ga:users", "ga:bounceRate", "ga:channelGrouping", token)
+    request_two("ga:sessions", "ga:bounceRate", "ga:channelGrouping", token)
   end
 
   def avg_session

@@ -12,7 +12,7 @@ class ExportXls
     self.book = Spreadsheet::Workbook.new 
 
     self.head = Spreadsheet::Format.new :pattern_fg_color => :orange, :vertical_align => :center, 
-    :weight => :bold, :size => 14, :pattern => 1, :horizontal_align => :center, :height => 18
+    :weight => :bold, :size => 14, :pattern => 1, :horizontal_align => :center
     self.percent = Spreadsheet::Format.new :number_format => '##.##%', :horizontal_align => :center
     self.center = Spreadsheet::Format.new :horizontal_align => :center, :vertical_align => :center
     self.left = Spreadsheet::Format.new :horizontal_align => :left, :vertical_align => :center
@@ -26,12 +26,82 @@ class ExportXls
     @sheet3.default_format = center
   end
 
-  def ga_xls(date)
+  def fb_xls(data)
 
   end
 
-  def fb_xls(data)
+  def ga_xls(date)
+    @sheet2.row(0).set_format(0, head)
+    @sheet2[0, 0] = "GA各項指標"
+    @sheet2[1, 0] = "工作階段"
+    @sheet2[2, 0] = "不重複訪客"
+    @sheet2[3, 0] = "電子報標題"
+    @sheet2[4, 0] = "新訪客(只造訪一次)"
+    @sheet2[5, 0] = "回訪客(來2次以上)"
+    @sheet2[6, 0] = "回訪客比例"
+    @sheet2[7, 0] = "網站瀏覽量"
+    @sheet2[8, 0] = "平均瀏覽頁數"
+    @sheet2[9, 0] = "平均停留時間"
+    @sheet2[10, 0] = "星期幾最多訪客"
+    @sheet2[11, 0] = "平均網頁停留時間"
+    @sheet2.merge_cells(12, 0, 13, 0)
+    @sheet2[12, 0] = "流量管道：有機搜尋"
+    @sheet2.merge_cells(14, 0, 15, 0)
+    @sheet2[14, 0] = "流量管道：社群媒體(FB為主)"
+    @sheet2.merge_cells(16, 0, 17, 0)
+    @sheet2[16, 0] = "流量管道：直接流量/n(網址/我的最愛/EDM)"
+    @sheet2.merge_cells(18, 0, 19, 0)
+    @sheet2[18, 0] = "流量管道：推薦連結"
+    @sheet2.merge_cells(20, 0, 21, 0)
+    @sheet2[20, 0] = "年齡分佈/n（18-24歲）"
+    @sheet2.merge_cells(22, 0, 23, 0)
+    @sheet2[22, 0] = "（25-34歲）"
+    @sheet2.merge_cells(24, 0, 25, 0)
+    @sheet2[24, 0] = "（35-44歲）"
+    @sheet2.merge_cells(26, 0, 27, 0)
+    @sheet2[26, 0] = "（45-54歲）"
+    @sheet2[27, 0] = "性別（男性）"
+    @sheet2[28, 0] = "（女性）"
 
+    @sheet2.column(0).width = 20
+
+    i = 0
+    data.each do |d|
+      @sheet2.row(0).set_format(i, head)
+      @sheet2[0, i] = "week#{i}(#{d[i].date.strftime("%Y-%m-%d")}-#{d[i+6].date.strftime("%Y-%m-%d")}"
+
+      @sheet2[1, 0] = d[i..i+6].pluck(:sessions_day).reduce(:+)
+      @sheet2[2, 0] = "不重複訪客"
+      @sheet2[3, 0] = "電子報標題"
+      @sheet2[4, 0] = "新訪客(只造訪一次)"
+      @sheet2[5, 0] = "回訪客(來2次以上)"
+      @sheet2[6, 0] = "回訪客比例"
+      @sheet2[7, 0] = "網站瀏覽量"
+      @sheet2[8, 0] = "平均瀏覽頁數"
+      @sheet2[9, 0] = "平均停留時間"
+      @sheet2[10, 0] = "星期幾最多訪客"
+      @sheet2[11, 0] = "平均網頁停留時間"
+      @sheet2.merge_cells(12, 0, 13, 0)
+      @sheet2[12, 0] = "流量管道：有機搜尋"
+      @sheet2.merge_cells(14, 0, 15, 0)
+      @sheet2[14, 0] = "流量管道：社群媒體(FB為主)"
+      @sheet2.merge_cells(16, 0, 17, 0)
+      @sheet2[16, 0] = "流量管道：直接流量/n(網址/我的最愛/EDM)"
+      @sheet2.merge_cells(18, 0, 19, 0)
+      @sheet2[18, 0] = "流量管道：推薦連結"
+      @sheet2.merge_cells(20, 0, 21, 0)
+      @sheet2[20, 0] = "年齡分佈/n（18-24歲）"
+      @sheet2.merge_cells(22, 0, 23, 0)
+      @sheet2[22, 0] = "（25-34歲）"
+      @sheet2.merge_cells(24, 0, 25, 0)
+      @sheet2[24, 0] = "（35-44歲）"
+      @sheet2.merge_cells(26, 0, 27, 0)
+      @sheet2[26, 0] = "（45-54歲）"
+      @sheet2[27, 0] = "性別（男性）"
+      @sheet2[28, 0] = "（女性）"
+
+      i += 7
+    end
   end
 
   def mailchimp_xls(data)
