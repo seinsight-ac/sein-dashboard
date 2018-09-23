@@ -5,11 +5,53 @@
 		</div>
 		<ul class="nav navbar-top-links">
 			<%= render 'layouts/alert' %>
+			<div class="pull-right" style=" padding: 15px;">
+				<div class="btn-group">
+					<button id="switchweek"" type="button" class="btn btn-xs btn-white active">Week</button>
+					<button id="switchmonth" type="button" class="btn btn-xs btn-white">Month</button>
+				</div>
+			</div>
 		</ul>
 	</nav>
 </div>
 
 <script type="text/javascript">
+
+$("<%= idw %>").click(function(){}
+	$(this).siblings().removeClass('active');
+	$(this).addClass('active');
+	$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= weekdata %>');
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= weekrate %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(monthrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(weekrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(monthrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(weekrate) %>')
+	$("<%= linechartid %>").sparkline(<%= data7d %>, {
+		type: 'line',
+		width: '100%',
+		height: '60',
+		lineColor: '#1ab394',
+		fillColor: "#ffffff"
+	}); 
+});
+
+$("<%= idm %>").click(function(){
+	$(this).siblings().removeClass('active');
+	$(this).addClass('active');
+	$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= monthdata %>');
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= monthrate %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(weekrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(monthrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(weekrate) %>')
+	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(monthrate) %>')
+	$("<%= linechartid %>").sparkline(<%= data30d %>, {
+		type: 'line',
+		width: '100%',
+		height: '60',
+		lineColor: '#1ab394',
+		fillColor: "#ffffff"
+	});    
+});
 
 // Minimalize menu
 
