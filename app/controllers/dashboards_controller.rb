@@ -3,7 +3,6 @@ class DashboardsController < ApplicationController
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :index, :only => [:googleanalytics]
 
-
   def index
     # google
     @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
