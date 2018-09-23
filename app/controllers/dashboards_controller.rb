@@ -182,7 +182,7 @@ class DashboardsController < ApplicationController
   private
 
   def convert_percentrate(datanew,  dataold)
-    return ((datanew - dataold) / dataold.to_f * 100).round(2)
+    return ((datanew - dataold) / dataold.abs.to_f * 100).round(2)
   end
 
   def divide_date(date)

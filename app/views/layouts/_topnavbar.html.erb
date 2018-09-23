@@ -5,12 +5,62 @@
 		</div>
 		<ul class="nav navbar-top-links">
 			<%= render 'layouts/alert' %>
+			<div class="pull-right" style=" padding: 15px;">
+				<div class="btn-group">
+					<button id="switchweek"" type="button" class="btn btn-xs">Week</button>
+					<button id="switchmonth" type="button" class="btn btn-xs">Month</button>
+				</div>
+			</div>
 		</ul>
 	</nav>
 </div>
 
 <script type="text/javascript">
+
+$("#switchweek").click(function() {
+	$(this).siblings().removeClass('label-primary');
+	$(this).addClass('label-primary');
+	$(this).siblings().removeAttr("style");
+	$(this).css("color","#ffffff");
+	$( "#labelpagefansw" ).trigger( "click" );
+	$( "#labelpageusersw" ).trigger( "click" );
+	$( "#labelwebusersw" ).trigger( "click" );
+	$( "#labelfansretentionw" ).trigger( "click" );
+	$( "#labelwebactivityw" ).trigger( "click" );
+	$( "#labelwebtrafficw" ).trigger( "click" );
+	$( "#labelpageviewsw" ).trigger( "click" );
+	$( "#labelpageviewspersessionw" ).trigger( "click" );
+	$( "#labelavgsessiondurationw" ).trigger( "click" );
+	$( "#labelpostsusersw" ).trigger( "click" );
+	$( "#labelnegativeusersw" ).trigger( "click" );
+	$( "#labellinkclicksw" ).trigger( "click" );
+	$( "#labelfansaddsw" ).trigger( "click" );
+})
+
+$("#switchmonth").click(function() {
+	$(this).siblings().removeClass('label-primary');
+	$(this).addClass('label-primary');
+	$(this).siblings().removeAttr("style");
+	$(this).css("color","#ffffff");
+	$( "#labelpagefansm" ).trigger( "click" );
+	$( "#labelpageusersm" ).trigger( "click" );
+	$( "#labelwebusersm" ).trigger( "click" );
+	$( "#labelfansretentionm" ).trigger( "click" );
+	$( "#labelwebactivitym" ).trigger( "click" );
+	$( "#labelwebtrafficm" ).trigger( "click" );
+	$( "#labelpageviewsm" ).trigger( "click" );
+	$( "#labelpageviewspersessionm" ).trigger( "click" );
+	$( "#labelavgsessiondurationm" ).trigger( "click" );
+	$( "#labelpostsusersm" ).trigger( "click" );
+	$( "#labelnegativeusersm" ).trigger( "click" );
+	$( "#labellinkclicksm" ).trigger( "click" );
+	$( "#labelfansaddsm" ).trigger( "click" );
+})
+
+// Minimalize menu
+
 $('.navbar-minimalize').on('click', function (event) {
+	console.log('toggle')
 	event.preventDefault();
 	$("body").toggleClass("mini-navbar");
 	SmoothlyMenu();
