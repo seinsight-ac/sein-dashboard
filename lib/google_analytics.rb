@@ -107,7 +107,6 @@ class GoogleAnalytics
 
   private
 
-
   def request_simple(metrics, token = 0)
     request = GetReportsRequest.new(
       { report_requests: [{
