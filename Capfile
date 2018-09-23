@@ -1,4 +1,4 @@
-require "whenever/capistrano"
+# require "whenever/capistrano"
 # Load DSL and set up stages
 require "capistrano/setup"
 
