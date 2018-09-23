@@ -17,9 +17,6 @@ class DashboardsController < ApplicationController
     @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
     @all_users_views_last_30d_data = GaDb.last(30).pluck(:pageviews_day)
 
-    
-    
-
     @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
     @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
 
@@ -171,8 +168,6 @@ class DashboardsController < ApplicationController
     @returning_visitor = GaDb.last(30).pluck(:return_visitor).reduce(:+)
 
   end
-
-
 
   private
 
