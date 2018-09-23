@@ -1,4 +1,6 @@
 # require "whenever/capistrano"
+# require 'capistrano/sidekiq'
+
 # Load DSL and set up stages
 require "capistrano/setup"
 
