@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     collection do
       get :googleanalytics
       get :facebook
+      get :excel
     end
 
   end

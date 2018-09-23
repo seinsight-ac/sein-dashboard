@@ -66,7 +66,7 @@ class DashboardsController < ApplicationController
     respond_to do |format|
       format.xls { send_data(export_xls.export,
         :type => "text/excel; charset=utf-8; header=present",
-        :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+        :filename => "社企流資料分析.xls")
       }
       format.html
     end
@@ -160,6 +160,25 @@ class DashboardsController < ApplicationController
 
   end
 
+  def excel
+    last_month_mon
+    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
+    alexa = AlexaDb.last
+
+    export_xls = ExportXls.new
+    
+    export_xls.mailchimp_xls(mailchimp)
+    export_xls.alexa_xls(alexa)
+    
+    respond_to do |format|
+      format.xls { send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+      }
+      format.html
+    end
+  end
+
   private
 
   def convert_percentrate(datanew,  dataold)
@@ -179,6 +198,7 @@ class DashboardsController < ApplicationController
     while @last.strftime("%a") != "Mon"
       @last -= 1
     end
+    @end = (@last + 28).strftime("%Y-%m-%d")
     @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
   end
 
