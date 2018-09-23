@@ -1,0 +1,26 @@
+var <%= dataname %> = {
+	datasets: [{
+		data: [
+			<%= data1 %>,<%= data2 %>,<%= data3 %>
+		],
+		backgroundColor: [
+			"#a3e1d4", "#dedede", "#b5b8cf"
+		],
+	}],
+	labels: [
+		"<%= label1 %>","<%= label2 %>","<%= label3 %>"
+	]
+};
+
+var polarOptions = {
+	segmentStrokeWidth: 2,
+	responsive: true,
+	scale: {
+		ticks: {
+			beginAtZero: true
+		},
+		reverse: false
+	},
+};
+
+new Chart(document.getElementById("<%= polarchartid %>").getContext("2d"), {type: 'polarArea', data: <%= dataname %>, options:polarOptions});

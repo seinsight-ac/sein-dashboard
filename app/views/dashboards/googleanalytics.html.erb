@@ -1,0 +1,56 @@
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
+    </div>
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%'} %>
+    </div>    
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', title: '官網平均瀏覽頁數', data: @pageviews_per_session_week, rate: @pageviews_per_session_week_rate, linechart: 'sparklinepageviewspersession', percent: '‱'} %>
+    </div>
+    <div class="col-lg-3">
+      <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '‱'} %>
+    </div>
+  </div>
+   <div class="row">
+    <div class="col-lg-4">
+      <%= render partial: "shared/barchart", locals: {id: 'labeluserage', title: '官網使用者年齡分佈', linechartid: 'barChartuserage'} %>
+    </div>
+    <div class="col-lg-4">
+      <%= render partial: "shared/linechart", locals: {id: 'labelwebactivity', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity'} %>
+    </div>
+    <div class="col-lg-4">
+      <%= render partial: "shared/polarchart", locals: {id: 'labeldevice', title: '官網使用者裝置分析', linechartid: 'lineChartdevice'} %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <%= render partial: "shared/barchart", locals: {id: 'labelwebtraffic', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic'} %>
+    </div>
+    <div class="col-lg-3">
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '官網使用者性別比例', linechartid: 'lineChartfansgender'} %>
+    </div>
+    <div class="col-lg-3">
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelusertype', title: '官網新舊訪客分析', linechartid: 'lineChartusertype'} %>
+    </div>
+  </div>
+</div>
+ <% content_for :javascript do %>
+ <script type="text/javascript">
+$(function() {
+  <%= render partial: "shared/tabclick", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', weekdata: @pageviews_week, monthdata: @pageviews_month, weekrate: @pageviews_week_rate, monthrate: @pageviews_month_rate, linechartid: '#sparklinepageviwes', data7d: @pageviews_last_7d, data30d: @pageviews_last_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', weekdata: @pageviews_per_session_week, monthdata: @pageviews_per_session_month, weekrate: @pageviews_per_session_week_rate, monthrate: @pageviews_per_session_month_rate, linechartid: '#sparklinepageviewspersession', data7d: @pageviews_per_session_7d, data30d: @pageviews_per_session_30d} %>
+  <%= render partial: "shared/tabclick", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', weekdata: @avg_session_duration_week, monthdata: @avg_session_duration_month, weekrate: @avg_session_duration_week_rate, monthrate: @avg_session_duration_month_rate, linechartid: '#sparklineavgsessionduration', data7d: @avg_session_duration_7d, data30d: @avg_session_duration_30d} %>
+   <%= render partial: "shared/hbarchartclickmonth6", locals: { barchartid: 'barChartuserage', dataname: "barDatauserage", labelY1: "18-24", labelY2: "25-34", labelY3: "35-44", labelY4: "45-54", labelY5:"55-65", labelY6:"65+",labelX1: "人數", lifetimedata: @user_age_bracket_month } %> 
+  <%= render partial: "shared/linechartclick", locals: {id: 'labelwebactivity', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有瀏覽量", label2: "多工作階段瀏覽量", label3: "活躍度", last7ddate: @ga_last_7d_date, last30ddate: @ga_last_30d_date ,weekdata1: @all_users_views_last_7d_data, weekdata2: @activeusers_views_last_7d_data, monthdata1: @all_users_views_last_30d_data, monthdata2: @activeusers_views_last_30d_data, weekrate: @users_activity_rate_7d, monthrate: @users_activity_rate_30d} %>
+  <%= render partial: "shared/polarchartclick", locals: {polarchartid: 'lineChartdevice', dataname: "lineDatadevice", label1: "Desktop", label2: "Mobile", label3: "Tablet", data1: @desktop, data2: @mobile, data3: @tablet} %>
+   
+  <%= render partial: "shared/barchartclick", locals: {id: 'labelwebtraffic', barchartid: 'barChartwebtraffic', dataname: "barDatawebtraffic", labelY1: "有機搜尋", labelY2: "社群", labelY3: "自然流量", labelY4: "參照連結", labelY5: "電郵", labelX1: "流量數", labelX2: "跳出率", weekdata1: @channel_user_week, weekdata2: @bounce_rate_week, monthdata1: @channel_user_month, monthdata2: @bounce_rate_month} %>     
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartfansgender', dataname: "lineDatafansgender", label1: "男性", label2: "女性", data1: @male_user, data2: @female_user} %>
+  <%= render partial: "shared/doughnutschartclick", locals: {doughnutschartid: 'lineChartusertype', dataname: "lineDatausertype", label1: "新訪客", label2: "舊訪客", data1: @new_visitor, data2: @returning_visitor} %>
+
+ });
+</script>
+ <% end %> 
