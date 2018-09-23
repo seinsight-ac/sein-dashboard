@@ -32,7 +32,7 @@ class DashboardsController < ApplicationController
 
     @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
     @bounce_rate_week = [GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7,  GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/7]
-
+    
     @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
     @channel_user_month = [GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30,  GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30]
 
