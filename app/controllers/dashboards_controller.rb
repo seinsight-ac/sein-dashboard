@@ -19,6 +19,9 @@ class DashboardsController < ApplicationController
 
     @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
     @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
+    ga = GoogleAnalytics.new("2017-09-23","2018-09-22")
+    @single = ga.session_pageviews.flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i}.grep(/\d+/, &:to_i)
+    
 
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
     @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
@@ -30,13 +33,12 @@ class DashboardsController < ApplicationController
     @ga_last_30d_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }
 
     @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
-    @bounce_rate_week = [GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7,  GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/7]
+    @bounce_rate_week = [(GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7).round(2),  (GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/7).round(2)]
 
     @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
-    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30,  GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30]
-
-    @bounce_rate_week = GaDb.last(7).pluck(:bouce_rate_day)
-    @bounce_rate_month = GaDb.last(30).pluck(:bouce_rate_day)
+    @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2),  (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30).round(2)]
+    
+    
     
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
