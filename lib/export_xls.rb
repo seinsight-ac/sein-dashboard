@@ -27,15 +27,45 @@ class ExportXls
   end
 
   def fb_xls(data)
+    @sheet1.row(0).set_format(0, head)
+    @sheet1[0, 0] = "FB各項指標"
+    @sheet1[1, 0] = "日期"
+    @sheet1[2, 0] = "總粉絲數"
+    @sheet1[3, 0] = "粉絲淨讚數"
+    @sheet1[4, 0] = "粉絲退讚數"
+    @sheet1[5, 0] = "粉絲專頁總觸及人數"
+    @sheet1[6, 0] = "PO文互動數\nPO文心情、留言、分享加總"
+    @sheet1[7, 0] = "PO文互動人數"
+    @sheet1[8, 0] = "負面行動次數"
+    @sheet1[9, 0] = "連結點擊次數"
+    @sheet1.column(0).width = 20
 
+    i = 0
+    c = 1
+    4.times do #to-do flex
+      @sheet1.row(0).set_format(c, head)
+      @sheet1[0, c] = "week#{c}"
+      @sheet1[1, c] = "#{data[i].date.strftime("%m-%d")}-#{data[i+6].date.strftime("%Y-%m-%d")}"
+      @sheet1[2, c] = data[i+6].fans
+      @sheet1[3, c] = data[i+6].fans_adds_week
+      @sheet1[4, c] = data[i+6].fans_losts_week
+      @sheet1[5, c] = data[i+6].page_users_week
+      @sheet1[6, c] = data[i+6].posts_users_week
+      @sheet1[7, c] = data[i+6].post_enagements_week
+      @sheet1[8, c] = data[i+6].negative_users_week
+      @sheet1[9, c] = data[i+6].link_clicks_week
+
+      i += 7
+      c += 1
+    end
   end
 
-  def ga_xls(date)
+  def ga_xls(data) # to-do week data
     @sheet2.row(0).set_format(0, head)
     @sheet2[0, 0] = "GA各項指標"
-    @sheet2[1, 0] = "工作階段"
-    @sheet2[2, 0] = "不重複訪客"
-    @sheet2[3, 0] = "電子報標題"
+    @sheet2[1, 0] = "日期"
+    @sheet2[2, 0] = "工作階段"
+    @sheet2[3, 0] = "不重複訪客"
     @sheet2[4, 0] = "新訪客(只造訪一次)"
     @sheet2[5, 0] = "回訪客(來2次以上)"
     @sheet2[6, 0] = "回訪客比例"
@@ -49,58 +79,68 @@ class ExportXls
     @sheet2.merge_cells(14, 0, 15, 0)
     @sheet2[14, 0] = "流量管道：社群媒體(FB為主)"
     @sheet2.merge_cells(16, 0, 17, 0)
-    @sheet2[16, 0] = "流量管道：直接流量/n(網址/我的最愛/EDM)"
+    @sheet2[16, 0] = "流量管道：直接流量\n(網址/我的最愛/EDM)"
     @sheet2.merge_cells(18, 0, 19, 0)
     @sheet2[18, 0] = "流量管道：推薦連結"
     @sheet2.merge_cells(20, 0, 21, 0)
-    @sheet2[20, 0] = "年齡分佈/n（18-24歲）"
+    @sheet2[20, 0] = "年齡分佈\n（18-24歲）"
     @sheet2.merge_cells(22, 0, 23, 0)
     @sheet2[22, 0] = "（25-34歲）"
     @sheet2.merge_cells(24, 0, 25, 0)
     @sheet2[24, 0] = "（35-44歲）"
     @sheet2.merge_cells(26, 0, 27, 0)
     @sheet2[26, 0] = "（45-54歲）"
-    @sheet2[27, 0] = "性別（男性）"
-    @sheet2[28, 0] = "（女性）"
+    @sheet2[28, 0] = "性別（男性）"
+    @sheet2[29, 0] = "（女性）"
 
     @sheet2.column(0).width = 20
 
     i = 0
-    data.each do |d|
-      @sheet2.row(0).set_format(i, head)
-      @sheet2[0, i] = "week#{i}(#{d[i].date.strftime("%Y-%m-%d")}-#{d[i+6].date.strftime("%Y-%m-%d")}"
+    c = 1
+    4.times do #to-do flex
+      all_user = data[i..i+6].pluck(:user_18_24, :user_25_34, :user_35_44, :user_45_54, :user_55_64, :user_65).reduce(:+).reduce(:+)
+      gender = data[i..i+6].pluck(:female_user, :male_user).reduce(:+).reduce(:+)
 
-      @sheet2[1, 0] = d[i..i+6].pluck(:sessions_day).reduce(:+)
-      @sheet2[2, 0] = "不重複訪客"
-      @sheet2[3, 0] = "電子報標題"
-      @sheet2[4, 0] = "新訪客(只造訪一次)"
-      @sheet2[5, 0] = "回訪客(來2次以上)"
-      @sheet2[6, 0] = "回訪客比例"
-      @sheet2[7, 0] = "網站瀏覽量"
-      @sheet2[8, 0] = "平均瀏覽頁數"
-      @sheet2[9, 0] = "平均停留時間"
-      @sheet2[10, 0] = "星期幾最多訪客"
-      @sheet2[11, 0] = "平均網頁停留時間"
-      @sheet2.merge_cells(12, 0, 13, 0)
-      @sheet2[12, 0] = "流量管道：有機搜尋"
-      @sheet2.merge_cells(14, 0, 15, 0)
-      @sheet2[14, 0] = "流量管道：社群媒體(FB為主)"
-      @sheet2.merge_cells(16, 0, 17, 0)
-      @sheet2[16, 0] = "流量管道：直接流量/n(網址/我的最愛/EDM)"
-      @sheet2.merge_cells(18, 0, 19, 0)
-      @sheet2[18, 0] = "流量管道：推薦連結"
-      @sheet2.merge_cells(20, 0, 21, 0)
-      @sheet2[20, 0] = "年齡分佈/n（18-24歲）"
-      @sheet2.merge_cells(22, 0, 23, 0)
-      @sheet2[22, 0] = "（25-34歲）"
-      @sheet2.merge_cells(24, 0, 25, 0)
-      @sheet2[24, 0] = "（35-44歲）"
-      @sheet2.merge_cells(26, 0, 27, 0)
-      @sheet2[26, 0] = "（45-54歲）"
-      @sheet2[27, 0] = "性別（男性）"
-      @sheet2[28, 0] = "（女性）"
+      @sheet2.row(0).set_format(c, head)
+      @sheet2[0, c] = "week#{c}"
+      @sheet2[1, c] = "#{data[i].date.strftime("%m-%d")}-#{data[i+6].date.strftime("%Y-%m-%d")}"
+      @sheet2[2, c] = data[i..i+6].pluck(:sessions_day).reduce(:+)
+      @sheet2[3, c] = data[i+6].web_users_month
+      @sheet2[4, c] = data[i..i+6].pluck(:new_visitor).reduce(:+)
+      @sheet2[5, c] = data[i..i+6].pluck(:return_visitor).reduce(:+)
+      @sheet2[6, c] = data[i..i+6].pluck(:return_visitor).reduce(:+) / (data[i..i+6].pluck(:return_visitor).reduce(:+) + data[i..i+6].pluck(:new_visitor).reduce(:+)).to_f
+      @sheet2[7, c] = data[i..i+6].pluck(:pageviews_day).reduce(:+)
+      @sheet2[8, c] = data[i..i+6].pluck(:pageviews_per_session_day).reduce(:+) / 7
+      @sheet2[9, c] = data[i..i+6].pluck(:avg_session_duration_day).reduce(:+) / 7
+      @sheet2[10, c] = data[i..i+6].pluck(:sessions_day, :date).max[1].strftime("%a")
+      @sheet2[11, c] = data[i..i+6].pluck(:avg_time_on_page_day).reduce(:+) / 7
+      @sheet2[12, c] = data[i..i+6].pluck(:oganic_search_day).reduce(:+)
+      @sheet2[13, c] = data[i..i+6].pluck(:oganic_search_bounce).reduce(:+) / 7
+      @sheet2[14, c] = data[i..i+6].pluck(:social_user_day).reduce(:+)
+      @sheet2[15, c] = data[i..i+6].pluck(:social_user_day).reduce(:+) / 7
+      @sheet2[16, c] = data[i..i+6].pluck(:direct_user_day).reduce(:+)
+      @sheet2[17, c] = data[i..i+6].pluck(:direct_user_day).reduce(:+) / 7
+      @sheet2[18, c] = data[i..i+6].pluck(:referral_user_day).reduce(:+)
+      @sheet2[19, c] = data[i..i+6].pluck(:referral_user_day).reduce(:+) / 7
+      @sheet2.row(20).set_format(c, percent)
+      @sheet2[20, c] = data[i..i+6].pluck(:user_18_24).reduce(:+) / all_user.to_f
+      @sheet2[21, c] =  data[i..i+6].pluck(:user_18_24).reduce(:+)
+      @sheet2.row(22).set_format(c, percent)
+      @sheet2[22, c] = data[i..i+6].pluck(:user_25_34).reduce(:+) / all_user.to_f
+      @sheet2[23, c] = data[i..i+6].pluck(:user_25_34).reduce(:+)
+      @sheet2.row(24).set_format(c, percent)
+      @sheet2[24, c] = data[i..i+6].pluck(:user_35_44).reduce(:+) / all_user.to_f
+      @sheet2[25, c] = data[i..i+6].pluck(:user_35_44).reduce(:+)
+      @sheet2.row(26).set_format(c, percent)
+      @sheet2[26, c] = data[i..i+6].pluck(:user_45_54).reduce(:+) / all_user.to_f
+      @sheet2[27, c] = data[i..i+6].pluck(:user_45_54).reduce(:+)
+      @sheet2.row(28).set_format(c, percent)
+      @sheet2.row(29).set_format(c, percent)
+      @sheet2[28, c] = data[i..i+6].pluck(:male_user).reduce(:+) / gender.to_f
+      @sheet2[29, c] = data[i..i+6].pluck(:female_user).reduce(:+) / gender.to_f
 
       i += 7
+      c += 1
     end
   end
 
