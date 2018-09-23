@@ -1,38 +1,38 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰', content:''} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%', content:''} %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', title: '官網平均瀏覽頁數', data: @pageviews_per_session_week, rate: @pageviews_per_session_week_rate, linechart: 'sparklinepageviewspersession', percent: '‱'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', title: '官網平均瀏覽頁數', data: @pageviews_per_session_week, rate: @pageviews_per_session_week_rate, linechart: 'sparklinepageviewspersession', percent: '%', content:''} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '‱'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '%', content:''} %>
     </div>
   </div>
    <div class="row">
     <div class="col-lg-4">
-      <%= render partial: "shared/barchartmonth6", locals: {id: 'labeluseragew', title: '官網使用者年齡分佈', linechartid: 'barChartuserage'} %>
+      <%= render partial: "shared/barchartmonth6", locals: {id: 'labeluseragew', title: '官網使用者年齡分佈', linechartid: 'barChartuserage', content:'' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw', idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213 } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw', idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/polarchart", locals: {id: 'labeldevice', title: '官網使用者裝置分析', linechartid: 'lineChartdevice'} %>
+      <%= render partial: "shared/polarchart", locals: {id: 'labeldevice', title: '官網使用者裝置分析', linechartid: 'lineChartdevice', content:'' } %>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6">
-      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic'} %>
+      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'' } %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '官網使用者性別比例', linechartid: 'lineChartfansgender', period:'month', height:310 } %>
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '官網使用者性別比例', linechartid: 'lineChartfansgender', period:'month', height:310, content:'' } %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/doughnutschart", locals: {id: 'labelusertype', title: '官網新舊訪客分析', linechartid: 'lineChartusertype', period:'month', height:310 } %>
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelusertype', title: '官網新舊訪客分析', linechartid: 'lineChartusertype', period:'month', height:310, content:'' } %>
     </div>
   </div>
 </div>
