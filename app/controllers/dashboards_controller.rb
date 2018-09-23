@@ -230,12 +230,5 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
   end
-<<<<<<< HEAD
-
-  def ga_data_date
-    first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-  end
-=======
->>>>>>> fa7b1325b6b4b25f99ceb86a20274539fad1c4f4
   
 end

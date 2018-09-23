@@ -7,8 +7,8 @@
 			<%= render 'layouts/alert' %>
 			<div class="pull-right" style=" padding: 15px;">
 				<div class="btn-group">
-					<button id="switchweek"" type="button" class="btn btn-xs btn-white active">Week</button>
-					<button id="switchmonth" type="button" class="btn btn-xs btn-white">Month</button>
+					<button id="switchweek"" type="button" class="btn btn-xs">Week</button>
+					<button id="switchmonth" type="button" class="btn btn-xs">Month</button>
 				</div>
 			</div>
 		</ul>
@@ -17,41 +17,45 @@
 
 <script type="text/javascript">
 
-$("<%= idw %>").click(function(){}
-	$(this).siblings().removeClass('active');
-	$(this).addClass('active');
-	$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= weekdata %>');
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= weekrate %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(monthrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(weekrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(monthrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(weekrate) %>')
-	$("<%= linechartid %>").sparkline(<%= data7d %>, {
-		type: 'line',
-		width: '100%',
-		height: '60',
-		lineColor: '#1ab394',
-		fillColor: "#ffffff"
-	}); 
-});
+$("#switchweek").click(function() {
+	$(this).siblings().removeClass('label-primary');
+	$(this).addClass('label-primary');
+	$(this).siblings().removeAttr("style");
+	$(this).css("color","#ffffff");
+	$( "#labelpagefansw" ).trigger( "click" );
+	$( "#labelpageusersw" ).trigger( "click" );
+	$( "#labelwebusersw" ).trigger( "click" );
+	$( "#labelfansretentionw" ).trigger( "click" );
+	$( "#labelwebactivityw" ).trigger( "click" );
+	$( "#labelwebtrafficw" ).trigger( "click" );
+	$( "#labelpageviewsw" ).trigger( "click" );
+	$( "#labelpageviewspersessionw" ).trigger( "click" );
+	$( "#labelavgsessiondurationw" ).trigger( "click" );
+	$( "#labelpostsusersw" ).trigger( "click" );
+	$( "#labelnegativeusersw" ).trigger( "click" );
+	$( "#labellinkclicksw" ).trigger( "click" );
+	$( "#labelfansaddsw" ).trigger( "click" );
+})
 
-$("<%= idm %>").click(function(){
-	$(this).siblings().removeClass('active');
-	$(this).addClass('active');
-	$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= monthdata %>');
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= monthrate %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(weekrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(monthrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(weekrate) %>')
-	$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(monthrate) %>')
-	$("<%= linechartid %>").sparkline(<%= data30d %>, {
-		type: 'line',
-		width: '100%',
-		height: '60',
-		lineColor: '#1ab394',
-		fillColor: "#ffffff"
-	});    
-});
+$("#switchmonth").click(function() {
+	$(this).siblings().removeClass('label-primary');
+	$(this).addClass('label-primary');
+	$(this).siblings().removeAttr("style");
+	$(this).css("color","#ffffff");
+	$( "#labelpagefansm" ).trigger( "click" );
+	$( "#labelpageusersm" ).trigger( "click" );
+	$( "#labelwebusersm" ).trigger( "click" );
+	$( "#labelfansretentionm" ).trigger( "click" );
+	$( "#labelwebactivitym" ).trigger( "click" );
+	$( "#labelwebtrafficm" ).trigger( "click" );
+	$( "#labelpageviewsm" ).trigger( "click" );
+	$( "#labelpageviewspersessionm" ).trigger( "click" );
+	$( "#labelavgsessiondurationm" ).trigger( "click" );
+	$( "#labelpostsusersm" ).trigger( "click" );
+	$( "#labelnegativeusersm" ).trigger( "click" );
+	$( "#labellinkclicksm" ).trigger( "click" );
+	$( "#labelfansaddsm" ).trigger( "click" );
+})
 
 // Minimalize menu
 
