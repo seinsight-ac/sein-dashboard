@@ -85,7 +85,6 @@ class GoogleAnalytics
     request = GetReportsRequest.new(
       { report_requests: [{
         view_id: "ga:55621750",
-        page_size: 365,    
         metrics: [
           {
             expression: "ga:pageviews"
