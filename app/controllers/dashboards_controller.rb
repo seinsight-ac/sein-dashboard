@@ -219,7 +219,7 @@ class DashboardsController < ApplicationController
     # facebook API
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
-    #@fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
+    @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     @fans_adds_week_data = FbDb.last(1).pluck(:fans_adds_week).first
     @fans_adds_month_data = FbDb.last(1).pluck(:fans_adds_month).first
     @fans_adds_week_last_week = FbDb.last(8).pluck(:fans_adds_week).first
