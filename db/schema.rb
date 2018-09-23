@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180921141620) do
+ActiveRecord::Schema.define(version: 20180922125419) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 20180921141620) do
     t.integer "social_user_day"
     t.integer "email_user_day"
     t.integer "oganic_search_day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "direct_bounce"
     t.float "email_bounce"
     t.float "social_bounce"
@@ -116,8 +118,6 @@ ActiveRecord::Schema.define(version: 20180921141620) do
     t.integer "new_visitor"
     t.integer "return_visitor"
     t.float "referral_bounce"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "mailchimp_dbs", force: :cascade do |t|

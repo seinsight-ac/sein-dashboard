@@ -20,8 +20,6 @@ class DashboardsController < ApplicationController
 
     @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
     @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
-    ga = GoogleAnalytics.new("2017-09-23","2018-09-22")
-    @single = ga.session_pageviews.flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i}.grep(/\d+/, &:to_i)
     
 
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
