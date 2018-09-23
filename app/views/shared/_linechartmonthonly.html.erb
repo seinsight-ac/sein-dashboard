@@ -1,6 +1,15 @@
 <div class="ibox float-e-margins">
 	<div class="ibox-title">
-		<h5><%= title %></h5>
+		<li class="dropdown" style='list-style-type:none'>
+			<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+				<h5><%= title %></h5>              
+			</a>
+			<ul class="dropdown-menu">
+				<div>
+					<span class="text-muted" style="font-size: 15px;"><%= content %></span>
+				</div>
+			</ul>
+		</li>
 		<div class="pull-right">
 			<div class="btn-group">
 				<span id="<%= id %>" class="label label-info pull-right" style="cursor: auto">Monthly</span>
