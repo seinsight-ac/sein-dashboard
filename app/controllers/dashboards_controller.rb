@@ -43,7 +43,7 @@ class DashboardsController < ApplicationController
     
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
-    @mail_users_month_rate = rate_transit(@mail_users, MailchimpDb.last(2).first.email_sent)
+    @mail_users_month_rate = convert_percentrate(MailchimpDb.last(4).first.email_sent - @mail_users, MailchimpDb.last(12).first.email_sent - MailchimpDb.last(8).first.email_sent)
 
     @last_12w_date = []
     MailchimpDb.last(4).pluck(:date).each do |d|
@@ -54,20 +54,14 @@ class DashboardsController < ApplicationController
     @mail_views = MailchimpDb.last(4).pluck(:open)
     @mail_links= MailchimpDb.last(4).pluck(:click)
 
-    @mail_views_rate = []
-    MailchimpDb.last(4).pluck(:open_rate).each do |open|
-      @mail_views_rate << open.round(2)
-    end
+    @mail_views_rate = MailchimpDb.last(4).pluck(:open_rate).map { |a| a.round(2)}
 
     @mail_links_rate = []
-    @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << a / b.to_f }
+    @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << (a / b.to_f).round(2) }
 
     # alexa
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
-    @rate = []
-    AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].each do |rate|
-      @rate << rate.round(2)
-    end
+    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
 
     # export to xls
     export_xls = ExportXls.new
@@ -176,10 +170,6 @@ class DashboardsController < ApplicationController
 
   def convert_percentrate(datanew,  dataold)
     return ((datanew - dataold) / dataold.to_f * 100).round(2)
-  end
-
-  def rate_transit(datanew, dataold)
-    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
   end
 
   def divide_date(date)
