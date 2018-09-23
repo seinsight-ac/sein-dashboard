@@ -17,6 +17,9 @@ class DashboardsController < ApplicationController
     @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
     @all_users_views_last_30d_data = GaDb.last(30).pluck(:pageviews_day)
 
+    
+    
+
     @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
     @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
 
@@ -83,8 +86,8 @@ class DashboardsController < ApplicationController
 
   def facebook
     # fb gender
-    # @fans_gender_age = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values")
-    # @fans_gender = @fans_gender_age.first.first.second.first['value']
+    #@fans_gender_age = @graph.get_object("278666028863859/insights/page_fans_gender_age?fields=values")
+    #@fans_gender = @fans_gender_age.first.first.second.first['value']
     @fans_female_day = FbDb.last(2).pluck(:fans_female_day).first
     @fans_male_day = FbDb.last(2).pluck(:fans_male_day).first
     @fans_13_17 = FbDb.last(2).pluck(:fans_13_17).first
@@ -97,26 +100,26 @@ class DashboardsController < ApplicationController
     @fans_age = []
     @fans_age.push(@fans_13_17).push(@fans_18_24).push(@fans_25_34).push(@fans_35_44).push(@fans_45_54).push(@fans_55_64).push(@fans_65)
     # negative users
-    # @negativeusers = @graph.get_object("278666028863859/insights/page_negative_feedback_unique?fields=values&date_preset=last_30d")
+    #@negativeusers = @graph.get_object("278666028863859/insights/page_negative_feedback_unique?fields=values&date_preset=last_30d")
     @negative_users_week = FbDb.last(1).pluck(:negative_users_week).first
     @negative_users_month = FbDb.last(1).pluck(:negative_users_month).first
     @negative_users_week_last_week = FbDb.last(8).pluck(:negative_users_week).first
-    @negative_users_month_last_month = FbDb.last(8).pluck(:negative_users_month).first     
+    @negative_users_month_last_month = FbDb.last(8).pluck(:negative_users_month).first   
     @negative_users_week_rate = convert_percentrate(@negative_users_week, @negative_users_week_last_week) 
     @negative_users_month_rate = convert_percentrate(@negative_users_month, @negative_users_month_last_month)
     @negative_users_last_7d = FbDb.last(7).pluck(:negative_users_day)
     @negative_users_last_30d = FbDb.last(30).pluck(:negative_users_day)
 
     # fans losts
-    # @fanslosts = @graph.get_object("278666028863859/insights/page_fan_removes_unique?fields=values&date_preset=last_30d")
+    #@fanslosts = @graph.get_object("278666028863859/insights/page_fan_removes_unique?fields=values&date_preset=last_30d")
     @fans_losts_last_7d_data = FbDb.last(7).pluck(:fans_losts_day)
     @fans_losts_last_4w_data = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
 
     # link clicks
-    # @postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
+    #@postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
     @post_enagements_last_7d_data = FbDb.last(7).pluck(:post_enagements_day)
     @post_enagements_last_4w_data = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
-    # @linkclicks = @graph.get_object("278666028863859/insights/page_consumptions_by_consumption_type?fields=values&date_preset=last_30d")
+    #@linkclicks = @graph.get_object("278666028863859/insights/page_consumptions_by_consumption_type?fields=values&date_preset=last_30d")
     @link_clicks_last_7d_data = FbDb.last(7).pluck(:link_clicks_day)
     @link_clicks_last_4w_data = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
     @link_clicks_rate_7d = []
@@ -127,59 +130,46 @@ class DashboardsController < ApplicationController
   end
 
   def googleanalytics
-    ga = GoogleAnalytics.new
-    
-    @user_age_bracket_month = ga.user_age_bracket_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
-    
-    #性別
-    @female_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[0].to_i
-    @male_user = ga.user_gender_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values.first}[1].to_i
-    
-    #新舊訪客
-    user_type = ga.user_type_month
-    @vistor = user_type.first[1][0]["data"]["totals"][0]["values"][0]
-    @new_vistor = user_type.first[1][0]["data"]["rows"][0]["metrics"][0]["values"][0]
-    @returning_vistor = user_type.first[1][0]["data"]["rows"][1]["metrics"][0]["values"][0]
-    @new_vistor_rate = (@new_vistor.to_f / @vistor.to_i).round(2)
-    @returning_vistor_rate = (@returning_vistor.to_f / @vistor.to_i).round(2)
 
-    #瀏覽量
-    @pageviews_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_month = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
+    @pageviews_week = GaDb.last(7).pluck(:pageviews_day).reduce(:+)
+    @pageviews_month = GaDb.last(30).pluck(:pageviews_day).reduce(:+)
 
-    @pageviews_last_week = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[16..22].flat_map{|i|i}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_last_month = ga.pageviews_lastmonth.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.flat_map{|i|i.values.first}.grep(/\d+/, &:to_i).inject(0, :+)
-    @pageviews_week_rate = convert_percentrate(@pageviews_week, @pageviews_last_week)
-    @pageviews_month_rate = convert_percentrate(@pageviews_month, @pageviews_last_month)
-    @pageviews_last_7d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[23..29].flat_map{|i|i}.grep(/\d+/, &:to_i)
-    @pageviews_last_30d = ga.pageviews.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[0..29].flat_map{|i|i}.grep(/\d+/, &:to_i).flat_map{|i|i}
+    @pageviews_last_7d = GaDb.last(7).pluck(:pageviews_day)
+    @pageviews_last_30d = GaDb.last(30).pluck(:pageviews_day)
+
+    @pageviews_week_rate = convert_percentrate(@pageviews_week, GaDb.last(14).first(7).pluck(:pageviews_day).reduce(:+))  
+    @pageviews_month_rate = convert_percentrate(@pageviews_month, GaDb.last(60).first(30).pluck(:pageviews_day).reduce(:+))
     
-    #官網平均瀏覽頁數
-    @pageviews_per_session_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @pageviews_per_session_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @pageviews_per_session_last_week = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @pageviews_per_session_last_month = (ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @pageviews_per_session_week_rate = convert_percentrate(@pageviews_per_session_week, @pageviews_per_session_last_week)
-    @pageviews_per_session_month_rate = convert_percentrate(@pageviews_per_session_month, @pageviews_per_session_last_month)
-    @pageviews_per_session_7d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    @pageviews_per_session_30d = ga.pageviews_per_session_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    #平均停留時間
-    @avg_session_duration_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @avg_session_duration_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @avg_session_duration_last_week = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[351..357].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 7).round(2)
-    @avg_session_duration_last_month = (ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[305..334].flat_map{|i|i}.grep(/\d+/, &:to_f).inject(0, :+) / 30).round(2)
-    @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_week, @avg_session_duration_last_week)
-    @avg_session_duration_month_rate = convert_percentrate(@avg_session_duration_month, @avg_session_duration_last_month)
-    @avg_session_duration_7d = ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[358..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    @avg_session_duration_30d =  ga.avg_session_duration_day.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}[335..364].flat_map{|i|i}.grep(/\d+/, &:to_f).flat_map{|i|i.round(2)}
-    #裝置
+    @pageviews_per_session_week = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/7).round(2)
+    @pageviews_per_session_month = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/30).round(2)
+
+    @pageviews_per_session_7d = GaDb.last(7).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
+    @pageviews_per_session_30d = GaDb.last(30).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
+
+    @pageviews_per_session_week_rate = convert_percentrate(@pageviews_per_session_week, (GaDb.last(14).first(7).pluck(:pageviews_per_session_day).reduce(:+)/7).round(2))  
+    @pageviews_per_session_month_rate = convert_percentrate(@pageviews_per_session_month, (GaDb.last(60).first(30).pluck(:pageviews_per_session_day).reduce(:+)/30).round(2))  
+
+    @avg_session_duration_week = ((GaDb.last(7).pluck(:avg_session_duration_day).reduce(:+))/7).round(2)
+    @avg_session_duration_month = ((GaDb.last(30).pluck(:avg_session_duration_day).reduce(:+))/30).round(2)
+
+    @avg_session_duration_7d = GaDb.last(7).pluck(:avg_session_duration_day).flat_map{|i|i.round(2)}
+    @avg_session_duration_30d = GaDb.last(30).pluck(:avg_session_duration_day).flat_map{|i|i.round(2)}
+
+    @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_week, (GaDb.last(14).first(7).pluck(:avg_session_duration_day).reduce(:+)/7).round(2))  
+    @avg_session_duration_month_rate = convert_percentrate(@avg_session_duration_month, (GaDb.last(60).first(30).pluck(:avg_session_duration_day).reduce(:+)/30).round(2))  
     
-    @tool = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.first}
-    @device_user_total = ga.device_month.first[1][0]["data"]["totals"][0]["values"][0]
-    @desktop = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[0]
-    @mobile = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[1]
-    @tablet = ga.device_month.first[1][0]["data"]["rows"].flat_map{|i|i.values.second}.flat_map{|i|i.values}.flat_map{|i|i.grep(/\d+/, &:to_i)}[2]
+    @user_age_bracket_month = [GaDb.last(30).pluck(:user_18_24).compact.reduce(:+), GaDb.last(30).pluck(:user_25_34).compact.reduce(:+), GaDb.last(30).pluck(:user_35_44).compact.reduce(:+), GaDb.last(30).pluck(:user_45_54).compact.reduce(:+), GaDb.last(30).pluck(:user_55_64).compact.reduce(:+), GaDb.last(30).pluck(:user_65).compact.reduce(:+)]
     
+    @desktop = GaDb.last(30).pluck(:desktop_user).reduce(:+)
+    @mobile = GaDb.last(30).pluck(:mobile_user).reduce(:+)
+    @tablet = GaDb.last(30).pluck(:tablet_user).reduce(:+)
+
+    @male_user = GaDb.last(30).pluck(:male_user).reduce(:+)
+    @female_user = GaDb.last(30).pluck(:female_user).reduce(:+)
+
+    @new_visitor = GaDb.last(30).pluck(:new_visitor).reduce(:+)
+    @returning_visitor = GaDb.last(30).pluck(:return_visitor).reduce(:+)
+
   end
 
 
@@ -239,11 +229,10 @@ class DashboardsController < ApplicationController
     @fans_adds_last_4w_data = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
     @fans_adds_week_rate = convert_percentrate(@fans_adds_week_data, @fans_adds_week_last_week)
     @fans_adds_month_rate = convert_percentrate(@fans_adds_month_data, @fans_adds_month_last_month)    
-
     # facebook page users
-    # @pageusers = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d")
+    #@pageusers = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d")
     @page_users_week = FbDb.last(1).pluck(:page_users_week).first
-    @page_users_month = FbDb.last(1).pluck(:page_users_month).first     
+    @page_users_month = FbDb.last(1).pluck(:page_users_month).first   
     @page_users_week_last_week = FbDb.last(8).pluck(:page_users_week).first
     @page_users_month_last_month = FbDb.last(8).pluck(:page_users_month).first     
     @page_users_week_rate = convert_percentrate(@page_users_week, @page_users_week_last_week) 
@@ -252,7 +241,7 @@ class DashboardsController < ApplicationController
     @page_users_last_30d = FbDb.last(30).pluck(:page_users_day)
 
     # facebook fans retention    
-    # @postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
+    #@postsusers = @graph.get_object("278666028863859/insights/page_posts_impressions_unique?fields=values&date_preset=last_30d")
     @posts_users_week = FbDb.last(1).pluck(:posts_users_week).first
     @posts_users_month = FbDb.last(1).pluck(:posts_users_month).first     
     @posts_users_week_last_week = FbDb.last(8).pluck(:posts_users_week).first
@@ -265,13 +254,17 @@ class DashboardsController < ApplicationController
     @posts_users_last_4w_data = FbDb.last(22).pluck(:posts_users_week).values_at(0, 7, 14, 21)
     @fb_last_7d_date = FbDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
     @fb_last_4w_date = FbDb.last(22).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(0, 7, 14, 21)
-    # @enagementsusers = @graph.get_object("278666028863859/insights/page_engaged_users?fields=values&date_preset=last_30d")
+    #@enagementsusers = @graph.get_object("278666028863859/insights/page_engaged_users?fields=values&date_preset=last_30d")
     @enagements_users_last_7d_data = FbDb.last(7).pluck(:enagements_users_day)
     @enagements_users_last_4w_data = FbDb.last(22).pluck(:enagements_users_week).values_at(0, 7, 14, 21)
     @fans_retention_rate_7d = []
     @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+  end
+
+  def convert_tenthousandthrate(datanew,  dataold)
+      return (datanew * 10000 / (dataold - datanew).to_f).round(2)
   end
 
   def ga_data_date

@@ -81,6 +81,30 @@ class GoogleAnalytics
     request_two_dim("ga:users", "ga:deviceCategory", token)
   end
 
+  def session_pageviews
+    request = GetReportsRequest.new(
+      { report_requests: [{
+        view_id: "ga:55621750",    
+        metrics: [
+          {
+            expression: "ga:pageviews"
+          }
+        ],dimensions:[
+          {
+            name: "ga:date"
+          },{
+            name: "ga:sessionCount"
+          }
+        ],date_ranges:[
+          {
+            start_date: @since,
+            end_date: @before
+          }
+        ],page_size: 365
+      }]})
+    return convert(request)
+  end
+
   private
 
 
