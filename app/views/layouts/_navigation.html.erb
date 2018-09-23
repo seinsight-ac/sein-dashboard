@@ -8,7 +8,7 @@
 					</span>
 				</div>
 				<div class="logo-element">
-					社
+					<img src="<%= image_path('logo2.png') %>" style="width:60px">
 				</div>
 			</li>
 			<li >
@@ -20,14 +20,19 @@
 				<% end %>
 			</li>
 			<li >
-				<%= link_to ga_dashboards_path do %>
+				<%= link_to googleanalytics_dashboards_path do %>
 					<i class="fa fa-google"></i> <span class="nav-label"> 官網分析 </span>
 				<% end %>
 			</li>
 			<li >
-				<%= link_to dashboards_path do %>
+				<%= link_to dashboards_path(format: :xls) do %>
 					<i class="fa fa-file-excel-o"></i> <span class="nav-label"> 資料下載 </span>
 				<% end %>
+			</li>
+				<li >
+				<a class="startTour">
+					<i class="fa fa fa-play"></i> <span class="nav-label"> 使用教學 </span>
+				</a>
 			</li>
 			<li >
 				<%= link_to destroy_user_session_path, method: :delete do %>
@@ -37,3 +42,53 @@
 		</ul>
 	</div>
 </nav>
+
+<% content_for :javascript do %>
+
+<script type="text/javascript">
+
+
+	$(function() {
+
+		// Instance the tour
+		var tour = new Tour({
+			steps: [{
+				element: ".startTour",
+				title: "使用教學開始！",
+				content: "介紹初次使用者使用本軟體：Ｄ",
+				placement: "right"
+			},
+				{
+					element: ".navbar-minimalize",
+					title: "版面控制按鈕",
+					content: "點擊後可以縮小左側導覽列。",
+					placement: "right",
+				},
+				{
+					element: "#labelpagefansm",
+					title: "顯示期間",
+					content: "點擊按鈕會切換數據顯示期間，Week代表從昨天開始一週前的數據，比例對比上上週，Month代表從昨天開始一個月前的數據，比例對比上上月。",
+					placement: "right"
+				},
+				{
+					element: "#lineChartfansretention",
+					title: "數據名稱",
+					content: "點擊數據名稱後可以隱藏此數據於圖表中，再次點擊後會再次出現。",
+					placement: "top"
+				}
+			]
+		});
+
+		// Initialize the tour
+		tour.init();
+
+		$('.startTour').click(function(){
+				tour.restart();
+				// Start the tour
+				// tour.start();
+		})
+	});
+
+</script>
+
+<% end %>

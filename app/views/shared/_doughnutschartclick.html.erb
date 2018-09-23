@@ -1,0 +1,13 @@
+var <%= dataname %> = {
+	labels: ["<%= label1 %>","<%= label2 %>"],
+	datasets: [{
+		data: [<%= data1 %>,<%= data2 %>],
+		backgroundColor: ["#a3e1d4","#b5b8cf"]
+	}]
+} ;
+
+var doughnutOptions = {
+	responsive: true
+};
+
+new Chart(document.getElementById("<%= doughnutschartid %>").getContext("2d"), {type: 'doughnut', data: <%= dataname %>, options:doughnutOptions});

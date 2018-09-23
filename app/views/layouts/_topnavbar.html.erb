@@ -1,9 +1,18 @@
 <div class="row border-bottom">
 	<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 		<div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+			<span class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i class="fa fa-bars"></i> </span>
 		</div>
-		<ul class="nav navbar-top-links navbar-right">
+		<ul class="nav navbar-top-links">
+			<%= render 'layouts/alert' %>
 		</ul>
 	</nav>
 </div>
+
+<script type="text/javascript">
+$('.navbar-minimalize').on('click', function (event) {
+	event.preventDefault();
+	$("body").toggleClass("mini-navbar");
+	SmoothlyMenu();
+});
+</script>

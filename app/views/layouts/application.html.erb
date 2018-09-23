@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Seindashboard</title>
-
+  <link href="<%= image_path('logo3.png') %>" rel="shortcut icon" type="image/x-icon" />
   <!-- Main css styles -->
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <!-- Main javascript files -->
@@ -22,7 +22,6 @@
     
     <!-- Page wraper -->
     <div id="<% if current_user %>page-wrapper<% end %>" class="gray-bg <%= @extra_class %>">
-      <%= render 'layouts/alert' %>
       <!-- Page wrapper -->
       <% if current_user %>
        <%= render 'layouts/topnavbar' %>

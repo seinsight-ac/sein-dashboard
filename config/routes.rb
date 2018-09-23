@@ -5,10 +5,8 @@ Rails.application.routes.draw do
   resources :dashboards do
 
     collection do
-      get :ga
-      get :mailchimp
+      get :googleanalytics
       get :facebook
-      get :alexa
     end
 
   end

@@ -13,8 +13,12 @@ class ExportXls
     @center = Spreadsheet::Format.new :horizontal_align => :center
     @percent = Spreadsheet::Format.new :number_format => '##.##%', :horizontal_align => :center
 
-    @sheet1 = book.create_worksheet :name => "dashboard"
+    @sheet1 = book.create_worksheet :name => "FB"
     @sheet1.default_format = @center
+    @sheet2 = book.create_worksheet :name => "GA"
+    @sheet2.default_format = @center
+    @sheet3 = book.create_worksheet :name => "Mailchimp/Alexa"
+    @sheet3.default_format = @center
   end
 
   def ga_xls(date)

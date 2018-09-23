@@ -1,12 +1,17 @@
 <div class="ibox float-e-margins">
 	<div class="ibox-title">
-		<span id="<%= id %>" class="label label-info pull-right">Weekly</span>
+		<div class="pull-right">
+			<div class="btn-group">
+				<button id="<%= idw %>" type="button" class="btn btn-xs btn-white active">Week</button>
+				<button id="<%= idm %>" type="button" class="btn btn-xs btn-white">Month</button>
+			</div>
+		</div>
 		<h5><%= title %></h5>
 	</div>
 	<div class="ibox-content">
 		<h1 class="no-margins" style="display: inline-block"><%= data %></h1>
 		<div class="stat-percent font-bold <%= color(rate) %> ">
-			<span><%= rate %></span> ‱
+			<span><%= rate %></span> <%= percent %>
 			<i class="fa <%= arrow(rate) %> "></i>
 		</div>
 		<div id="<%= linechart %>"></div>
