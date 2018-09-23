@@ -187,7 +187,7 @@ GaDb.destroy_all
 
 def set_ga_db(user, user_7, user_30, session_pageview, 
   bounce, pageview, session, channel, avg_session, avg_time_page, 
-  bracket, gender, page_per_session, device, user_type)
+  bracket, gender, page_per_session, device, user_type, single)
   i = 0
   b = 0
   c = 0
@@ -243,6 +243,11 @@ def set_ga_db(user, user_7, user_30, session_pageview,
       puts avg_time_page[i]["dimensions"][0]
       break
     elsif page_per_session[i]["dimensions"][0] != date
+      puts "page_per_session"
+      puts date
+      puts page_per_session[i]["dimensions"][0]
+      break
+    elsif single[i]["dimensions"][1] != date
       puts "page_per_session"
       puts date
       puts page_per_session[i]["dimensions"][0]
@@ -341,7 +346,8 @@ def set_ga_db(user, user_7, user_30, session_pageview,
       else
         c += 1
       end,
-      social_bounce: channel[t]["metrics"][0]["values"][1]
+      social_bounce: channel[t]["metrics"][0]["values"][1],
+      single_session: channel[t]["metrics"][0]["values"][0].to_f
       )
     end
 
@@ -374,10 +380,11 @@ bracket = ga.bracket + ga.bracket(1000) + ga.bracket(2000)
 gender = ga.gender
 page_per_session = ga.page_per_session
 device = ga.device + ga.device(1000)
+single = ga.session_pageviews
 
 set_ga_db(user, user_7, user_30, session_pageview, bounce, 
   pageview, session, channel, avg_session, avg_time_page, 
-  bracket, gender, page_per_session, device, user_type)
+  bracket, gender, page_per_session, device, user_type, single)
 
 puts "create #{GaDb.count} ga data"
 
