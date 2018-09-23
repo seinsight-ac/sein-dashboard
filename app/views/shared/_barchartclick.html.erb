@@ -1,103 +1,97 @@
-$("#<%= id %>").click(function(){
-	if ($(this).html() == 'Weekly') {
-		$(this).removeClass('label-info');
-		$(this).addClass('label-success');
-		$(this).html('Monthly');
+$("<%= idw %>").click(function(){
+	$(this).siblings().removeClass('active');
+	$(this).addClass('active');
+	var <%= dataname %> = {
+		labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
+		datasets: [
+			{
+				label: "<%= labelX1 %>",
+				backgroundColor: 'rgba(220, 220, 220, 1)',
+				pointBorderColor: "#fff",
+				data: <%= weekdata1 %>,
+				yAxisID: 'y-axis-1',
+			},{
+				label: "<%= labelX2 %>",
+				backgroundColor: 'rgba(26,179,148,0.5)',
+				borderColor: "rgba(26,179,148,0.7)",
+				pointBackgroundColor: "rgba(26,179,148,1)",
+				pointBorderColor: "#fff",
+				data: <%= weekdata2 %>,
+				yAxisID: 'y-axis-2',
+			},
+		]
+	};
 
-		var <%= dataname %> = {
-			labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
-			datasets: [
-				{
-					label: "<%= labelX1 %>",
-					backgroundColor: 'rgba(220, 220, 220, 1)',
-					pointBorderColor: "#fff",
-					data: <%= monthdata1 %>,
-					yAxisID: 'y-axis-1',
-				},{
-					label: "<%= labelX2 %>",
-					backgroundColor: 'rgba(26,179,148,0.5)',
-					borderColor: "rgba(26,179,148,0.7)",
-					pointBackgroundColor: "rgba(26,179,148,1)",
-					pointBorderColor: "#fff",
-					data: <%= monthdata2 %>,
-					yAxisID: 'y-axis-2',
-				},
-			]
-		};
+	var barOptions = {
+		responsive: true,
+		scales: {
+			yAxes: [{
+				type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+				display: true,
+				position: 'left',
+				id: 'y-axis-1',
+			}, {
+				type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+				display: true,
+				position: 'right',
+				id: 'y-axis-2',
+				stacked: true,
+				gridLines: {
+					drawOnChartArea: false
+				}
+			}],
+		}
+	};
 
-		var barOptions = {
-			responsive: true,
-			scales: {
-				yAxes: [{
-					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display: true,
-					position: 'left',
-					id: 'y-axis-1',
-				}, {
-					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display: true,
-					position: 'right',
-					id: 'y-axis-2',
-					stacked: true,
-					gridLines: {
-						drawOnChartArea: false
-					}
-				}],
-			}
-		};
+	new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
+});
 
-		new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
-	}
+$("<%= idm %>").click(function(){
+	$(this).siblings().removeClass('active');
+	$(this).addClass('active');
+	var <%= dataname %> = {
+		labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
+		datasets: [
+			{
+				label: "<%= labelX1 %>",
+				backgroundColor: 'rgba(220, 220, 220, 1)',
+				pointBorderColor: "#fff",
+				data: <%= monthdata1 %>,
+				yAxisID: 'y-axis-1',
+			},{
+				label: "<%= labelX2 %>",
+				backgroundColor: 'rgba(26,179,148,0.5)',
+				borderColor: "rgba(26,179,148,0.7)",
+				pointBackgroundColor: "rgba(26,179,148,1)",
+				pointBorderColor: "#fff",
+				data: <%= monthdata2 %>,
+				yAxisID: 'y-axis-2',
+			},
+		]
+	};
 
-	else if ($(this).html() == 'Monthly') {
-		$(this).removeClass('label-success');
-		$(this).addClass('label-info');
-		$(this).html('Weekly');
-		
-		var <%= dataname %> = {
-			labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
-			datasets: [
-				{
-					label: "<%= labelX1 %>",
-					backgroundColor: 'rgba(220, 220, 220, 1)',
-					pointBorderColor: "#fff",
-					data: <%= weekdata1 %>,
-					yAxisID: 'y-axis-1',
-				},{
-					label: "<%= labelX2 %>",
-					backgroundColor: 'rgba(26,179,148,0.5)',
-					borderColor: "rgba(26,179,148,0.7)",
-					pointBackgroundColor: "rgba(26,179,148,1)",
-					pointBorderColor: "#fff",
-					data: <%= weekdata2 %>,
-					yAxisID: 'y-axis-2',
-				},
-			]
-		};
+	var barOptions = {
+		responsive: true,
+		scales: {
+			yAxes: [{
+				type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+				display: true,
+				position: 'left',
+				id: 'y-axis-1',
+			}, {
+				type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+				display: true,
+				position: 'right',
+				id: 'y-axis-2',
+				stacked: true,
+				gridLines: {
+					drawOnChartArea: false
+				}
+			}],
+		}
+	};
 
-		var barOptions = {
-			responsive: true,
-			scales: {
-				yAxes: [{
-					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display: true,
-					position: 'left',
-					id: 'y-axis-1',
-				}, {
-					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display: true,
-					position: 'right',
-					id: 'y-axis-2',
-					stacked: true,
-					gridLines: {
-						drawOnChartArea: false
-					}
-				}],
-			}
-		};
-
-		new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
-	}
+	new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
 });
 
 var <%= dataname %> = {

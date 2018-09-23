@@ -3,7 +3,6 @@ class DashboardsController < ApplicationController
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :index, :only => [:googleanalytics]
 
-
   def index
     # google
     @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
@@ -16,56 +15,44 @@ class DashboardsController < ApplicationController
     @web_users_month_rate = convert_percentrate(@web_users_month, GaDb.last(60).first(30).pluck(:web_users_week).reduce(:+))
 
     @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
-    @all_users_views_last_30d_data = GaDb.last(30).pluck(:pageviews_day)
+    @all_users_views_last_4w_data = [GaDb.last(7).pluck(:pageviews_day).reduce(:+), GaDb.last(14).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(21).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(28).first(7).pluck(:pageviews_day).reduce(:+)]
 
-    @single_session_pageviews_7d = GaDb.last(7).pluck(:session_pageviews_day).map { |a| a.round(2) }
-    @single_session_pageviews_30d = GaDb.last(30).pluck(:session_pageviews_day).map { |a| a.round(2) }
+    @single_session_pageviews_7d = GaDb.last(7).pluck(:single_session)
+    @single_session_pageviews_4w = [GaDb.last(7).pluck(:single_session).reduce(:+), GaDb.last(14).first(7).pluck(:single_session).reduce(:+), GaDb.last(21).first(7).pluck(:single_session).reduce(:+), GaDb.last(28).first(7).pluck(:single_session).reduce(:+)]
 
     @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
-    @activeusers_views_last_30d_data = @all_users_views_last_30d_data.zip(@single_session_pageviews_30d).map{|k| (k[0] - k[1]) }
-  
-    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f) }
-    @users_activity_rate_30d = @activeusers_views_last_30d_data.zip(@all_users_views_last_30d_data).map{|k| (k[0] / k[1].to_f) }
+    @activeusers_views_last_4w_data = @all_users_views_last_4w_data.zip(@single_session_pageviews_4w).map{|k| (k[0] - k[1]) }
+    
+    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
+    @users_activity_rate_4w = @activeusers_views_last_4w_data.zip(@all_users_views_last_4w_data).map{|k| (k[0] / k[1].to_f).round(2) }
     
     @ga_last_7d_date = GaDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
-    @ga_last_30d_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }
+    @ga_last_4w_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(8, 15, 22, 29)
 
     @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
-    @bounce_rate_week = [GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7, GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7,  GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/7]
-
+    @bounce_rate_week = [(GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(7).pluck(:email_bounce).compact.size).round(2)]
     @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
-    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30, GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30,  GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/30]
-
-    @bounce_rate_week = GaDb.last(7).pluck(:bouce_rate_day)
-    @bounce_rate_month = GaDb.last(30).pluck(:bouce_rate_day)
+    @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
     
+
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
-    @mail_users_month_rate = rate_transit(@mail_users, MailchimpDb.last(2).first.email_sent)
+    @mail_users_month_rate = convert_percentrate(MailchimpDb.last(4).first.email_sent - @mail_users, MailchimpDb.last(12).first.email_sent - MailchimpDb.last(8).first.email_sent)
 
-    @last_12w_date = []
-    MailchimpDb.last(4).pluck(:date).each do |d|
-      @last_12w_date << d.strftime("%m%d").to_i
-    end
+    @last_12w_date = MailchimpDb.last(4).pluck(:date).map { |a| a.strftime("%m%d").to_i }
     @mail_users_last_30d = MailchimpDb.last(4).pluck(:email_sent)
 
     @mail_views = MailchimpDb.last(4).pluck(:open)
     @mail_links= MailchimpDb.last(4).pluck(:click)
 
-    @mail_views_rate = []
-    MailchimpDb.last(4).pluck(:open_rate).each do |open|
-      @mail_views_rate << open.round(2)
-    end
+    @mail_views_rate = MailchimpDb.last(4).pluck(:open_rate).map { |a| a.round(2)}
 
     @mail_links_rate = []
-    @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << a / b.to_f }
+    @mail_links.zip(@mail_views) { |a, b| @mail_links_rate << (a / b.to_f).round(2) }
 
     # alexa
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
-    @rate = []
-    AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].each do |rate|
-      @rate << rate.round(2)
-    end
+    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
 
     # export to xls
     export_xls = ExportXls.new
@@ -76,7 +63,7 @@ class DashboardsController < ApplicationController
     respond_to do |format|
       format.xls { send_data(export_xls.export,
         :type => "text/excel; charset=utf-8; header=present",
-        :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+        :filename => "社企流資料分析.xls")
       }
       format.html
     end
@@ -170,14 +157,34 @@ class DashboardsController < ApplicationController
 
   end
 
+  def excel
+    last_month_mon
+
+    fb = FbDb.where("date >= ? AND date <= ?", @last, @end)
+    ga = GaDb.where("date >= ? AND date <= ?", @last, @end)
+    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
+    alexa = AlexaDb.last
+
+    export_xls = ExportXls.new
+    
+    export_xls.fb_xls(fb)
+    export_xls.ga_xls(ga)
+    export_xls.mailchimp_xls(mailchimp)
+    export_xls.alexa_xls(alexa)
+    
+    respond_to do |format|
+      format.xls { send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+      }
+      format.html
+    end
+  end
+
   private
 
   def convert_percentrate(datanew,  dataold)
-    return ((datanew - dataold) / dataold.to_f * 100).round(2)
-  end
-
-  def rate_transit(datanew, dataold)
-    return ((datanew - dataold) / dataold.to_f * 10000).round(2)
+    return ((datanew - dataold) / dataold.abs.to_f * 100).round(2)
   end
 
   def divide_date(date)
@@ -193,21 +200,8 @@ class DashboardsController < ApplicationController
     while @last.strftime("%a") != "Mon"
       @last -= 1
     end
+    @end = (@last + 28).strftime("%Y-%m-%d")
     @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
-  end
-
-  def set_time
-    @now = Time.now
-    @now.utc
-    @month = @now - 60 * 60 * 24 * 35
-    @now.strftime("%Y-%m-%d")
-    @month.strftime("%Y-%m-%d")
-  end
-
-  def get_week_data(db, data)
-    a = []
-    a << db.last(22).pluck(:data)[22, 15]
-    a << db.last(22).pluck(:data)[8, 1]
   end
 
   def fbinformation
@@ -257,14 +251,6 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
-  end
-
-  def convert_tenthousandthrate(datanew,  dataold)
-      return (datanew * 10000 / (dataold - datanew).to_f).round(2)
-  end
-
-  def ga_data_date
-    first[1][0]["data"]["rows"].flat_map{|i|i.values.first}.grep(/\d+/, &:to_i)
   end
   
 end

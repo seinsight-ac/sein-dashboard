@@ -1,13 +1,23 @@
 <div class="ibox float-e-margins">
 	<div class="ibox-title">
-		<h5><%= title %></h5>
+		<li class="dropdown" style='list-style-type:none'>
+			<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+				<h5><%= title %></h5>              
+			</a>
+			<ul class="dropdown-menu">
+				<div>
+					<span class="text-muted" style="font-size: 15px;"><%= content %></span>
+				</div>
+			</ul>
+		</li>
 		<div class="pull-right">
 			<div class="btn-group">
-				<span id="<%= id %>" class="label label-info pull-right">Weekly</span>
+				<button id="<%= idw %>" type="button" class="btn btn-xs btn-white active">Week</button>
+				<button id="<%= idm %>" type="button" class="btn btn-xs btn-white">Month</button>
 			</div>
 		</div>
 	</div>
 	<div class="ibox-content">
-		<canvas id="<%= linechartid %>" height="213"></canvas>
+		<canvas id="<%= linechartid %>" height="<%= height %>"></canvas>
 	</div>
 </div>

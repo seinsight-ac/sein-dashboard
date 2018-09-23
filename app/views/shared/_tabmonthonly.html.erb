@@ -1,12 +1,21 @@
 <div class="ibox float-e-margins">
 	<div class="ibox-title">
-		<span id="<%= id %>" class="label label-success pull-right" style="cursor: auto">Monthly</span>
-		<h5><%= title %></h5>
+		<span id="<%= id %>" class="label label-info pull-right" style="cursor: auto">Monthly</span>
+		<li class="dropdown" style='list-style-type:none'>
+			<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+				<h5><%= title %></h5>              
+			</a>
+			<ul class="dropdown-menu">
+				<div>
+					<span class="text-muted" style="font-size: 15px;"><%= content %></span>
+				</div>
+			</ul>
+		</li>
 	</div>
 	<div class="ibox-content">
 		<h1 class="no-margins" style="display: inline-block"><%= data %></h1>
 		<div class="stat-percent font-bold <%= color(rate) %> ">
-			<span><%= rate %></span> ‱
+			<span><%= rate %></span> <%= percent %>
 			<i class="fa <%= arrow(rate) %> "></i>
 		</div>
 		<div id="<%= linechart %>"></div>
