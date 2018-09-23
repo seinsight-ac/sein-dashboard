@@ -94,45 +94,6 @@ $("<%= idm %>").click(function(){
 	});    
 });
 
-<% if false %>
-$("<%= id %>").click(function(){
-	if ($(this).html() == 'Week') {
-		$(this).removeClass('label-info');
-		$(this).addClass('label-success');
-		$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= monthdata %>');
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= monthrate %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(weekrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(monthrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(weekrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(monthrate) %>')
-		$("<%= linechartid %>").sparkline(<%= data30d %>, {
-			type: 'line',
-			width: '100%',
-			height: '60',
-			lineColor: '#1ab394',
-			fillColor: "#ffffff"
-		});    
-	}
-	else if ($(this).html() == 'Month') {
-		$(this).removeClass('label-success');
-		$(this).addClass('label-info');
-		$(this).closest('.ibox').children('.ibox-content').children('h1').html('<%= weekdata %>');
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('span').html('<%= weekrate %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').removeClass('<%= arrow(monthrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').children('i').addClass('<%= arrow(weekrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').removeClass('<%= color(monthrate) %>')
-		$(this).closest('.ibox').children('.ibox-content').children('.stat-percent').addClass('<%= color(weekrate) %>')
-		$("<%= linechartid %>").sparkline(<%= data7d %>, {
-			type: 'line',
-			width: '100%',
-			height: '60',
-			lineColor: '#1ab394',
-			fillColor: "#ffffff"
-		});       
-	}
-});
-<% end %>
-
 $("<%= linechartid %>").sparkline(<%= data7d %>, {
 	type: 'line',
 	width: '100%',
