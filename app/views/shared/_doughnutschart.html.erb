@@ -3,13 +3,13 @@
 		<h5><%= title %></h5>
 		<div class="pull-right">
 			<div class="btn-group">
-				<span id="<%= id %>" class="label label-info pull-right">Lifetime</span>
+				<span id="<%= id %>" class="label label-info pull-right" style="cursor: auto"><%= period %></span>
 			</div>
 		</div>
 	</div>
 	<div class="ibox-content">
 		<div>
-			<canvas id="<%= linechartid %>" height="213"></canvas>
+			<canvas id="<%= linechartid %>" height="<%= height%>"></canvas>
 		</div>
 	</div>
 </div>

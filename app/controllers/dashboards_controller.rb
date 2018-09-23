@@ -174,7 +174,7 @@ class DashboardsController < ApplicationController
   private
 
   def convert_percentrate(datanew,  dataold)
-    return ((datanew - dataold) / dataold.to_f * 100).round(2)
+    return ((datanew - dataold) / dataold.abs.to_f * 100).round(2)
   end
 
   def rate_transit(datanew, dataold)
@@ -258,10 +258,6 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
-  end
-
-  def convert_tenthousandthrate(datanew,  dataold)
-      return (datanew * 10000 / (dataold - datanew).to_f).round(2)
   end
 
   def ga_data_date
