@@ -22,5 +22,8 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrapTour/bootstrap-tour.min.js
+//= require moment
+//= require bootstrap-datetimepicker
+//= require jquery-ui
 //= require_tree .
 

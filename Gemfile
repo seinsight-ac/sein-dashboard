@@ -55,6 +55,9 @@ gem 'jquery-rails'
 gem 'jquery-slimscroll-rails'
 gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
 gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
+gem 'jquery-ui-rails'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
