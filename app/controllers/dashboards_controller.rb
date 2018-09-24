@@ -4,6 +4,10 @@ class DashboardsController < ApplicationController
   before_action :index, :only => [:googleanalytics]
 
   def index
+    @starttime = params[:starttime]
+    @endtime = params[:endtime]
+    puts @starttime
+    puts @endtime
     # google
     @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
     @web_users_month = GaDb.last(30).pluck(:web_users_week).reduce(:+)
@@ -181,13 +185,6 @@ class DashboardsController < ApplicationController
       }
       format.html
     end
-  end
-
-  def create
-    @starttime = params[:starttime]
-    @endtime = params[:endtime]
-    puts @starttime
-    pust @endtime
   end
 
   private

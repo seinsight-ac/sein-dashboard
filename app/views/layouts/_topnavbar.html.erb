@@ -27,13 +27,23 @@
 
 <script type="text/javascript">
 
+var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 
 $('#starttime').datetimepicker({
-	format: 'DD/MM/YYYY'
+	format: 'YYYY/MM/DD',
+	minDate: '2017/09/23',
+	maxDate: String(utc)
 });
+
 $('#endtime').datetimepicker({
-	format: 'DD/MM/YYYY'
+	format: 'YYYY/MM/DD',
+	maxDate: String(utc)
 });
+
+$('#starttime').on("dp.change", function(e) {
+	$('#endtime').data("DateTimePicker").minDate(e.date);
+})
+
 // $('#starttime').blur(function () {
 // 	console.log($('#starttime').data('date'))
 // })
@@ -45,7 +55,7 @@ $('#submitdate').on('click', function () {
 		event.preventDefault();
 		$.ajax({
 			url: '/dashboards',
-			method: 'post',
+			Type: 'GET',
 			dataType: "json",
 			data:{
 					starttime: $('#starttime').data('date'),
