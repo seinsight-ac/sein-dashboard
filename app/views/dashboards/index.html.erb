@@ -28,7 +28,7 @@
   <div class="row">
 
     <div class="col-lg-6">
-      <%= render partial: "shared/hbarchartdayonly", locals: {id: 'labelcompetitors', title: '競爭對手流量分析', linechartid: 'barChartcompetitors', content:'', period: '2018/9/24'} %>
+      <%= render partial: "shared/hbarchartdayonly", locals: {id: 'labelcompetitors', title: '競爭對手流量分析', linechartid: 'barChartcompetitors', content:'', period: @created_at} %>
     </div>
     <div class="col-lg-6">
       <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'' } %>
