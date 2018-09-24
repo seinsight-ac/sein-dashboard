@@ -14,13 +14,9 @@ class DashboardsController < ApplicationController
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
 
-      puts @fb
-      puts @ga
-      puts @mailchimp
-
       # mailchimp
       @mail_users_select = @mailchimp[-1].email_sent
-      @mail_users_month_rate = convert_percentrate( @mailchimp[-4].email_sent - @mail_users_select,  @mailchimp[-12].email_sent -  @mailchimp[-8].email_sent)
+      @mail_users_rate_select = convert_percentrate( @mailchimp[-4].email_sent - @mail_users_select, @mailchimp.last(12).first.email_sent -  @mailchimp.last(8).first.email_sent)
       @mail_users_all_select = @mailchimp.pluck(:email_sent)
 
       @last_date_select = @mailchimp.pluck(:date).map { |a| a.strftime("%m%d").to_i }
@@ -73,7 +69,7 @@ class DashboardsController < ApplicationController
         @enagements_users_last_4w_data_select = []
         f = 0
         t = i
-        @fb.pluck(:enagements_users_week).map { |a| a.strftime("%m%d").to_i }.each do |data|
+        @fb.pluck(:enagements_users_week).each do |data|
           if f == t
             @enagements_users_last_4w_data_select << data
             t += 7
@@ -128,7 +124,6 @@ class DashboardsController < ApplicationController
 
         @channel_user_month = [@ga.pluck(:oganic_search_day).compact.reduce(:+), @ga.pluck(:social_user_day).compact.reduce(:+), @ga.pluck(:direct_user_day).compact.reduce(:+), @ga.pluck(:referral_user_day).compact.reduce(:+), @ga.pluck(:email_user_day).compact.reduce(:+)]
         @bounce_rate_month = [(@ga.pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:social_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
-
       else
 
       end
