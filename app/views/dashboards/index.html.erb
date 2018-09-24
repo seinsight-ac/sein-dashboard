@@ -40,27 +40,16 @@
 
 <script type="text/javascript">
 $(function() {
-
   <%= render partial: "shared/tabclick", locals: {idw: '#labelpagefansw', idm: '#labelpagefansm', weekdata: @fans, monthdata: @fans, weekrate: @fans_adds_week_rate, monthrate: @fans_adds_month_rate, linechartid: '#sparklinefansadds', data7d: @fans_adds_last_7d_data, data30d: @fans_adds_last_30d_data} %>
-
   <%= render partial: "shared/tabclick", locals: {idw: '#labelpageusersw', idm: '#labelpageusersm', weekdata: @page_users_week, monthdata: @page_users_month, weekrate: @page_users_week_rate, monthrate: @page_users_month_rate, linechartid: '#sparklinepageusers', data7d: @page_users_last_7d, data30d: @page_users_last_30d} %>
-
   <%= render partial: "shared/tabclick", locals: {idw: '#labelwebusersw', idm: '#labelwebusersm', weekdata: @web_users_week, monthdata: @web_users_month, weekrate: @web_users_week_rate, monthrate: @web_users_month_rate, linechartid: '#sparklinewebusers', data7d: @web_users_last_7d, data30d: @web_users_last_30d} %>
-
   <%= render partial: "shared/tabclickmonthonly", locals: { linechartid: '#sparklinemailusers', data30d: @mail_users_last_30d} %>
-
-
   <%= render partial: "shared/linechartclick", locals: {idw: '#labelfansretentionw', idm: '#labelfansretentionm', linechartid: 'lineChartfansretention', dataname: "lineDatafansretention", label1: "內容曝光人數", label2: "貼文互動人數", label3: "互動率", last7ddate: @fb_last_7d_date, last30ddate: @fb_last_4w_date ,weekdata1: @posts_users_last_7d_data, weekdata2: @enagements_users_last_7d_data, monthdata1: @posts_users_last_4w_data, monthdata2: @enagements_users_last_4w_data, weekrate: @fans_retention_rate_7d, monthrate: @fans_retention_rate_30d} %>
   
   <%= render partial: "shared/linechartclick", locals: {idw: '#labelwebactivityw', idm: '#labelwebactivitym', linechartid: 'lineChartwebactivity', dataname: "lineDatawebactivity", label1: "所有使用者", label2: "多工作階段使用者", label3: "活躍度", last7ddate: @ga_last_7d_date, last30ddate: @ga_last_4w_date ,weekdata1: @all_users_views_last_7d_data, weekdata2: @activeusers_views_last_7d_data, monthdata1: @all_users_views_last_4w_data, monthdata2: @activeusers_views_last_4w_data, weekrate: @users_activity_rate_7d, monthrate: @users_activity_rate_4w} %>
-
-
   <%= render partial: "shared/linechartclickmonthonly", locals: { linechartid: 'lineChartmailactivity', dataname: "lineDatamailactivity", label1: "開信率", label2: "連結點擊率", last12wdate: @last_12w_date , monthrate1: @mail_views_rate, monthrate2: @mail_links_rate} %> 
-
   <%= render partial: "shared/barchartclick", locals: {idw: '#labelwebtrafficw', idm: '#labelwebtrafficm', barchartid: 'barChartwebtraffic', dataname: "barDatawebtraffic", labelY1: "有機搜尋", labelY2: "社群", labelY3: "自然流量", labelY4: "參照連結", labelY5: "電郵", labelX1: "流量數", labelX2: "跳出率", weekdata1: @channel_user_week, weekdata2: @bounce_rate_week, monthdata1: @channel_user_month, monthdata2: @bounce_rate_month} %>     
-
   <%= render partial: "shared/hbarchartclickdayonly", locals: { barchartid: 'barChartcompetitors', dataname: "barDatacompetitors", labelY1: "Womany", labelY2: "泛科學", labelY3: "上下游", labelY4: "環境資訊中心", labelY5: "社企流", labelY6: "NPOst", labelX1: "台灣排名", labelX2: "跳出率", dayrank: @rank, dayrate: @rate } %> 
-
 });
 </script>
 
