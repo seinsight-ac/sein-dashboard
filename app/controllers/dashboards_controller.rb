@@ -24,7 +24,9 @@ class DashboardsController < ApplicationController
     # alexa
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
     @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
+    @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
 
+    
     # export to xls
     export_xls = ExportXls.new
     
@@ -79,9 +81,9 @@ class DashboardsController < ApplicationController
     @link_clicks_last_7d_data = FbDb.last(7).pluck(:link_clicks_day)
     @link_clicks_last_4w_data = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
     @link_clicks_rate_7d = []
-    @link_clicks_rate_7d = @post_enagements_last_7d_data.zip(@link_clicks_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_7d = @link_clicks_last_7d_data.zip(@post_enagements_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @link_clicks_rate_30d = []
-    @link_clicks_rate_30d = @post_enagements_last_4w_data.zip(@link_clicks_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_30d = @link_clicks_last_4w_data.zip(@post_enagements_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
   
   end
 
@@ -150,6 +152,13 @@ class DashboardsController < ApplicationController
       }
       format.html
     end
+  end
+
+  def create
+    @starttime = params[:starttime]
+    @endtime = params[:endtime]
+    puts @starttime
+    pust @endtime
   end
 
   private

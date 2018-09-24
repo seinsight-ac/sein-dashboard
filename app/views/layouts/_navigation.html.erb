@@ -46,48 +46,77 @@
 <% content_for :javascript do %>
 
 <script type="text/javascript">
+$(function() {
 
-
-	$(function() {
-
-		// Instance the tour
-		var tour = new Tour({
-			steps: [{
-				element: ".startTour",
-				title: "使用教學開始！",
-				content: "介紹初次使用者使用本軟體：Ｄ",
-				placement: "right"
+	// Instance the tour
+	var tour = new Tour({
+		steps: [{
+			element: ".startTour",
+			title: "使用教學開始！",
+			content: "介紹初次使用者使用本軟體：Ｄ",
+			placement: "right",
+			backdrop: true,
+			backdropContainer: '#wrapper',
+			onShown: function (tour){
+				$('body').addClass('tour-open')
 			},
-				{
-					element: ".navbar-minimalize",
-					title: "版面控制按鈕",
-					content: "點擊後可以縮小左側導覽列。",
-					placement: "right",
+			onHidden: function (tour){
+				$('body').removeClass('tour-close')
+			}
+		},
+			{
+				element: ".navbar-minimalize",
+				title: "版面控制按鈕",
+				content: "點擊後可以縮小左側導覽列。",
+				placement: "right",
+			},
+			{
+				element: "#labelpagefansm",
+				title: "顯示期間",
+				content: "點擊按鈕會切換數據顯示期間。",
+				placement: "right",
+			},{
+				element: "#switch",
+				title: "總顯示期間",
+				content: "一次切換網站數據顯示期間。",
+				placement: "bottom",
+			},{
+				element: ".input-daterange",
+				title: "起始日期與結束日期",
+				content: "切換網站資料顯示期間。",
+				placement: "bottom",
+			},{
+				element: "#emailtitle",
+				title: "圖表數值解釋",
+				content: "點擊名稱查看圖表數值定義。",
+				placement: "left",
+			},
+			{
+				element: "#lineChartfansretention",
+				title: "數據名稱",
+				content: "點擊數據名稱後可以隱藏此數據於圖表中，再次點擊後會再次出現。",
+				placement: "top",
+				backdrop: true,
+				backdropContainer: '#wrapper',
+				onShown: function (tour){
+					$('body').addClass('tour-open')
 				},
-				{
-					element: "#labelpagefansm",
-					title: "顯示期間",
-					content: "點擊按鈕會切換數據顯示期間，Week代表從昨天開始一週前的數據，比例對比上上週，Month代表從昨天開始一個月前的數據，比例對比上上月。",
-					placement: "right"
-				},
-				{
-					element: "#lineChartfansretention",
-					title: "數據名稱",
-					content: "點擊數據名稱後可以隱藏此數據於圖表中，再次點擊後會再次出現。",
-					placement: "top"
+				onHidden: function (tour){
+					$('body').removeClass('tour-close')
 				}
-			]
-		});
-
-		// Initialize the tour
-		tour.init();
-
-		$('.startTour').click(function(){
-				tour.restart();
-				// Start the tour
-				// tour.start();
-		})
+			}
+		]
 	});
+
+	// Initialize the tour
+	tour.init();
+
+	$('.startTour').click(function(){
+			tour.restart();
+			// Start the tour
+			// tour.start();
+	})
+});
 
 </script>
 

@@ -53,6 +53,28 @@ class GoogleAnalytics
     request_two_dim("ga:users", "ga:userType")
   end
 
+  def user_type_week
+    request = GetReportsRequest.new(
+      { report_requests: [{
+        view_id: "ga:55621750",
+        metrics: [
+          {
+            expression: "ga:users"
+          }
+        ],dimensions:[
+          {
+            name: "ga:userType"
+          }
+        ],date_ranges:[
+          {
+            start_date: @since,
+            end_date: @before
+          }
+        ]
+      }]})
+    return convert(request)
+  end
+
   def channel(token = 0)
     request_two("ga:sessions", "ga:bounceRate", "ga:channelGrouping", token)
   end
@@ -67,6 +89,29 @@ class GoogleAnalytics
 
   def bracket(token = 0)
     request_two_dim("ga:users", "ga:userAgeBracket", token)
+  end
+
+  def bracket_week
+    request = GetReportsRequest.new(
+      { report_requests: [{
+        view_id: "ga:55621750",
+        metrics: [
+          {
+            expression: "ga:users"
+          }
+        ],dimensions:[
+          {
+            name: "ga:userAgeBracket"
+          }
+        ],date_ranges:[
+          {
+            start_date: @since,
+            end_date: @before
+          }
+        ]
+      }]})
+    response = analytics.batch_get_reports(request)
+    JSON.parse(response.to_json)["reports"][0]["data"]
   end
 
   def gender(token = 0)

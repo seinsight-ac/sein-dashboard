@@ -5,18 +5,59 @@
 		</div>
 		<ul class="nav navbar-top-links">
 			<%= render 'layouts/alert' %>
-			<div class="pull-right" style=" padding: 15px;">
-				<div class="btn-group">
+			<ul class="nav navbar-top-links navbar-right" style=" padding-top: 8px;">
+				<li id="switch">
 					<button id="switchweek"" type="button" class="btn btn-xs">Week</button>
 					<button id="switchmonth" type="button" class="btn btn-xs">Month</button>
-				</div>
-			</div>
+				</li>
+				<li class="btn-group" style=" padding-left: 8px;">
+					<div class="input-group input-daterange" style="width: 300px;">
+						<input type="text" id="starttime" class="form-control">
+						<div class="input-group-addon">to</div>
+						<input type="text" id="endtime" class="form-control">
+					</div>
+				</li>
+				<li>
+					<button type="button" id= "submitdate" class="btn btn-sm btn-primary"> Go!</button>
+				</li>
+			</ul>
 		</ul>
 	</nav>
 </div>
 
 <script type="text/javascript">
 
+
+$('#starttime').datetimepicker({
+	format: 'DD/MM/YYYY'
+});
+$('#endtime').datetimepicker({
+	format: 'DD/MM/YYYY'
+});
+// $('#starttime').blur(function () {
+// 	console.log($('#starttime').data('date'))
+// })
+// $('#endtime').blur(function () {
+// 	console.log($('#endtime').data('date'))
+// })
+
+$('#submitdate').on('click', function () {
+		event.preventDefault();
+		$.ajax({
+			url: '/dashboards',
+			method: 'post',
+			dataType: "json",
+			data:{
+					starttime: $('#starttime').data('date'),
+					endtime: $('#endtime').data('date'),
+				},
+			success: function(data){
+			}
+		});
+		return false;
+	});
+
+// switch week / month
 $("#switchweek").click(function() {
 	$(this).siblings().removeClass('label-primary');
 	$(this).addClass('label-primary');
@@ -58,11 +99,11 @@ $("#switchmonth").click(function() {
 })
 
 // Minimalize menu
-
 $('.navbar-minimalize').on('click', function (event) {
 	console.log('toggle')
 	event.preventDefault();
 	$("body").toggleClass("mini-navbar");
 	SmoothlyMenu();
 });
+
 </script>
