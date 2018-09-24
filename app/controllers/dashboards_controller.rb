@@ -110,9 +110,9 @@ class DashboardsController < ApplicationController
     @link_clicks_last_7d_data = FbDb.last(7).pluck(:link_clicks_day)
     @link_clicks_last_4w_data = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
     @link_clicks_rate_7d = []
-    @link_clicks_rate_7d = @post_enagements_last_7d_data.zip(@link_clicks_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_7d = @link_clicks_last_7d_data.zip(@post_enagements_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @link_clicks_rate_30d = []
-    @link_clicks_rate_30d = @post_enagements_last_4w_data.zip(@link_clicks_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_30d = @link_clicks_last_4w_data.zip(@post_enagements_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
   
   end
 
