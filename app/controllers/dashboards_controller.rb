@@ -4,10 +4,13 @@ class DashboardsController < ApplicationController
   before_action :index, :only => [:googleanalytics]
 
   def index
-    @starttime = params[:starttime]
-    @endtime = params[:endtime]
-    puts @starttime
-    puts @endtime
+    @starttime = params[:starttime].to_i
+    @endtime = params[:endtime].to_i
+
+    if (@endtime.to_date - @starttime.to_date) > 20
+      puts (@endtime.to_date - @starttime.to_date)
+    end
+
     # google
     @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
     @web_users_month = GaDb.last(30).pluck(:web_users_week).reduce(:+)
@@ -58,9 +61,18 @@ class DashboardsController < ApplicationController
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
     @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
-
     
     # export to xls
+    #fb = FbDb.where("date >= ? AND date <= ?", @last, @end)
+    #ga = GaDb.where("date >= ? AND date <= ?", @last, @end)
+    #mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
+    #alexa = AlexaDb.last
+    
+    #export_xls.fb_xls(fb)
+    #export_xls.ga_xls(ga)
+    #export_xls.mailchimp_xls(mailchimp)
+    #export_xls.alexa_xls(alexa)
+
     export_xls = ExportXls.new
     
     #export_xls.mailchimp_xls(@campaigns)
