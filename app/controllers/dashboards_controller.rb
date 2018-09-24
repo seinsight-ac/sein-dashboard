@@ -157,15 +157,18 @@ class DashboardsController < ApplicationController
 
   end
 
-
-
-
   def excel
     last_month_mon
+
+    fb = FbDb.where("date >= ? AND date <= ?", @last, @end)
+    ga = GaDb.where("date >= ? AND date <= ?", @last, @end)
     mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
     alexa = AlexaDb.last
-     export_xls = ExportXls.new
+
+    export_xls = ExportXls.new
     
+    export_xls.fb_xls(fb)
+    export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(alexa)
     
@@ -177,7 +180,6 @@ class DashboardsController < ApplicationController
       format.html
     end
   end
-
 
   private
 
