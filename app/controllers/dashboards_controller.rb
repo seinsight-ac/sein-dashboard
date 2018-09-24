@@ -181,6 +181,11 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def create
+    @starttime = params[:starttime]
+    @endtime = params[:endtime]
+  end
+
   private
 
   def convert_percentrate(datanew,  dataold)
