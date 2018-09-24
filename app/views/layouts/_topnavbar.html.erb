@@ -34,28 +34,270 @@ $('#starttime').datetimepicker({
 $('#endtime').datetimepicker({
 	format: 'DD/MM/YYYY'
 });
-// $('#starttime').blur(function () {
-// 	console.log($('#starttime').data('date'))
-// })
-// $('#endtime').blur(function () {
-// 	console.log($('#endtime').data('date'))
-// })
+
 
 $('#submitdate').on('click', function () {
-		event.preventDefault();
-		$.ajax({
-			url: '/dashboards',
-			method: 'post',
-			dataType: "json",
-			data:{
-					starttime: $('#starttime').data('date'),
-					endtime: $('#endtime').data('date'),
-				},
-			success: function(data){
-			}
-		});
-		return false;
+	event.preventDefault();
+	$.ajax({
+		url: '/dashboards',
+		method: 'post',
+		dataType: "json",
+		data:{
+				starttime: $('#starttime').data('date'),
+				endtime: $('#endtime').data('date'),
+			},
+		success: function(data){
+			$("#sparklinefansadds").sparkline([1, 2, 3], {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinepageusers").sparkline([1, 2, 3], {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinewebusers").sparkline([1, 2, 3], {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinemailusers").sparkline([1, 2, 3], {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+
+			var <%= dataname %> = {
+				labels: <%= last12wdate %>,
+				datasets: [
+					{
+						label: "<%= label1 %>", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: <%= monthrate1 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= label2 %>", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  <%= monthrate2 %>,
+						yAxisID: 'y-axis-1',
+					},
+				]
+			};
+
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}],
+				}
+			};
+			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+
+			var <%= dataname %> = {
+				labels: <%= last7ddate %>,
+				datasets: [
+					{
+						label: "<%= label1 %>", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: <%= weekdata1 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= label2 %>", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  <%= weekdata2 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= label3 %>",
+						backgroundColor: 'rgba(225,225,225,1)',
+						pointBorderColor: "#fff",
+						data: <%= weekrate %>,
+						yAxisID: 'y-axis-2',
+					}
+				]
+			};
+
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+
+			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+
+			var <%= dataname %> = {
+				labels: <%= last7ddate %>,
+				datasets: [
+					{
+						label: "<%= label1 %>", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: <%= weekdata1 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= label2 %>", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  <%= weekdata2 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= label3 %>",
+						backgroundColor: 'rgba(225,225,225,1)',
+						pointBorderColor: "#fff",
+						data: <%= weekrate %>,
+						yAxisID: 'y-axis-2',
+					}
+				]
+			};
+
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+
+			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+
+
+			var <%= dataname %> = {
+				labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
+				datasets: [
+					{
+						label: "<%= labelX1 %>",
+						backgroundColor: 'rgba(220, 220, 220, 1)',
+						pointBorderColor: "#fff",
+						data: <%= weekdata1 %>,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "<%= labelX2 %>",
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						borderColor: "rgba(26,179,148,0.7)",
+						pointBackgroundColor: "rgba(26,179,148,1)",
+						pointBorderColor: "#fff",
+						data: <%= weekdata2 %>,
+						yAxisID: 'y-axis-2',
+					},
+				]
+			};
+
+			var barOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						stacked: true,
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+
+			new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
+
+			var <%= dataname %> = {
+				labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>", "<%= labelY6 %>"],
+				datasets: [
+					{
+						label: "<%= labelX1 %>",
+						backgroundColor: 'rgba(220, 220, 220, 1)',
+						pointBorderColor: "#fff",
+						data: <%= dayrank %>,
+						xAxisID: 'x-axis-1',
+					},{
+						label: "<%= labelX2 %>",
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						borderColor: "rgba(26,179,148,0.7)",
+						pointBackgroundColor: "rgba(26,179,148,1)",
+						pointBorderColor: "#fff",
+						data: <%= dayrate %>,
+						xAxisID: 'x-axis-2',
+					},
+				]
+			};
+
+			var barOptionsh = {
+				responsive: true,
+				scales: {
+					xAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'top',
+						id: 'x-axis-1',
+						stacked: true,
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'bottom',
+						id: 'x-axis-2',
+						stacked: true,
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+
+			new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptionsh});
+		}
 	});
+	return false;
+});
 
 // switch week / month
 $("#switchweek").click(function() {
