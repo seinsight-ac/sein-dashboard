@@ -77,22 +77,28 @@ $('#submitdate').on('click', function () {
 			});
 
 			var <%= dataname %> = {
-				labels: <%= last12wdate %>,
+				labels: <%= last7ddate %>,
 				datasets: [
 					{
 						label: "<%= label1 %>", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: <%= monthrate1 %>,
+						data: <%= weekdata1 %>,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "<%= label2 %>", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  <%= monthrate2 %>,
+						data:  <%= weekdata2 %>,
 						yAxisID: 'y-axis-1',
-					},
+					},{
+						label: "<%= label3 %>",
+						backgroundColor: 'rgba(225,225,225,1)',
+						pointBorderColor: "#fff",
+						data: <%= weekrate %>,
+						yAxisID: 'y-axis-2',
+					}
 				]
 			};
 
@@ -104,9 +110,18 @@ $('#submitdate').on('click', function () {
 						display: true,
 						position: 'left',
 						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
 					}],
 				}
 			};
+
 			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 
 			var <%= dataname %> = {
