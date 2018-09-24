@@ -53,7 +53,8 @@ class DashboardsController < ApplicationController
     # alexa
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
     @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
-    @created_at = AlexaDb.last(1).created_at.strftime("%Y-%m-%d")
+    @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
+
     
     # export to xls
     export_xls = ExportXls.new
@@ -185,6 +186,8 @@ class DashboardsController < ApplicationController
   def create
     @starttime = params[:starttime]
     @endtime = params[:endtime]
+    puts @starttime
+    pust @endtime
   end
 
   private
