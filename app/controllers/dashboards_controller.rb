@@ -1,40 +1,11 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
-  before_action :index, :only => [:googleanalytics]
+  before_action :gainformation, :only => [:index, :googleanalytics]
+  
 
   def index
-    # google
-    @web_users_week = GaDb.last(7).pluck(:web_users_week).reduce(:+)
-    @web_users_month = GaDb.last(30).pluck(:web_users_week).reduce(:+)
-
-    @web_users_last_7d = GaDb.last(7).pluck(:web_users_week)
-    @web_users_last_30d = GaDb.last(30).pluck(:web_users_week)
     
-    @web_users_week_rate = convert_percentrate(@web_users_week, GaDb.last(14).first(7).pluck(:web_users_week).reduce(:+))  
-    @web_users_month_rate = convert_percentrate(@web_users_month, GaDb.last(60).first(30).pluck(:web_users_week).reduce(:+))
-
-    @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
-    @all_users_views_last_4w_data = [GaDb.last(7).pluck(:pageviews_day).reduce(:+), GaDb.last(14).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(21).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(28).first(7).pluck(:pageviews_day).reduce(:+)]
-
-    @single_session_pageviews_7d = GaDb.last(7).pluck(:single_session)
-    @single_session_pageviews_4w = [GaDb.last(7).pluck(:single_session).reduce(:+), GaDb.last(14).first(7).pluck(:single_session).reduce(:+), GaDb.last(21).first(7).pluck(:single_session).reduce(:+), GaDb.last(28).first(7).pluck(:single_session).reduce(:+)]
-
-    @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
-    @activeusers_views_last_4w_data = @all_users_views_last_4w_data.zip(@single_session_pageviews_4w).map{|k| (k[0] - k[1]) }
-    
-    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
-    @users_activity_rate_4w = @activeusers_views_last_4w_data.zip(@all_users_views_last_4w_data).map{|k| (k[0] / k[1].to_f).round(2) }
-    
-    @ga_last_7d_date = GaDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
-    @ga_last_4w_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(8, 15, 22, 29)
-
-    @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
-    @bounce_rate_week = [(GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(7).pluck(:email_bounce).compact.size).round(2)]
-    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
-    @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
-    
-
     # mailchimp
     @mail_users = MailchimpDb.last.email_sent
     @mail_users_month_rate = convert_percentrate(MailchimpDb.last(4).first.email_sent - @mail_users, MailchimpDb.last(12).first.email_sent - MailchimpDb.last(8).first.email_sent)
@@ -128,8 +99,8 @@ class DashboardsController < ApplicationController
     @pageviews_month_rate = convert_percentrate(@pageviews_month, GaDb.last(60).first(30).pluck(:pageviews_day).reduce(:+))
     
     @pageviews_per_session_week = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/7).round(2)
-    @pageviews_per_session_month = ((GaDb.last(7).pluck(:pageviews_per_session_day).reduce(:+))/30).round(2)
-
+    @pageviews_per_session_month = ((GaDb.last(30).pluck(:pageviews_per_session_day).reduce(:+))/30).round(2)
+    
     @pageviews_per_session_7d = GaDb.last(7).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
     @pageviews_per_session_30d = GaDb.last(30).pluck(:pageviews_per_session_day).flat_map{|i|i.round(2)}
 
@@ -260,6 +231,39 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
     @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+  end
+
+  def gainformation
+    @web_users_week = GaDb.pluck(:web_users_week).values_at(364)[0]
+    @web_users_month = GaDb.pluck(:web_users_month).values_at(364)[0]
+    
+    @web_users_last_7d = GaDb.last(7).pluck(:web_users_week)
+    @web_users_last_30d = GaDb.last(30).pluck(:web_users_month)
+    
+    @web_users_week_rate = convert_percentrate(@web_users_week, GaDb.pluck(:web_users_week).values_at(357)[0])  
+    @web_users_month_rate = convert_percentrate(@web_users_month, GaDb.pluck(:web_users_month).values_at(334)[0])
+    
+    @all_users_views_last_7d_data = GaDb.last(7).pluck(:pageviews_day)
+    @all_users_views_last_4w_data = [GaDb.last(7).pluck(:pageviews_day).reduce(:+), GaDb.last(14).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(21).first(7).pluck(:pageviews_day).reduce(:+), GaDb.last(28).first(7).pluck(:pageviews_day).reduce(:+)]
+
+    @single_session_pageviews_7d = GaDb.last(7).pluck(:single_session)
+    @single_session_pageviews_4w = [GaDb.last(7).pluck(:single_session).reduce(:+), GaDb.last(14).first(7).pluck(:single_session).reduce(:+), GaDb.last(21).first(7).pluck(:single_session).reduce(:+), GaDb.last(28).first(7).pluck(:single_session).reduce(:+)]
+
+    @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(@single_session_pageviews_7d).map{|k| (k[0] - k[1]) }
+    @activeusers_views_last_4w_data = @all_users_views_last_4w_data.zip(@single_session_pageviews_4w).map{|k| (k[0] - k[1]) }
+    
+    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
+    @users_activity_rate_4w = @activeusers_views_last_4w_data.zip(@all_users_views_last_4w_data).map{|k| (k[0] / k[1].to_f).round(2) }
+    
+    @ga_last_7d_date = GaDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
+    @ga_last_4w_date = GaDb.last(30).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(8, 15, 22, 29)
+
+    @channel_user_week = [GaDb.last(7).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(7).pluck(:social_user_day).compact.reduce(:+), GaDb.last(7).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(7).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(7).pluck(:email_user_day).compact.reduce(:+)]
+    @bounce_rate_week = [(GaDb.last(7).pluck(:oganic_search_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:social_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:direct_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:referral_bounce).compact.reduce(:+)/7).round(2), (GaDb.last(7).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(7).pluck(:email_bounce).compact.size).round(2)]
+    @channel_user_month = [GaDb.last(30).pluck(:oganic_search_day).compact.reduce(:+), GaDb.last(30).pluck(:social_user_day).compact.reduce(:+), GaDb.last(30).pluck(:direct_user_day).compact.reduce(:+), GaDb.last(30).pluck(:referral_user_day).compact.reduce(:+), GaDb.last(30).pluck(:email_user_day).compact.reduce(:+)]
+    @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
+    
+
   end
   
 end

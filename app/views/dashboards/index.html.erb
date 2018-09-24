@@ -7,10 +7,10 @@
       <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%', content:'這週(月)看見粉專的使用者數目，折線圖為每天的人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為30天)' } %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:''} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為一定期間的不重複訪客總數(週從昨天往前推算7天，月為30天)'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '%', content:''} %>
+      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '%', content:'訂閱電子報的人數'} %>
     </div>
   </div>
   <div class="row">
@@ -18,10 +18,10 @@
       <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:150, content:'這週(月)粉絲與貼文互動（心情、留言、分享等）比例，互動率公式:日(週)互動人數 / 日(週)觸及人數。(週為昨天往前算7天，月為前4周)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量佔所有工作階段瀏覽量的比值所組成。' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity', content:'' } %>
+      <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity', content:'開信率為已開啟信件數/總投放信件數、連結點擊率為 點擊信中連結次數/開信次數' } %>
     </div>
   </div>
 
@@ -31,7 +31,7 @@
       <%= render partial: "shared/hbarchartdayonly", locals: {id: 'labelcompetitors', title: '競爭對手流量分析', linechartid: 'barChartcompetitors', content:'', period: @created_at} %>
     </div>
     <div class="col-lg-6">
-      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'' } %>
+      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'透過廣告獲得流量的來源、媒介，了解使用者從哪些管道進入網站並搭配使用者未與網頁互動的跳出率更準確地看出使用者的實際使用情況。' } %>
     </div>
 
   </div>

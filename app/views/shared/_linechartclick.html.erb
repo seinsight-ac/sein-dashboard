@@ -1,7 +1,7 @@
-
 $("<%= idw %>").click(function(){
 	$(this).siblings().removeClass('active');
 	$(this).addClass('active');
+	
 	var <%= dataname %> = {
 		labels: <%= last7ddate %>,
 		datasets: [
@@ -27,7 +27,7 @@ $("<%= idw %>").click(function(){
 			}
 		]
 	};
-
+	
 	var lineOptions = {
 		responsive: true,
 		scales: {
@@ -47,6 +47,7 @@ $("<%= idw %>").click(function(){
 			}],
 		}
 	};
+	
 	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 });
 
@@ -54,6 +55,7 @@ $("<%= idw %>").click(function(){
 $("<%= idm %>").click(function(){
 	$(this).siblings().removeClass('active');
 	$(this).addClass('active');
+	
 	var <%= dataname %> = {
 		labels: <%= last30ddate %>,
 		datasets: [
@@ -79,7 +81,7 @@ $("<%= idm %>").click(function(){
 			}
 		]
 	};
-
+	
 	var lineOptions = {
 		responsive: true,
 		scales: {
@@ -100,7 +102,8 @@ $("<%= idm %>").click(function(){
 		}
 	};
 	
-	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions});   
+    new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+
 });
 
 var <%= dataname %> = {
@@ -149,4 +152,6 @@ var lineOptions = {
 	}
 };
 
-new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+ new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions});
+
+
