@@ -11,11 +11,14 @@
 					<button id="switchmonth" type="button" class="btn btn-xs">Month</button>
 				</li>
 				<li class="btn-group" style=" padding-left: 8px;">
-				<div class="input-group input-daterange" style="width: 300px;">
-					<input type="text" id="starttime" class="form-control">
-					<div class="input-group-addon">to</div>
-					<input type="text" id="endtime" class="form-control">
-				</div>
+					<div class="input-group input-daterange" style="width: 300px;">
+						<input type="text" id="starttime" class="form-control">
+						<div class="input-group-addon">to</div>
+						<input type="text" id="endtime" class="form-control">
+					</div>
+				</li>
+				<li>
+					<button type="button" id= "submitdate" class="btn btn-sm btn-primary"> Go!</button>
 				</li>
 			</ul>
 		</ul>
@@ -24,20 +27,35 @@
 
 <script type="text/javascript">
 
-$(function () {
-	$('#starttime').datetimepicker({
-		format: 'DD/MM/YYYY'
-	});
-	$('#endtime').datetimepicker({
-		format: 'DD/MM/YYYY'
-	});
-	$('#starttime').blur(function () {
-    console.log($('#starttime').data('date'))
-	})
-	$('#endtime').blur(function () {
-    console.log($('#endtime').data('date'))
-	})
+
+$('#starttime').datetimepicker({
+	format: 'DD/MM/YYYY'
 });
+$('#endtime').datetimepicker({
+	format: 'DD/MM/YYYY'
+});
+// $('#starttime').blur(function () {
+// 	console.log($('#starttime').data('date'))
+// })
+// $('#endtime').blur(function () {
+// 	console.log($('#endtime').data('date'))
+// })
+
+$('#submitdate').on('click', function () {
+		event.preventDefault();
+		$.ajax({
+			url: '/dashboards',
+			method: 'post',
+			dataType: "json",
+			data:{
+					starttime: $('#starttime').data('date'),
+					endtime: $('#endtime').data('date'),
+				},
+			success: function(data){
+			}
+		});
+		return false;
+	});
 
 // switch week / month
 $("#switchweek").click(function() {
