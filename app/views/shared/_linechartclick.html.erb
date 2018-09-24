@@ -2,6 +2,7 @@
 $("<%= idw %>").click(function(){
 	$(this).siblings().removeClass('active');
 	$(this).addClass('active');
+	
 	var <%= dataname %> = {
 		labels: <%= last7ddate %>,
 		datasets: [
