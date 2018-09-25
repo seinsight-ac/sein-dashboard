@@ -35,7 +35,7 @@ $('#endtime').datetimepicker({
 	format: 'DD/MM/YYYY'
 });
 
-
+<% if false %>
 $('#submitdate').on('click', function () {
 	event.preventDefault();
 	$.ajax({
@@ -314,6 +314,7 @@ $('#submitdate').on('click', function () {
 	return false;
 });
 
+<% end %>
 // switch week / month
 $("#switchweek").click(function() {
 	$(this).siblings().removeClass('label-primary');
