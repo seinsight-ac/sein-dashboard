@@ -180,7 +180,7 @@ end
 set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
 
 puts "create #{FbDb.count} fb data"
-=end
+
 # ga
 
 GaDb.destroy_all
