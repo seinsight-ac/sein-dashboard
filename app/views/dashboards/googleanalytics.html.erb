@@ -1,7 +1,7 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '‰', content:'使用者為在一定期間至少有一個工作階段的不重複使用者人數(週從昨天往前推算7天，月為30天)'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為在一定期間至少有一個工作階段的不重複使用者人數(週從昨天往前推算7天，月為30天)'} %>
     </div>
     <div class="col-lg-3">
       <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%', content:'「瀏覽量」是網頁的總瀏覽數。重複瀏覽同一個網頁也計算在內。(週從昨天往前推算7天，月為30天)。'} %>
