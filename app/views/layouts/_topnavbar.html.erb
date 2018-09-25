@@ -27,13 +27,24 @@
 
 <script type="text/javascript">
 
+var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 
 $('#starttime').datetimepicker({
-	format: 'DD/MM/YYYY'
+	format: 'YYYY/MM/DD',
+	minDate: '2017/09/23',
+	maxDate: String(utc)
 });
+
 $('#endtime').datetimepicker({
-	format: 'DD/MM/YYYY'
+	format: 'YYYY/MM/DD',
+	minDate: String(utc),
+	maxDate: String(utc)
 });
+
+$('#starttime').on("dp.change", function(e) {
+	$('#endtime').data("DateTimePicker").minDate(e.date);
+})
+
 
 <% if false %>
 $('#submitdate').on('click', function () {
@@ -310,6 +321,23 @@ $('#submitdate').on('click', function () {
 
 			new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptionsh});
 		}
+		event.preventDefault();
+		$.ajax({
+			url: '/dashboards',
+			Type: 'GET',
+			dataType: "json",
+			data:{
+				starttime: $('#starttime').data('date'),
+				endtime: $('#endtime').data('date'),
+			},
+			success: function(data){
+				$("#sparklinefansadds").sparkline(<%= @fans_adds_last_7d_data_select %>);
+				$("#sparklinepageusers").sparkline(<%= @page_users_last_7d_select %>);
+				$("#sparklinewebusers").sparkline(<%= @web_users_last_7d_select %>);
+				$("#sparklinemailusers").sparkline(<%= @mail_users_all_select %>);
+			}
+		});
+		return false;
 	});
 	return false;
 });
