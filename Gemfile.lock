@@ -408,6 +408,7 @@ DEPENDENCIES
   rubocop (~> 0.49.0)
   sass-rails (~> 5.0)
   selenium-webdriver
+  sidekiq
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
