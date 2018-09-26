@@ -8,7 +8,6 @@
 
 # User.create(email: "test@example.com", password: "12345678")
 
-
 # fb
 FbDb.destroy_all
 
