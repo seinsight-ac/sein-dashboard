@@ -39,6 +39,7 @@ gem "koala"
 gem 'spreadsheet'
 # 固定排程
 gem 'whenever', :require => false
+gem 'sidekiq'
 
 # web scraping
 gem 'mechanize'
