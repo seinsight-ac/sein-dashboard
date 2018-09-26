@@ -51,7 +51,7 @@ $('#submitdate').on('click', function () {
 	event.preventDefault();
 	$.ajax({
 		url: '/dashboards',
-		method: 'post',
+		Type: 'GET',
 		dataType: "json",
 		data:{
 				starttime: $('#starttime').data('date'),
@@ -331,10 +331,6 @@ $('#submitdate').on('click', function () {
 				endtime: $('#endtime').data('date'),
 			},
 			success: function(data){
-				$("#sparklinefansadds").sparkline(<%= @fans_adds_last_7d_data_select %>);
-				$("#sparklinepageusers").sparkline(<%= @page_users_last_7d_select %>);
-				$("#sparklinewebusers").sparkline(<%= @web_users_last_7d_select %>);
-				$("#sparklinemailusers").sparkline(<%= @mail_users_all_select %>);
 			}
 		});
 		return false;
