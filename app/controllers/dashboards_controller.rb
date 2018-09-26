@@ -198,20 +198,20 @@ class DashboardsController < ApplicationController
 
     # fans losts
     #@fanslosts = @graph.get_object("278666028863859/insights/page_fan_removes_unique?fields=values&date_preset=last_30d")
-    @fans_losts_last_7d_data = FbDb.last(7).pluck(:fans_losts_day)
-    @fans_losts_last_4w_data = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
+    @fans_losts_last_7d = FbDb.last(7).pluck(:fans_losts_day)
+    @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
 
     # link clicks
     #@postenagements = @graph.get_object("278666028863859/insights/page_post_engagements?fields=values&date_preset=last_30d")
-    @post_enagements_last_7d_data = FbDb.last(7).pluck(:post_enagements_day)
-    @post_enagements_last_4w_data = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
+    @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
+    @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
     #@linkclicks = @graph.get_object("278666028863859/insights/page_consumptions_by_consumption_type?fields=values&date_preset=last_30d")
-    @link_clicks_last_7d_data = FbDb.last(7).pluck(:link_clicks_day)
-    @link_clicks_last_4w_data = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
+    @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
+    @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
     @link_clicks_rate_7d = []
-    @link_clicks_rate_7d = @link_clicks_last_7d_data.zip(@post_enagements_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_7d = @link_clicks_last_7d.zip(@post_enagements_last_7d).map { |x, y| (x / y.to_f).round(2) }
     @link_clicks_rate_30d = []
-    @link_clicks_rate_30d = @link_clicks_last_4w_data.zip(@post_enagements_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_30d = @link_clicks_last_4w.zip(@post_enagements_last_4w).map { |x, y| (x / y.to_f).round(2) }
   
   end
 
@@ -311,15 +311,15 @@ class DashboardsController < ApplicationController
     @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     # facebook fans
     @fans = @graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
-    @fans_adds_week_data = FbDb.last(1).pluck(:fans_adds_week).first
-    @fans_adds_month_data = FbDb.last(1).pluck(:fans_adds_month).first
+    @fans_adds_week = FbDb.last(1).pluck(:fans_adds_week).first
+    @fans_adds_month = FbDb.last(1).pluck(:fans_adds_month).first
     @fans_adds_week_last_week = FbDb.last(8).pluck(:fans_adds_week).first
     @fans_adds_month_last_month = FbDb.last(8).pluck(:fans_adds_week).first     
-    @fans_adds_last_7d_data = FbDb.last(7).pluck(:fans_adds_day)
-    @fans_adds_last_30d_data = FbDb.last(30).pluck(:fans_adds_day)
-    @fans_adds_last_4w_data = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
-    @fans_adds_week_rate = convert_percentrate(@fans_adds_week_data, @fans_adds_week_last_week)
-    @fans_adds_month_rate = convert_percentrate(@fans_adds_month_data, @fans_adds_month_last_month)    
+    @fans_adds_last_7d = FbDb.last(7).pluck(:fans_adds_day)
+    @fans_adds_last_30d = FbDb.last(30).pluck(:fans_adds_day)
+    @fans_adds_last_4w = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
+    @fans_adds_week_rate = convert_percentrate(@fans_adds_week, @fans_adds_week_last_week)
+    @fans_adds_month_rate = convert_percentrate(@fans_adds_month, @fans_adds_month_last_month)    
     # facebook page users
     #@pageusers = @graph.get_object("278666028863859/insights/page_impressions_unique?fields=values&date_preset=last_30d")
     @page_users_week = FbDb.last(1).pluck(:page_users_week).first
@@ -341,17 +341,16 @@ class DashboardsController < ApplicationController
     @posts_users_month_rate = convert_percentrate(@posts_users_month, @posts_users_month_last_month)
     @posts_users_last_7d = FbDb.last(7).pluck(:posts_users_day)
     @posts_users_last_30d = FbDb.last(30).pluck(:posts_users_day)
-    @posts_users_last_7d_data = FbDb.last(7).pluck(:posts_users_day)
-    @posts_users_last_4w_data = FbDb.last(22).pluck(:posts_users_week).values_at(0, 7, 14, 21)
-    @fb_last_7d_date = FbDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
-    @fb_last_4w_date = FbDb.last(22).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(0, 7, 14, 21)
+    @posts_users_last_4w = FbDb.last(22).pluck(:posts_users_week).values_at(0, 7, 14, 21)
+    @fb_last_7d_date = FbDb.last(8).pluck(:date).map { |a| a.strftime("%m%d").to_i }[0..6]
+    @fb_last_4w_date = FbDb.last(23).pluck(:date).map { |a| a.strftime("%m%d").to_i }.values_at(0, 7, 14, 21)
     #@enagementsusers = @graph.get_object("278666028863859/insights/page_engaged_users?fields=values&date_preset=last_30d")
-    @enagements_users_last_7d_data = FbDb.last(7).pluck(:enagements_users_day)
-    @enagements_users_last_4w_data = FbDb.last(22).pluck(:enagements_users_week).values_at(0, 7, 14, 21)
+    @enagements_users_last_7d = FbDb.last(7).pluck(:enagements_users_day)
+    @enagements_users_last_4w = FbDb.last(22).pluck(:enagements_users_week).values_at(0, 7, 14, 21)
     @fans_retention_rate_7d = []
-    @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_7d = @enagements_users_last_7d.zip(@posts_users_last_7d).map { |x, y| (x / y.to_f).round(2) }
     @fans_retention_rate_30d = []
-    @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_30d = @enagements_users_last_4w.zip(@posts_users_last_4w).map { |x, y| (x / y.to_f).round(2) }
   end
 
   def gainformation
