@@ -5,7 +5,6 @@
 
 env :PATH, ENV['PATH']
 set :output, 'log/cron.log'
-set :environment, :production
 
 every 1.day, at: '10:00' do
   rake "grab_fb_data"

@@ -5,9 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-=begin
 
-User.create(email: "test@example.com", password: "12345678")
+# User.create(email: "test@example.com", password: "12345678")
+
 
 # fb
 FbDb.destroy_all
@@ -181,7 +181,7 @@ end
 set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
 
 puts "create #{FbDb.count} fb data"
-=end
+
 # ga
 
 GaDb.destroy_all
@@ -396,7 +396,7 @@ set_ga_db(user, user_7, user_30, session_pageview, bounce,
   bracket, gender, page_per_session, device, user_type, single)
 
 puts "create #{GaDb.count} ga data"
-=begin
+
 # mailchimp
 MailchimpDb.destroy_all
 
@@ -491,4 +491,3 @@ AlexaDb.create(
 )
 
 puts "create #{AlexaDb.count} alexa data"
-=end
