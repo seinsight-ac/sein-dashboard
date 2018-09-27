@@ -17,7 +17,7 @@ class DashboardsController < ApplicationController
       if @mailchimp.size > 0
         @mail_users_select = @mailchimp.last.email_sent
         @mail_users_last_select = @mailchimp.pluck(:email_sent)
-        @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.first.email_sent)
+        @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.email_sent)
         @mail_views_rate_select = @mailchimp.pluck(:open_rate).map { |a| a.round(2)}
         @mail_links_rate_select = @mailchimp.pluck(:click).zip(@mailchimp.pluck(:open)).map { |a, b| (a / b.to_f).round(2) }
         @select_date = @mailchimp.pluck(:date).map { |a| a.strftime("%m%d").to_i }
@@ -28,7 +28,7 @@ class DashboardsController < ApplicationController
       else
         # 粉絲專頁讚數
         @fans_adds_select = @fb.pluck(:fans_adds_day)
-        @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_select, @fb.first.fans_adds_week)
+        @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
 
         # 粉專曝光使用者
         @page_users_select = @fb.last.page_users_week
@@ -72,7 +72,7 @@ class DashboardsController < ApplicationController
       respond_to do |format|
         format.xls { send_data(export_xls.export,
           :type => "text/excel; charset=utf-8; header=present",
-          :filename => "#{@starttime}-#{@endtime}社企流資料分析.xls")
+          :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
         }
         format.html
       end
