@@ -13,11 +13,68 @@ class DashboardsController < ApplicationController
       @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-      
+
+      if @mailchimp.size > 0
+        @mail_users_select = @mailchimp.last.email_sent
+        @mail_users_last_select = @mailchimp.pluck(:email_sent)
+        @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.email_sent)
+        @mail_views_rate_select = @mailchimp.pluck(:open_rate).map { |a| a.round(2)}
+        @mail_links_rate_select = @mailchimp.pluck(:click).zip(@mailchimp.pluck(:open)).map { |a, b| (a / b.to_f).round(2) }
+        @select_date = @mailchimp.pluck(:date).map { |a| a.strftime("%m%d").to_i }
+      end
+
       if (@endtime.to_date - @starttime.to_date) > 20
-
+        
       else
+        # 粉絲專頁讚數
+        @fans_adds_select = @fb.pluck(:fans_adds_day)
+        @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
 
+        # 粉專曝光使用者
+        @page_users_select = @fb.last.page_users_week
+        @page_users_select = @fb.pluck(:page_users_day)
+        @page_users_select_rate = convert_percentrate(@page_users_week, @fb.first.page_users_week) 
+        
+        # 粉絲黏著度分析
+        @posts_users_select = @fb.pluck(:posts_users_day)
+        @enagements_users_select = @fb.pluck(:enagements_users_day)
+        @fans_retention_rate_select = @enagements_users_select.zip(@posts_users_select).map { |x, y| (x / y.to_f).round(2) }
+
+        # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
+        @fb_last_select = @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
+
+        # 官網使用者
+        @web_users_select = @ga.last.web_users_week
+        @web_users_last_select = @ga.pluck(:web_users_day)
+        @web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_week)
+        @all_users_views_select_data = @ga.pluck(:pageviews_day)
+
+        # 官網瀏覽活躍度分析
+        @activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map{|k| (k[0] - k[1]) }
+        @users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map{|k| (k[0] / k[1].to_f).round(2) }
+        
+        # 日期
+        @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
+        
+        # 官網流量來源與跳出率分析
+        @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day),@ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
+        @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
+      end
+
+      # export to xls
+      export_xls = ExportXls.new
+
+      # export_xls.fb_xls(@fb)
+      # export_xls.ga_xls(@ga)
+      # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
+      export_xls.alexa_xls(AlexaDb.last)
+      
+      respond_to do |format|
+        format.xls { send_data(export_xls.export,
+          :type => "text/excel; charset=utf-8; header=present",
+          :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
+        }
+        format.html
       end
     end
     
@@ -49,26 +106,6 @@ class DashboardsController < ApplicationController
 
     # 日期
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
-    
-    # export to xls
-    
-    #export_xls.fb_xls(fb)
-    #export_xls.ga_xls(ga)
-    #export_xls.mailchimp_xls(mailchimp)
-    #export_xls.alexa_xls(alexa)
-
-    export_xls = ExportXls.new
-    
-    #export_xls.mailchimp_xls(@campaigns)
-    #export_xls.alexa_xls(@sein, @newsmarket, @pansci, @einfo, @npost, @womany)
-    
-    respond_to do |format|
-      format.xls { send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "社企流資料分析.xls")
-      }
-      format.html
-    end
   end
 
   def facebook
@@ -193,14 +230,13 @@ class DashboardsController < ApplicationController
     fb = FbDb.where("date >= ? AND date <= ?", @last, @end)
     ga = GaDb.where("date >= ? AND date <= ?", @last, @end)
     mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
-    alexa = AlexaDb.last
 
     export_xls = ExportXls.new
     
     export_xls.fb_xls(fb)
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
-    export_xls.alexa_xls(alexa)
+    export_xls.alexa_xls(AlexaDb.last)
     
     respond_to do |format|
       format.xls { send_data(export_xls.export,
