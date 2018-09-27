@@ -98,24 +98,24 @@ class DashboardsController < ApplicationController
 
     # 貼文點擊分析
     # 貼文互動總數
-    @post_enagements_last_7d_data = FbDb.last(7).pluck(:post_enagements_day)
-    @post_enagements_last_4w_data = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
+    @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
+    @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
 
     # 連結點擊數
-    @link_clicks_last_7d_data = FbDb.last(7).pluck(:link_clicks_day)
-    @link_clicks_last_4w_data = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
+    @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
+    @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
 
     # 連結點擊率
-    @link_clicks_rate_7d = @link_clicks_last_7d_data.zip(@post_enagements_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
-    @link_clicks_rate_30d = @link_clicks_last_4w_data.zip(@post_enagements_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_7d = @link_clicks_last_7d.zip(@post_enagements_last_7d).map { |x, y| (x / y.to_f).round(2) }
+    @link_clicks_rate_30d = @link_clicks_last_4w.zip(@post_enagements_last_4w).map { |x, y| (x / y.to_f).round(2) }
 
     # 粉專讚數趨勢
     # 淨讚數
-    @fans_adds_last_4w_data = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
+    @fans_adds_last_4w = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
 
     # 退讚數
-    @fans_losts_last_7d_data = FbDb.last(7).pluck(:fans_losts_day)
-    @fans_losts_last_4w_data = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
+    @fans_losts_last_7d = FbDb.last(7).pluck(:fans_losts_day)
+    @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
     
     # 粉絲男女比例
     @fans_female_day = FbDb.last(2).first.fans_female_day
@@ -239,8 +239,8 @@ class DashboardsController < ApplicationController
     @fans = graph.get_object("278666028863859/insights/page_fans?fields=values&date_preset=today").first.first.second.first["value"]
     
     # 粉絲專頁讚數折線圖
-    @fans_adds_last_30d_data = FbDb.last(28).pluck(:fans_adds_day)
-    @fans_adds_last_7d_data = @fans_adds_last_30d_data.last(7)
+    @fans_adds_last_30d = FbDb.last(28).pluck(:fans_adds_day)
+    @fans_adds_last_7d = @fans_adds_last_30d.last(7)
 
     # 粉絲專頁讚數比例
     @fans_adds_week_rate = convert_percentrate(FbDb.last.fans_adds_week, FbDb.last(8).first.fans_adds_week)
@@ -260,16 +260,16 @@ class DashboardsController < ApplicationController
     
     # 粉絲黏著度分析
     # 貼文觸及人數
-    @posts_users_last_7d_data = FbDb.last(7).pluck(:posts_users_day)
-    @posts_users_last_4w_data = FbDb.last(22).pluck(:posts_users_week).values_at(0, 7, 14, 21)
+    @posts_users_last_7d = FbDb.last(7).pluck(:posts_users_day)
+    @posts_users_last_4w = FbDb.last(22).pluck(:posts_users_week).values_at(0, 7, 14, 21)
 
     # 貼文互動人數
-    @enagements_users_last_7d_data = FbDb.last(7).pluck(:enagements_users_day)
-    @enagements_users_last_4w_data = FbDb.last(22).pluck(:enagements_users_week).values_at(0, 7, 14, 21)
+    @enagements_users_last_7d = FbDb.last(7).pluck(:enagements_users_day)
+    @enagements_users_last_4w = FbDb.last(22).pluck(:enagements_users_week).values_at(0, 7, 14, 21)
 
     # 互動率
-    @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
-    @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_7d = @enagements_users_last_7d.zip(@posts_users_last_7d).map { |x, y| (x / y.to_f).round(2) }
+    @fans_retention_rate_30d = @enagements_users_last_4w.zip(@posts_users_last_4w).map { |x, y| (x / y.to_f).round(2) }
 
     # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
     @fb_last_7d_date = FbDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
