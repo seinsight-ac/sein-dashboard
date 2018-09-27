@@ -384,5 +384,15 @@ class DashboardsController < ApplicationController
     @bounce_rate_month = [(GaDb.last(30).pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:social_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (GaDb.last(30).pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
     
   end
+
+  def bestpost
+    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    @messages = @graph.get_object("278666028863859?fields=posts.limit(100){message}").first[1]["data"].flat_map{|i|i.values.first}
+    @likes = @graph.get_object("278666028863859?fields=posts.limit(100){likes.summary(true)}").first[1]["data"].flat_map{|i|i.values.second}.flat_map{|i|i.values.third}.flat_map{|i|i.values[0]}
+    @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
+    @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
+    @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
+  end
+  
   
 end
