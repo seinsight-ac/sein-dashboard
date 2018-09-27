@@ -326,13 +326,15 @@ class DashboardsController < ApplicationController
   end
 
   # channel裡的值去掉nil把值相加
-  def ga_preprocess(data1, data2, data3, data4, data5)
+  def ga_preprocess(data1, data2, data3, data4, data5, data6 = nil)
     value = []
     value << data1.compact.reduce(:+).round(2)
     value << data2.compact.reduce(:+).round(2)
     value << data3.compact.reduce(:+).round(2)
     value << data4.compact.reduce(:+).round(2)
     value << data5.compact.reduce(:+).round(2)
+    value << data6.compact.reduce(:+).round(2) if data6 != nil
+    return value
   end
 
   # channel裡的值去掉nil把值相加取平均
