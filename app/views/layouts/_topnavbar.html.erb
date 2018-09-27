@@ -45,66 +45,65 @@ $('#starttime').on("dp.change", function(e) {
 	$('#endtime').data("DateTimePicker").minDate(e.date);
 })
 
-
-<% if false %>
 $('#submitdate').on('click', function () {
 	event.preventDefault();
 	$.ajax({
 		url: '/dashboards',
-		method: 'post',
+		Type: 'GET',
 		dataType: "json",
 		data:{
 				starttime: $('#starttime').data('date'),
 				endtime: $('#endtime').data('date'),
 			},
 		success: function(data){
-			$("#sparklinefansadds").sparkline([1, 2, 3], {
+			console.log('hi')
+			<% if false %>
+			$("#sparklinefansadds").sparkline(data[@fans_adds_last_7d_data_select], {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinepageusers").sparkline([1, 2, 3], {
+			$("#sparklinepageusers").sparkline(@page_users_last_7d_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinewebusers").sparkline([1, 2, 3], {
+			$("#sparklinewebusers").sparkline(@web_users_last_7d_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinemailusers").sparkline([1, 2, 3], {
+			$("#sparklinemailusers").sparkline(@mail_users_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-
-			var <%= dataname %> = {
+			var lineDatafansretention = {
 				labels: <%= last7ddate %>,
 				datasets: [
 					{
-						label: "<%= label1 %>", 
+						label: "內容曝光人數", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
 						data: <%= weekdata1 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= label2 %>", 
+						label: "貼文互動人數", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
 						data:  <%= weekdata2 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= label3 %>",
+						label: "互動率",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
 						data: <%= weekrate %>,
@@ -112,7 +111,6 @@ $('#submitdate').on('click', function () {
 					}
 				]
 			};
-
 			var lineOptions = {
 				responsive: true,
 				scales: {
@@ -132,27 +130,25 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-
-			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
-
-			var <%= dataname %> = {
+			new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
+			var lineDatawebactivity = {
 				labels: <%= last7ddate %>,
 				datasets: [
 					{
-						label: "<%= label1 %>", 
+						label: "所有使用者", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
 						data: <%= weekdata1 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= label2 %>", 
+						label: "多工作階段使用者", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
 						data:  <%= weekdata2 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= label3 %>",
+						label: "活躍度",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
 						data: <%= weekrate %>,
@@ -160,7 +156,6 @@ $('#submitdate').on('click', function () {
 					}
 				]
 			};
-
 			var lineOptions = {
 				responsive: true,
 				scales: {
@@ -180,35 +175,26 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-
-			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
-
-			var <%= dataname %> = {
+			new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
+			var lineDatamailactivity = {
 				labels: <%= last7ddate %>,
 				datasets: [
 					{
-						label: "<%= label1 %>", 
+						label: "<%= 開信率 %>", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
 						data: <%= weekdata1 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= label2 %>", 
+						label: "<%= 連結點擊率 %>", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
 						data:  <%= weekdata2 %>,
 						yAxisID: 'y-axis-1',
-					},{
-						label: "<%= label3 %>",
-						backgroundColor: 'rgba(225,225,225,1)',
-						pointBorderColor: "#fff",
-						data: <%= weekrate %>,
-						yAxisID: 'y-axis-2',
 					}
 				]
 			};
-
 			var lineOptions = {
 				responsive: true,
 				scales: {
@@ -228,21 +214,18 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-
-			new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
-
-
-			var <%= dataname %> = {
-				labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>"],
+			new Chart(document.getElementById("lineChartmailactivity").getContext("2d"), {type: 'line', data: lineDatamailactivity, options:lineOptions}); 
+			var "barDatawebtraffic" = {
+				labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
 				datasets: [
 					{
-						label: "<%= labelX1 %>",
+						label: "流量數",
 						backgroundColor: 'rgba(220, 220, 220, 1)',
 						pointBorderColor: "#fff",
 						data: <%= weekdata1 %>,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= labelX2 %>",
+						label: "跳出率",
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						borderColor: "rgba(26,179,148,0.7)",
 						pointBackgroundColor: "rgba(26,179,148,1)",
@@ -252,7 +235,6 @@ $('#submitdate').on('click', function () {
 					},
 				]
 			};
-
 			var barOptions = {
 				responsive: true,
 				scales: {
@@ -273,76 +255,13 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-
-			new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'bar', data: <%= dataname %>, options:barOptions});
-
-			var <%= dataname %> = {
-				labels: ["<%= labelY1 %>", "<%= labelY2 %>", "<%= labelY3 %>", "<%= labelY4 %>", "<%= labelY5 %>", "<%= labelY6 %>"],
-				datasets: [
-					{
-						label: "<%= labelX1 %>",
-						backgroundColor: 'rgba(220, 220, 220, 1)',
-						pointBorderColor: "#fff",
-						data: <%= dayrank %>,
-						xAxisID: 'x-axis-1',
-					},{
-						label: "<%= labelX2 %>",
-						backgroundColor: 'rgba(26,179,148,0.5)',
-						borderColor: "rgba(26,179,148,0.7)",
-						pointBackgroundColor: "rgba(26,179,148,1)",
-						pointBorderColor: "#fff",
-						data: <%= dayrate %>,
-						xAxisID: 'x-axis-2',
-					},
-				]
-			};
-
-			var barOptionsh = {
-				responsive: true,
-				scales: {
-					xAxes: [{
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'top',
-						id: 'x-axis-1',
-						stacked: true,
-					}, {
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'bottom',
-						id: 'x-axis-2',
-						stacked: true,
-						gridLines: {
-							drawOnChartArea: false
-						}
-					}],
-				}
-			};
-
-			new Chart(document.getElementById("<%= barchartid %>").getContext("2d"), {type: 'horizontalBar', data: <%= dataname %>, options:barOptionsh});
+			new Chart(document.getElementById("barChartwebtraffic").getContext("2d"), {type: 'bar', data: barDatawebtraffic, options:barOptions});
+			<% end %>
 		}
-		event.preventDefault();
-		$.ajax({
-			url: '/dashboards',
-			Type: 'GET',
-			dataType: "json",
-			data:{
-				starttime: $('#starttime').data('date'),
-				endtime: $('#endtime').data('date'),
-			},
-			success: function(data){
-				$("#sparklinefansadds").sparkline(<%= @fans_adds_last_7d_data_select %>);
-				$("#sparklinepageusers").sparkline(<%= @page_users_last_7d_select %>);
-				$("#sparklinewebusers").sparkline(<%= @web_users_last_7d_select %>);
-				$("#sparklinemailusers").sparkline(<%= @mail_users_all_select %>);
-			}
-		});
-		return false;
 	});
 	return false;
 });
 
-<% end %>
 // switch week / month
 $("#switchweek").click(function() {
 	$(this).siblings().removeClass('label-primary');

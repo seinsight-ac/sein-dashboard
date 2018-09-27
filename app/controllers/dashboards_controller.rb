@@ -7,6 +7,7 @@ class DashboardsController < ApplicationController
   def index
     
     if params[:starttime]
+      puts params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
       @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
 
@@ -36,6 +37,7 @@ class DashboardsController < ApplicationController
         @fans_adds_week_last_week_select = @fb[-8].fans_adds_week
         @fans_adds_last_7d_data_select = @fb[-8].fans_adds_day
         @fans_adds_week_rate_select = convert_percentrate(@fans_adds_week_data_select, @fans_adds_week_last_week_select)
+        binding.pry
         # facebook page users
         @page_users_week_select = @fb.last.page_users_week
         @page_users_week_last_week_select = @fb[-8].page_users_week 
