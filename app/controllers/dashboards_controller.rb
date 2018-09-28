@@ -390,7 +390,7 @@ class DashboardsController < ApplicationController
     @likes = @graph.get_object("278666028863859?fields=posts.limit(100){likes.summary(true)}").first[1]["data"].flat_map{|i|i.values.second}.flat_map{|i|i.values.third}.flat_map{|i|i.values[0]}
     @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
     @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
-    @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
+    @posts = @messages.zip(@likes).zip(@shares).zip(@comments) 
   end
   
   
