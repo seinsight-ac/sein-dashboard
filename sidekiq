@@ -1,0 +1,11 @@
+# Logfile created on 2018-09-28 19:43:10 +0800 by logger.rb/56815
+2018-09-28T11:43:22.481Z 29417 TID-goe2peni4 INFO: Running in ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+2018-09-28T11:43:22.483Z 29417 TID-goe2peni4 INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2018-09-28T11:43:22.483Z 29417 TID-goe2peni4 INFO: Upgrade to Sidekiq Pro for more features and support: http://sidekiq.org
+2018-09-28T11:43:22.539Z 29417 TID-goe3ihocw INFO: Booting Sidekiq 3.5.4 with redis options {:url=>nil}
+2018-09-28T11:43:22.568Z 29417 TID-goe3ihocw INFO: Loading Schedule
+2018-09-28T11:43:22.568Z 29417 TID-goe3ihocw INFO: Scheduling grab_api 
+2018-09-28T11:43:25.380Z 29417 TID-goe3ihocw INFO: Schedules Loaded
+2018-09-28T11:43:25.380Z 29417 TID-goe2peni4 INFO: Starting processing, hit Ctrl-C to stop
+2018-09-28T11:44:06.550Z 29417 TID-goe2peni4 INFO: Shutting down
+2018-09-28T11:44:06.886Z 29417 TID-goe3kfw88 INFO: Terminating 25 quiet workers

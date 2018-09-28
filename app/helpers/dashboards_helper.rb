@@ -1,5 +1,4 @@
 module DashboardsHelper
-
   def color(data)
     if data > 0
       'text-navy'
