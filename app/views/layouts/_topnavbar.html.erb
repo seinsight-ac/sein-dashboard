@@ -45,22 +45,218 @@ $('#starttime').on("dp.change", function(e) {
 	$('#endtime').data("DateTimePicker").minDate(e.date);
 })
 
-
 $('#submitdate').on('click', function () {
-		event.preventDefault();
-		$.ajax({
-			url: '/dashboards',
-			Type: 'GET',
-			dataType: "json",
-			data:{
+	event.preventDefault();
+	$.ajax({
+		url: '/dashboards',
+		method: 'POST',
+		dataType: "json",
+		data:{
 				starttime: $('#starttime').data('date'),
 				endtime: $('#endtime').data('date'),
 			},
-			success: function(data){
-			}
-		});
-		return false;
+		success: function(data){
+			$("#sparklinefansadds").sparkline(data.fans_adds_last_7d_data_select, {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinepageusers").sparkline(data.page_users_last_7d_select, {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinewebusers").sparkline(data.web_users_last_7d_select, {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			$("#sparklinemailusers").sparkline(data.mail_users_select, {
+				type: 'line',
+				width: '100%',
+				height: '60',
+				lineColor: '#1ab394',
+				fillColor: "#ffffff"
+			});
+			var lineDatafansretention = {
+				labels: data.ga_last_7d_date,
+				datasets: [
+					{
+						label: "內容曝光人數", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: data.posts_users_last_7d,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "貼文互動人數", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  data.enagements_users_last_7d,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "互動率",
+						backgroundColor: 'rgba(225,225,225,1)',
+						pointBorderColor: "#fff",
+						data: data.fans_retention_rate_7d,
+						yAxisID: 'y-axis-2',
+					}
+				]
+			};
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+			new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
+			var lineDatawebactivity = {
+				labels: data.ga_last_7d_date,
+				datasets: [
+					{
+						label: "所有使用者", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: data.all_users_views_last_7d_data,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "多工作階段使用者", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  data.activeusers_views_last_7d_data,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "活躍度",
+						backgroundColor: 'rgba(225,225,225,1)',
+						pointBorderColor: "#fff",
+						data: data.users_activity_rate_7d,
+						yAxisID: 'y-axis-2',
+					}
+				]
+			};
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+			new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
+			var lineDatamailactivity = {
+				labels: data.last_12w_date,
+				datasets: [
+					{
+						label: "開信率", 
+						backgroundColor: 'rgba(220, 220, 220, 0.3)',
+						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
+						pointBorderColor: "#fff",
+						data: data.mail_views_rate,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "連結點擊率", 
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						pointBorderColor: "#fff",
+						data:  data.mail_links_rate,
+						yAxisID: 'y-axis-1',
+					}
+				]
+			};
+			var lineOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+			new Chart(document.getElementById("lineChartmailactivity").getContext("2d"), {type: 'line', data: lineDatamailactivity, options:lineOptions}); 
+			var barDatawebtraffic = {
+				labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
+				datasets: [
+					{
+						label: "流量數",
+						backgroundColor: 'rgba(220, 220, 220, 1)',
+						pointBorderColor: "#fff",
+						data: data.channel_user_week,
+						yAxisID: 'y-axis-1',
+					},{
+						label: "跳出率",
+						backgroundColor: 'rgba(26,179,148,0.5)',
+						borderColor: "rgba(26,179,148,0.7)",
+						pointBackgroundColor: "rgba(26,179,148,1)",
+						pointBorderColor: "#fff",
+						data: data.bounce_rate_week,
+						yAxisID: 'y-axis-2',
+					},
+				]
+			};
+			var barOptions = {
+				responsive: true,
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						stacked: true,
+						gridLines: {
+							drawOnChartArea: false
+						}
+					}],
+				}
+			};
+			new Chart(document.getElementById("barChartwebtraffic").getContext("2d"), {type: 'bar', data: barDatawebtraffic, options:barOptions});
+		}
 	});
+});
 
 // switch week / month
 $("#switchweek").click(function() {

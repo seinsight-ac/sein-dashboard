@@ -2,9 +2,8 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :gainformation, :only => [:index, :googleanalytics]
-
-  def index
-    
+  
+  def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
       @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
@@ -12,8 +11,9 @@ class DashboardsController < ApplicationController
       @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      puts @mailchimp
 
-      unless @mailchimp.size.empty?
+      unless @mailchimp.size.empty ?
         @mail_users_select = @mailchimp.last.email_sent
         @mail_users_last_select = @mailchimp.pluck(:email_sent)
         @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.email_sent)
@@ -24,41 +24,41 @@ class DashboardsController < ApplicationController
 
       if (@endtime.to_date - @starttime.to_date) > 20
         
-      else
-        # 粉絲專頁讚數
-        @fans_adds_select = @fb.pluck(:fans_adds_day)
-        @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
+			else
+				# 粉絲專頁讚數
+				@fans_adds_select = @fb.pluck(:fans_adds_day)
+				@fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
 
-        # 粉專曝光使用者
-        @page_users_select = @fb.last.page_users_week
-        @page_users_select = @fb.pluck(:page_users_day)
-        @page_users_select_rate = convert_percentrate(@page_users_week, @fb.first.page_users_week) 
-        
-        # 粉絲黏著度分析
-        @posts_users_select = @fb.pluck(:posts_users_day)
-        @enagements_users_select = @fb.pluck(:enagements_users_day)
-        @fans_retention_rate_select = @enagements_users_select.zip(@posts_users_select).map { |x, y| (x / y.to_f).round(2) }
+				# 粉專曝光使用者
+				@page_users_select = @fb.last.page_users_week
+				@page_users_select = @fb.pluck(:page_users_day)
+				@page_users_select_rate = convert_percentrate(@page_users_week, @fb.first.page_users_week) 
+				
+				# 粉絲黏著度分析
+				@posts_users_select = @fb.pluck(:posts_users_day)
+				@enagements_users_select = @fb.pluck(:enagements_users_day)
+				@fans_retention_rate_select = @enagements_users_select.zip(@posts_users_select).map { |x, y| (x / y.to_f).round(2) }
 
-        # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
-        @fb_last_select = @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
+				# 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
+				@fb_last_select = @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
 
-        # 官網使用者
-        @web_users_select = @ga.last.web_users_week
-        @web_users_last_select = @ga.pluck(:web_users_day)
-        @web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_week)
-        @all_users_views_select_data = @ga.pluck(:pageviews_day)
+				# 官網使用者
+				@web_users_select = @ga.last.web_users_week
+				@web_users_last_select = @ga.pluck(:web_users_day)
+				@web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_week)
+				@all_users_views_select_data = @ga.pluck(:pageviews_day)
 
-        # 官網瀏覽活躍度分析
-        @activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map { |k| (k[0] - k[1]) }
-        @users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map { |k| (k[0] / k[1].to_f).round(2) }
-        
-        # 日期
-        @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
-        
-        # 官網流量來源與跳出率分析
-        @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
-        @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
-      end
+				# 官網瀏覽活躍度分析
+				@activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map { |k| (k[0] - k[1]) }
+				@users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map { |k| (k[0] / k[1].to_f).round(2) }
+				
+				# 日期
+				@ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
+				
+				# 官網流量來源與跳出率分析
+				@channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
+				@bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
+			end
 
       # export to xls
       export_xls = ExportXls.new
@@ -77,6 +77,17 @@ class DashboardsController < ApplicationController
         format.html
       end
     end
+    render :json => { :starttime => @starttime, :endtime => @endtime }
+  end
+
+  def index
+    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    @messages = @graph.get_object("278666028863859?fields=posts.limit(100){message}").first[1]["data"].flat_map{|i|i.values.first}
+    @likes = @graph.get_object("278666028863859?fields=posts.limit(100){likes.summary(true)}").first[1]["data"].flat_map{|i|i.values.second}.flat_map{|i|i.values.third}.flat_map{|i|i.values[0]}
+    @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
+    @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
+    @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
+    binding.pry
     
     # 電子報訂閱數
     @mail_users = MailchimpDb.last.email_sent
@@ -391,6 +402,7 @@ class DashboardsController < ApplicationController
     @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
     @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
     @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
+    binding.pry
   end
   
   
