@@ -3,6 +3,15 @@ class DashboardsController < ApplicationController
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :gainformation, :only => [:index, :googleanalytics]
   
+  def create
+    puts params[:starttime]
+    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
+    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+    puts @starttime
+    puts @endtime
+    render :json => { :starttime => @starttime, :endtime => @endtime }
+    
+  end
 
   def index
     
@@ -10,125 +19,6 @@ class DashboardsController < ApplicationController
       puts params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
       @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
-
-      @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-      @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-      @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-
-      # mailchimp
-      @mail_users_select = @mailchimp[-1].email_sent
-      @mail_users_rate_select = convert_percentrate( @mailchimp[-4].email_sent - @mail_users_select, @mailchimp.last(12).first.email_sent -  @mailchimp.last(8).first.email_sent)
-      @mail_users_all_select = @mailchimp.pluck(:email_sent)
-
-      @last_date_select = @mailchimp.pluck(:date).map { |a| a.strftime("%m%d").to_i }
-      @mail_views_select = @mailchimp.pluck(:open)
-      @mail_links_select= @mailchimp.pluck(:click)
-      @mail_views_rate_select = @mailchimp.pluck(:open_rate).map { |a| a.round(2)}
-      @mail_links_rate_select = []
-      @mail_links_select.zip(@mail_views_select) { |a, b| @mail_links_rate_select << (a / b.to_f).round(2) }
-      
-      if (@endtime.to_date - @starttime.to_date) > 20
-        i = @endtime.to_date - @starttime.to_date
-        i = i - (i % 7)
-
-        # fb
-        @fans_select = @fb.last.fans
-        @fans_adds_week_data_select = @fb.last.fans_adds_week
-        @fans_adds_week_last_week_select = @fb[-8].fans_adds_week
-        @fans_adds_last_7d_data_select = @fb[-8].fans_adds_day
-        @fans_adds_week_rate_select = convert_percentrate(@fans_adds_week_data_select, @fans_adds_week_last_week_select)
-        binding.pry
-        # facebook page users
-        @page_users_week_select = @fb.last.page_users_week
-        @page_users_week_last_week_select = @fb[-8].page_users_week 
-        @page_users_week_rate_select = convert_percentrate(@page_users_week_select, @page_users_week_last_week_select) 
-        @page_users_last_7d_select = @fb.last(7).pluck(:page_users_day)
-
-        # facebook fans retention  
-        @posts_users_week_select = @fb.last.posts_users_week   
-        @posts_users_week_last_week_select = @fb[-8].posts_users_week   
-        @posts_users_week_rate_select = convert_percentrate(@posts_users_week_select, @posts_users_week_last_week_select) 
-        @posts_users_last_4w_data_select = []
-        f = 0
-        t = i
-        @fb.pluck(:posts_users_week).each do |data|
-          if f == t
-            @posts_users_last_4w_data_select << data
-            t += 7
-          end
-          f += 1
-        end
-        @fb_last_4w_date_select = []
-        f = 0
-        t = i
-        @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i }.each do |data|
-          if f == t
-            @fb_last_4w_date_select << data
-            t += 7
-          end
-          f += 1
-        end
-        @enagements_users_last_4w_data_select = []
-        f = 0
-        t = i
-        @fb.pluck(:enagements_users_week).each do |data|
-          if f == t
-            @enagements_users_last_4w_data_select << data
-            t += 7
-          end
-          f += 1
-        end
-        @fans_retention_rate_7d = []
-        @fans_retention_rate_7d = @enagements_users_last_7d_data.zip(@posts_users_last_7d_data).map { |x, y| (x / y.to_f).round(2) }
-        @fans_retention_rate_30d = []
-        @fans_retention_rate_30d = @enagements_users_last_4w_data.zip(@posts_users_last_4w_data).map { |x, y| (x / y.to_f).round(2) }
-        
-        # ga
-        @web_users_week_select = @ga.last.web_users_week
-        @web_users_last_7d_select = @ga.last.web_users_week
-        @web_users_week_rate_select = convert_percentrate(@web_users_week_select, @web_users_last_7d_select) 
-        
-        f = 0
-        t = i
-        @all_users_views_last_4w_data_select = []
-        while f < @ga.size - 1
-          if f == t
-            @all_users_views_last_4w_data_select << @ga.pluck(:pageviews_day)[t..t+7].reduce(:+)
-            t += 7
-          end
-          f += 1
-        end
-
-        f = 0
-        t = i
-        @single_session_pageviews_4w_select = []
-        while f < @ga.size - 1
-          if f == t
-            @single_session_pageviews_4w_select << @ga.pluck(:single_session)[t..t+7].reduce(:+)
-            t += 7
-          end
-          f += 1
-        end
-        @activeusers_views_last_4w_data_select = @all_users_views_last_4w_data_select.zip(@single_session_pageviews_4w_select).map{|k| (k[0] - k[1]) }
-        
-        @users_activity_rate_4w_select = @activeusers_views_last_4w_data_select.zip(@all_users_views_last_4w_data_select).map{|k| (k[0] / k[1].to_f).round(2) }
-        
-        @ga_last_4w_date_select = []
-        f = 0
-        t = i
-        @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i }.each do |data|
-          if f == t
-            @ga_last_4w_date_select << data
-            t += 7
-          end
-          f += 1
-        end
-
-        @channel_user_month = [@ga.pluck(:oganic_search_day).compact.reduce(:+), @ga.pluck(:social_user_day).compact.reduce(:+), @ga.pluck(:direct_user_day).compact.reduce(:+), @ga.pluck(:referral_user_day).compact.reduce(:+), @ga.pluck(:email_user_day).compact.reduce(:+)]
-        @bounce_rate_month = [(@ga.pluck(:oganic_search_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:social_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:direct_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:referral_bounce).compact.reduce(:+)/30).round(2), (@ga.pluck(:email_bounce).compact.reduce(:+)/GaDb.last(30).pluck(:email_bounce).compact.size).round(2)]
-      else
-
-      end
     end
     
     # mailchimp

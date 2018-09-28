@@ -5,9 +5,14 @@
 
 env :PATH, ENV['PATH']
 set :output, 'log/cron.log'
-set :environment, :production
 
 every 1.day, at: '10:00' do
+  rake "grab_fb_data"
+  rake "grab_ga_data"
+  rake "grab_alexa_data"
+end
+
+every 1.day, at: '15:00' do
   rake "grab_fb_data"
   rake "grab_ga_data"
   rake "grab_alexa_data"

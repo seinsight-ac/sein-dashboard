@@ -49,37 +49,35 @@ $('#submitdate').on('click', function () {
 	event.preventDefault();
 	$.ajax({
 		url: '/dashboards',
-		Type: 'GET',
+		method: 'POST',
 		dataType: "json",
 		data:{
 				starttime: $('#starttime').data('date'),
 				endtime: $('#endtime').data('date'),
 			},
 		success: function(data){
-			console.log('hi')
-			<% if false %>
-			$("#sparklinefansadds").sparkline(data[@fans_adds_last_7d_data_select], {
+			$("#sparklinefansadds").sparkline(data.fans_adds_last_7d_data_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinepageusers").sparkline(@page_users_last_7d_select, {
+			$("#sparklinepageusers").sparkline(data.page_users_last_7d_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinewebusers").sparkline(@web_users_last_7d_select, {
+			$("#sparklinewebusers").sparkline(data.web_users_last_7d_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinemailusers").sparkline(@mail_users_select, {
+			$("#sparklinemailusers").sparkline(data.mail_users_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
@@ -87,26 +85,26 @@ $('#submitdate').on('click', function () {
 				fillColor: "#ffffff"
 			});
 			var lineDatafansretention = {
-				labels: <%= last7ddate %>,
+				labels: data.ga_last_7d_date,
 				datasets: [
 					{
 						label: "內容曝光人數", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: <%= weekdata1 %>,
+						data: data.posts_users_last_7d,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "貼文互動人數", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  <%= weekdata2 %>,
+						data:  data.enagements_users_last_7d,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "互動率",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
-						data: <%= weekrate %>,
+						data: data.fans_retention_rate_7d,
 						yAxisID: 'y-axis-2',
 					}
 				]
@@ -132,26 +130,26 @@ $('#submitdate').on('click', function () {
 			};
 			new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
 			var lineDatawebactivity = {
-				labels: <%= last7ddate %>,
+				labels: data.ga_last_7d_date,
 				datasets: [
 					{
 						label: "所有使用者", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: <%= weekdata1 %>,
+						data: data.all_users_views_last_7d_data,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "多工作階段使用者", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  <%= weekdata2 %>,
+						data:  data.activeusers_views_last_7d_data,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "活躍度",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
-						data: <%= weekrate %>,
+						data: data.users_activity_rate_7d,
 						yAxisID: 'y-axis-2',
 					}
 				]
@@ -177,20 +175,20 @@ $('#submitdate').on('click', function () {
 			};
 			new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
 			var lineDatamailactivity = {
-				labels: <%= last7ddate %>,
+				labels: data.last_12w_date,
 				datasets: [
 					{
-						label: "<%= 開信率 %>", 
+						label: "開信率", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: <%= weekdata1 %>,
+						data: data.mail_views_rate,
 						yAxisID: 'y-axis-1',
 					},{
-						label: "<%= 連結點擊率 %>", 
+						label: "連結點擊率", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  <%= weekdata2 %>,
+						data:  data.mail_links_rate,
 						yAxisID: 'y-axis-1',
 					}
 				]
@@ -215,14 +213,14 @@ $('#submitdate').on('click', function () {
 				}
 			};
 			new Chart(document.getElementById("lineChartmailactivity").getContext("2d"), {type: 'line', data: lineDatamailactivity, options:lineOptions}); 
-			var "barDatawebtraffic" = {
+			var barDatawebtraffic = {
 				labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
 				datasets: [
 					{
 						label: "流量數",
 						backgroundColor: 'rgba(220, 220, 220, 1)',
 						pointBorderColor: "#fff",
-						data: <%= weekdata1 %>,
+						data: data.channel_user_week,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "跳出率",
@@ -230,7 +228,7 @@ $('#submitdate').on('click', function () {
 						borderColor: "rgba(26,179,148,0.7)",
 						pointBackgroundColor: "rgba(26,179,148,1)",
 						pointBorderColor: "#fff",
-						data: <%= weekdata2 %>,
+						data: data.bounce_rate_week,
 						yAxisID: 'y-axis-2',
 					},
 				]
@@ -256,10 +254,8 @@ $('#submitdate').on('click', function () {
 				}
 			};
 			new Chart(document.getElementById("barChartwebtraffic").getContext("2d"), {type: 'bar', data: barDatawebtraffic, options:barOptions});
-			<% end %>
 		}
 	});
-	return false;
 });
 
 // switch week / month
