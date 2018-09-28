@@ -4,13 +4,9 @@ class DashboardsController < ApplicationController
   before_action :gainformation, :only => [:index, :googleanalytics]
   
   def create
-    puts params[:starttime]
     @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
     @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
-    puts @starttime
-    puts @endtime
-    render :json => { :starttime => @starttime, :endtime => @endtime }
-    
+    render :json => { :starttime => @starttime, :endtime => @endtime } // 前端資料放在這裡
   end
 
   def index
