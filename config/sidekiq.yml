@@ -1,0 +1,4 @@
+:schedule:
+  grab_api:
+    cron: '0 */8 * * * *' 
+    class: GrabApi

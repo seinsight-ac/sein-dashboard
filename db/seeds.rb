@@ -55,7 +55,7 @@ def set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, p
       puts date
       puts link_click[0]["values"][i]["end_time"]
       break
-    elsif gender[i] == nil
+    elsif gender[i].nil?
       FbDb.create(
         date: fan[i]["end_time"],
         fans: fan[i]["value"],
@@ -447,7 +447,7 @@ AlexaDb.destroy_all
 @womany = Alexa.data("womany.net")
 
 def rank(data)
- data[1].inner_text.delete(',').to_i
+  data[1].inner_text.delete(',').to_i
 end
 
 def convert_rate(data)

@@ -47,31 +47,33 @@ class ExportXls
 
     i = 0
     c = 1
-    4.times do #to-do flex
+    # to-do flex
+    4.times do 
       @sheet1.row(0).set_format(c, head)
       @sheet1[0, c] = "week#{c}"
-      @sheet1[1, c] = "#{data[i].date.strftime("%m/%d")}-#{data[i+6].date.strftime("%m/%d")}"
-      @sheet1[2, c] = data[i+6].fans
-      @sheet1[3, c] = data[i+6].fans_adds_week
-      @sheet1[4, c] = data[i+6].fans_losts_week
-      @sheet1[5, c] = data[i+6].page_users_week
-      @sheet1[8, c] = data[i+6].posts_users_week
-      @sheet1[9, c] = data[i+6].post_enagements_week
-      @sheet1[7, c] = data[i+6].negative_users_week
-      @sheet1[11, c] = data[i+6].link_clicks_week
-      @sheet1[6, c] = data[i+6].posts_users_week
+      @sheet1[1, c] = "#{data[i].date.strftime("%m/%d")}-#{data[i + 6].date.strftime("%m/%d")}"
+      @sheet1[2, c] = data[i + 6].fans
+      @sheet1[3, c] = data[i + 6].fans_adds_week
+      @sheet1[4, c] = data[i + 6].fans_losts_week
+      @sheet1[5, c] = data[i + 6].page_users_week
+      @sheet1[8, c] = data[i + 6].posts_users_week
+      @sheet1[9, c] = data[i + 6].post_enagements_week
+      @sheet1[7, c] = data[i + 6].negative_users_week
+      @sheet1[11, c] = data[i + 6].link_clicks_week
+      @sheet1[6, c] = data[i + 6].posts_users_week
       @sheet1.row(10).set_format(c, percent)
-      @sheet1[10, c] = data[i+6].enagements_users_day / data[i+6].posts_users_week.to_f
+      @sheet1[10, c] = data[i + 6].enagements_users_day / data[i + 6].posts_users_week.to_f
       @sheet1.row(12).set_format(c, percent)
-      @sheet1[12, c] =  data[i+6].enagements_users_day / data[i+6].link_clicks_week.to_f
+      @sheet1[12, c] = data[i + 6].enagements_users_day / data[i + 6].link_clicks_week.to_f
       @sheet3.column(c).width = 20
 
-      i += 7
-      c += 1
+      i  += 7
+      c  += 1
     end
   end
 
-  def ga_xls(data) # to-do week data
+  # to-do week data
+  def ga_xls(data) 
     @sheet2.row(0).set_format(0, head)
     @sheet2[0, 0] = "GA各項指標"
     @sheet2[1, 0] = "日期"
@@ -108,8 +110,9 @@ class ExportXls
 
     i = 0
     c = 1
-    4.times do #to-do flex
-      ga = GoogleAnalytics.new(data[i].date.strftime("%Y-%m-%d"), data[i+6].date.strftime("%Y-%m-%d"))
+    # to-do flex
+    4.times do 
+      ga = GoogleAnalytics.new(data[i].date.strftime("%Y-%m-%d"), data[i + 6].date.strftime("%Y-%m-%d"))
       user_type = ga.user_type_week
       age = ga.bracket_week
       pageview = ga.page_per_session_week
@@ -123,34 +126,34 @@ class ExportXls
 
       @sheet2.row(0).set_format(c, head)
       @sheet2[0, c] = "week#{c}"
-      @sheet2[1, c] = "#{data[i].date.strftime("%m/%d")}-#{data[i+6].date.strftime("%m/%d")}"
-      @sheet2[2, c] = data[i..i+6].pluck(:sessions_day).reduce(:+)
-      @sheet2[3, c] = data[i+6].web_users_week
+      @sheet2[1, c] = "#{data[i].date.strftime("%m/%d")}-#{data[i + 6].date.strftime("%m/%d")}"
+      @sheet2[2, c] = data[i..i + 6].pluck(:sessions_day).reduce(:+)
+      @sheet2[3, c] = data[i + 6].web_users_week
       @sheet2[4, c] = user_type[0]["metrics"][0]["values"][0].to_f
       @sheet2[5, c] = user_type[1]["metrics"][0]["values"][0].to_f
       @sheet2.row(6).set_format(c, percent)
       @sheet2[6, c] = user_type[1]["metrics"][0]["values"][0].to_f / (user_type[0]["metrics"][0]["values"][0].to_f + user_type[1]["metrics"][0]["values"][0].to_f).to_f
-      @sheet2[7, c] = data[i..i+6].pluck(:pageviews_day).reduce(:+)
+      @sheet2[7, c] = data[i..i + 6].pluck(:pageviews_day).reduce(:+)
       @sheet2.row(8).set_format(c, round)
       @sheet2[8, c] = pageview[0]["metrics"][0]["values"][0].to_f.round(2)
       @sheet2[9, c] = "#{session[0]["metrics"][0]["values"][0].to_i / 60}分#{session[0]["metrics"][0]["values"][0].to_f.round(0) % 60}秒"
-      @sheet2[10, c] = data[i..i+6].pluck(:sessions_day, :date).max[1].strftime("%a")
+      @sheet2[10, c] = data[i..i + 6].pluck(:sessions_day, :date).max[1].strftime("%a")
       @sheet2[11, c] = "#{page_time[0]["metrics"][0]["values"][0].to_i / 60}分#{page_time[0]["metrics"][0]["values"][0].to_f.round(0) % 60}秒"
-      @sheet2[12, c] = data[i..i+6].pluck(:oganic_search_day).reduce(:+)
+      @sheet2[12, c] = data[i..i + 6].pluck(:oganic_search_day).reduce(:+)
       @sheet2.row(13).set_format(c, percent)
-      @sheet2[13, c] = data[i..i+6].pluck(:oganic_search_day).reduce(:+) / data[i..i+6].pluck(:sessions_day).reduce(:+).to_f
-      @sheet2[14, c] = data[i..i+6].pluck(:social_user_day).reduce(:+)
+      @sheet2[13, c] = data[i..i + 6].pluck(:oganic_search_day).reduce(:+) / data[i..i + 6].pluck(:sessions_day).reduce(:+).to_f
+      @sheet2[14, c] = data[i..i + 6].pluck(:social_user_day).reduce(:+)
       @sheet2.row(15).set_format(c, percent)
-      @sheet2[15, c] = data[i..i+6].pluck(:social_user_day).reduce(:+) / data[i..i+6].pluck(:sessions_day).reduce(:+).to_f
-      @sheet2[16, c] = data[i..i+6].pluck(:direct_user_day).reduce(:+)
+      @sheet2[15, c] = data[i..i + 6].pluck(:social_user_day).reduce(:+) / data[i..i + 6].pluck(:sessions_day).reduce(:+).to_f
+      @sheet2[16, c] = data[i..i + 6].pluck(:direct_user_day).reduce(:+)
       @sheet2.row(17).set_format(c, percent)
-      @sheet2[17, c] = data[i..i+6].pluck(:direct_user_day).reduce(:+) / data[i..i+6].pluck(:sessions_day).reduce(:+).to_f
-      @sheet2[18, c] = data[i..i+6].pluck(:referral_user_day).reduce(:+)
+      @sheet2[17, c] = data[i..i + 6].pluck(:direct_user_day).reduce(:+) / data[i..i + 6].pluck(:sessions_day).reduce(:+).to_f
+      @sheet2[18, c] = data[i..i + 6].pluck(:referral_user_day).reduce(:+)
       @sheet2.row(19).set_format(c, percent)
-      @sheet2[19, c] = data[i..i+6].pluck(:referral_user_day).reduce(:+) / data[i..i+6].pluck(:sessions_day).reduce(:+).to_f
+      @sheet2[19, c] = data[i..i + 6].pluck(:referral_user_day).reduce(:+) / data[i..i + 6].pluck(:sessions_day).reduce(:+).to_f
       @sheet2.row(20).set_format(c, percent)
       @sheet2[20, c] = age["rows"][0]["metrics"][0]["values"][0].to_f / age_total
-      @sheet2[21, c] =  age["rows"][0]["metrics"][0]["values"][0].to_f
+      @sheet2[21, c] = age["rows"][0]["metrics"][0]["values"][0].to_f
       @sheet2.row(22).set_format(c, percent)
       @sheet2[22, c] = age["rows"][1]["metrics"][0]["values"][0].to_f / age_total
       @sheet2[23, c] = age["rows"][1]["metrics"][0]["values"][0].to_f
@@ -250,15 +253,15 @@ class ExportXls
 
     @sheet3.row(14).set_format(3, percent)
     @sheet3[14, 3] = data.sein_bounce_rate
-     @sheet3.row(15).set_format(3, percent)
+    @sheet3.row(15).set_format(3, percent)
     @sheet3[15, 3] = data.newsmarket_bounce_rate
-     @sheet3.row(16).set_format(3, percent)
+    @sheet3.row(16).set_format(3, percent)
     @sheet3[16, 3] = data.pansci_bounce_rate
-     @sheet3.row(17).set_format(3, percent)
+    @sheet3.row(17).set_format(3, percent)
     @sheet3[17, 3] = data.einfo_bounce_rate
-     @sheet3.row(18).set_format(3, percent)
+    @sheet3.row(18).set_format(3, percent)
     @sheet3[18, 3] = data.npost_bounce_rate
-     @sheet3.row(19).set_format(3, percent)
+    @sheet3.row(19).set_format(3, percent)
     @sheet3[19, 3] = data.womany_bounce_rate
 
     @sheet3[14, 4] = data.sein_pageview

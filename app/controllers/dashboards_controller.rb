@@ -2,7 +2,6 @@ class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :gainformation, :only => [:index, :googleanalytics]
-  
 
   def index
     
@@ -14,11 +13,11 @@ class DashboardsController < ApplicationController
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
 
-      if @mailchimp.size > 0
+      unless @mailchimp.size.empty?
         @mail_users_select = @mailchimp.last.email_sent
         @mail_users_last_select = @mailchimp.pluck(:email_sent)
         @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.email_sent)
-        @mail_views_rate_select = @mailchimp.pluck(:open_rate).map { |a| a.round(2)}
+        @mail_views_rate_select = @mailchimp.pluck(:open_rate).map { |a| a.round(2) }
         @mail_links_rate_select = @mailchimp.pluck(:click).zip(@mailchimp.pluck(:open)).map { |a, b| (a / b.to_f).round(2) }
         @select_date = @mailchimp.pluck(:date).map { |a| a.strftime("%m%d").to_i }
       end
@@ -50,14 +49,14 @@ class DashboardsController < ApplicationController
         @all_users_views_select_data = @ga.pluck(:pageviews_day)
 
         # 官網瀏覽活躍度分析
-        @activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map{|k| (k[0] - k[1]) }
-        @users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map{|k| (k[0] / k[1].to_f).round(2) }
+        @activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map { |k| (k[0] - k[1]) }
+        @users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map { |k| (k[0] / k[1].to_f).round(2) }
         
         # 日期
         @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
         
         # 官網流量來源與跳出率分析
-        @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day),@ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
+        @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
         @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
       end
 
@@ -70,7 +69,8 @@ class DashboardsController < ApplicationController
       export_xls.alexa_xls(AlexaDb.last)
       
       respond_to do |format|
-        format.xls { send_data(export_xls.export,
+        format.xls { 
+          send_data(export_xls.export,
           :type => "text/excel; charset=utf-8; header=present",
           :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
         }
@@ -89,7 +89,7 @@ class DashboardsController < ApplicationController
 
     # 電子報成效分析
     # 開信率
-    @mail_views_rate = MailchimpDb.last(4).pluck(:open_rate).map { |a| a.round(2)}
+    @mail_views_rate = MailchimpDb.last(4).pluck(:open_rate).map { |a| a.round(2) }
 
     # 連結點擊率
     @mail_links_rate = MailchimpDb.last(4).pluck(:click).zip(MailchimpDb.last(4).pluck(:open)).map { |a, b| (a / b.to_f).round(2) }
@@ -102,7 +102,7 @@ class DashboardsController < ApplicationController
     @rank = AlexaDb.last(1).pluck(:womany_rank, :pansci_rank, :newsmarket_rank, :einfo_rank, :sein_rank, :npost_rank)[0]
 
     # 跳出率
-    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2)}
+    @rate = AlexaDb.last(1).pluck(:womany_bounce_rate, :pansci_bounce_rate, :newsmarket_bounce_rate, :einfo_bounce_rate, :sein_bounce_rate, :npost_bounce_rate)[0].map { |a| a.round(2) }
 
     # 日期
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
@@ -187,7 +187,7 @@ class DashboardsController < ApplicationController
     @pageviews_per_session_month = ((GaDb.last(28).pluck(:pageviews_per_session_day).reduce(:+)) / 28).round(2)
     
     # 官網平均瀏覽頁數折線圖
-    @pageviews_per_session_30d = GaDb.last(28).pluck(:pageviews_per_session_day).map{|i|i.round(2)}
+    @pageviews_per_session_30d = GaDb.last(28).pluck(:pageviews_per_session_day).map { |i| i.round(2) }
     @pageviews_per_session_7d = @pageviews_per_session_30d.last(7)
 
     # 官網平均瀏覽頁數比例
@@ -199,7 +199,7 @@ class DashboardsController < ApplicationController
     @avg_session_duration_month = ((GaDb.last(28).pluck(:avg_session_duration_day).reduce(:+)) / 28).round(2)
 
     # 官網平均停留時間折線圖
-    @avg_session_duration_30d = GaDb.last(28).pluck(:avg_session_duration_day).flat_map{|i|i.round(2)}
+    @avg_session_duration_30d = GaDb.last(28).pluck(:avg_session_duration_day).flat_map { |i| i.round(2) }
     @avg_session_duration_7d = @avg_session_duration_30d.last(7)
     
     # 官網平均停留時間比例
@@ -239,7 +239,8 @@ class DashboardsController < ApplicationController
     export_xls.alexa_xls(AlexaDb.last)
     
     respond_to do |format|
-      format.xls { send_data(export_xls.export,
+      format.xls { 
+        send_data(export_xls.export,
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
       }
@@ -250,7 +251,7 @@ class DashboardsController < ApplicationController
   private
 
   # 轉換成比例((新值-舊值)/舊值)
-  def convert_percentrate(datanew,  dataold)
+  def convert_percentrate(datanew, dataold)
     return ((datanew - dataold) / dataold.abs.to_f * 100).round(2)
   end
 
@@ -331,12 +332,12 @@ class DashboardsController < ApplicationController
 
     # 官網瀏覽活躍度分析
     # 多工作階段使用者(所有使用者-單工作階段使用者)
-    @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(GaDb.last(7).pluck(:single_session)).map{|k| (k[0] - k[1]) }
-    @activeusers_views_last_4w_data = @all_users_views_last_4w_data.zip(get_week_data(GaDb.last(28).pluck(:single_session))).map{|k| (k[0] - k[1]) }
+    @activeusers_views_last_7d_data = @all_users_views_last_7d_data.zip(GaDb.last(7).pluck(:single_session)).map { |k| (k[0] - k[1]) }
+    @activeusers_views_last_4w_data = @all_users_views_last_4w_data.zip(get_week_data(GaDb.last(28).pluck(:single_session))).map { |k| (k[0] - k[1]) }
     
     # 活躍度(多工作階段使用者/所有使用者)
-    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map{|k| (k[0] / k[1].to_f).round(2) }
-    @users_activity_rate_4w = @activeusers_views_last_4w_data.zip(@all_users_views_last_4w_data).map{|k| (k[0] / k[1].to_f).round(2) }
+    @users_activity_rate_7d = @activeusers_views_last_7d_data.zip(@all_users_views_last_7d_data).map { |k| (k[0] / k[1].to_f).round(2) }
+    @users_activity_rate_4w = @activeusers_views_last_4w_data.zip(@all_users_views_last_4w_data).map { |k| (k[0] / k[1].to_f).round(2) }
     
     # 日期
     @ga_last_7d_date = GaDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i }
@@ -369,7 +370,7 @@ class DashboardsController < ApplicationController
     value << data3.compact.reduce(:+).round(2)
     value << data4.compact.reduce(:+).round(2)
     value << data5.compact.reduce(:+).round(2)
-    value << data6.compact.reduce(:+).round(2) if data6 != nil
+    value << data6.compact.reduce(:+).round(2) unless data6.nil?
     return value
   end
 

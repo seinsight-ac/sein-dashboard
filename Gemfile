@@ -38,9 +38,9 @@ gem "koala"
 # export xls
 gem 'spreadsheet'
 # 固定排程
-gem 'whenever', :require => false
 gem 'sidekiq'
-gem 'listen', '>= 3.1.5', '< 3.2'
+gem 'sidekiq-scheduler', '~> 1'
+gem 'sinatra', :require => nil
 
 # web scraping
 gem 'mechanize'
@@ -51,15 +51,15 @@ gem "pry"
 # CSS
 gem "animate-rails"
 gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
 gem "font-awesome-rails"
 gem 'jquery-peity-rails'
 gem 'jquery-rails'
 gem 'jquery-slimscroll-rails'
-gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
-gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
-gem 'momentjs-rails', '>= 2.9.0'
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
 gem 'jquery-ui-rails'
+gem 'metismenu-rails', github: 'lanvige/metismenu-rails'
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'pace-rails', git: 'git@github.com:yovu/pace-rails.git'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -90,6 +90,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'listen', '>= 3.1.5', '< 3.2'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
