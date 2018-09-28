@@ -1,4 +1,4 @@
 :schedule:
   grab_api:
-    cron: '0 */8 * * * *' 
+    cron: '0 0 */8 * * *' 
     class: GrabApi
