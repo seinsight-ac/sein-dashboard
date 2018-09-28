@@ -13,7 +13,7 @@ class DashboardsController < ApplicationController
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       puts @mailchimp
 
-      unless @mailchimp.size.empty ?
+     unless @mailchimp.size.empty?
         @mail_users_select = @mailchimp.last.email_sent
         @mail_users_last_select = @mailchimp.pluck(:email_sent)
         @mail_users_select_rate = convert_percentrate(@mail_users_select, @mailchimp.first.email_sent)
@@ -81,13 +81,6 @@ class DashboardsController < ApplicationController
   end
 
   def index
-    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    @messages = @graph.get_object("278666028863859?fields=posts.limit(100){message}").first[1]["data"].flat_map{|i|i.values.first}
-    @likes = @graph.get_object("278666028863859?fields=posts.limit(100){likes.summary(true)}").first[1]["data"].flat_map{|i|i.values.second}.flat_map{|i|i.values.third}.flat_map{|i|i.values[0]}
-    @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
-    @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
-    @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
-    binding.pry
     
     # 電子報訂閱數
     @mail_users = MailchimpDb.last.email_sent
@@ -402,7 +395,6 @@ class DashboardsController < ApplicationController
     @comments = @graph.get_object("278666028863859?fields=posts.limit(100){comments.summary(true)}").first[1]["data"].flat_map{|i|i.values[1].delete_if{|i|i=="data"}}.flat_map{|i|i.select{|i|i=="summary"}}.flat_map{|i|i.values}.flat_map{|i|i.values[1]}
     @shares = @graph.get_object("278666028863859?fields=posts.limit(100){shares}").first[1]["data"].flat_map{|i|i.values.first}.flat_map{|i|i.first[1]}
     @posts = @messages.zip(@likes).zip(@shares).zip(@comments)
-    binding.pry
   end
   
   
