@@ -19,4 +19,3 @@ module SeinDashboard
 end
 
 CONFIG = Rails.application.secrets
-
