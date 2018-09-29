@@ -56,28 +56,72 @@ $('#submitdate').on('click', function () {
 				endtime: $('#endtime').data('date'),
 			},
 		success: function(data){
-			$("#sparklinefansadds").sparkline(data.fans_adds_last_7d_data_select, {
+			// $('#sparklinefansadds').parent('.ibox-content').children('h1').html('monthdata');
+			$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('span').html(data.fans_adds_select_rate);
+			$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
+			$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').removeClass();
+			if (data.fans_adds_select_rate > 0 ) {
+				$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-up');
+				$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-navy');
+			}	else {
+				$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-down');
+				$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-danger');
+			}
+			$("#sparklinefansadds").sparkline(data.fans_adds_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinepageusers").sparkline(data.page_users_last_7d_select, {
+		 	$('#sparklinepageusers').parent('.ibox-content').children('h1').html(data.page_users_select);
+			$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.page_users_select_rate);
+			$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
+			$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').removeClass();
+			if (data.page_users_select_rate > 0 ) {
+				$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-up');
+				$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-navy');
+			}	else {
+				$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-down');
+				$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-danger');
+			}
+			$("#sparklinepageusers").sparkline(data.page_users_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinewebusers").sparkline(data.web_users_last_7d_select, {
+			$('#sparklinewebusers').parent('.ibox-content').children('h1').html(data.web_users_select);
+			$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.web_users_select_rate);
+			$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
+			$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').removeClass();
+			if (data.web_users_select_rate > 0 ) {
+				$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-up');
+				$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-navy');
+			}	else {
+				$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-down');
+				$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-danger');
+			}
+			$("#sparklinewebusers").sparkline(data.web_users_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-			$("#sparklinemailusers").sparkline(data.mail_users_select, {
+			$('#sparklinemailusers').parent('.ibox-content').children('h1').html(data.mail_users_select);
+			$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.mail_users_select_rate);
+			$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
+			$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').removeClass();
+			if (data.mail_users_select_rate > 0 ) {
+				$('#sparklinemailusers').prev().children('i').addClass('fa fa-level-up');
+				$('#sparklinemailusers').prev().addClass('stat-percent font-bold text-navy');
+			}	else {
+				$('#sparklinemailusers').prev().children('i').addClass('fa fa-level-down');
+				$('#sparklinemailusers').prev().addClass('stat-percent font-bold text-danger');
+			}
+			$("#sparklinemailusers").sparkline(data.mail_users_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
@@ -85,26 +129,26 @@ $('#submitdate').on('click', function () {
 				fillColor: "#ffffff"
 			});
 			var lineDatafansretention = {
-				labels: data.ga_last_7d_date,
+				labels: data.fb_last_select,
 				datasets: [
 					{
 						label: "內容曝光人數", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: data.posts_users_last_7d,
+						data: data.posts_users_last_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "貼文互動人數", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  data.enagements_users_last_7d,
+						data:  data.enagements_users_last_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "互動率",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
-						data: data.fans_retention_rate_7d,
+						data: data.fans_retention_rate_select,
 						yAxisID: 'y-axis-2',
 					}
 				]
@@ -130,26 +174,26 @@ $('#submitdate').on('click', function () {
 			};
 			new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
 			var lineDatawebactivity = {
-				labels: data.ga_last_7d_date,
+				labels: data.ga_last_select_date,
 				datasets: [
 					{
 						label: "所有使用者", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: data.all_users_views_last_7d_data,
+						data: data.all_users_views_last_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "多工作階段使用者", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  data.activeusers_views_last_7d_data,
+						data:  data.activeusers_views_last_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "活躍度",
 						backgroundColor: 'rgba(225,225,225,1)',
 						pointBorderColor: "#fff",
-						data: data.users_activity_rate_7d,
+						data: data.users_activity_rate_select,
 						yAxisID: 'y-axis-2',
 					}
 				]
@@ -175,20 +219,20 @@ $('#submitdate').on('click', function () {
 			};
 			new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
 			var lineDatamailactivity = {
-				labels: data.last_12w_date,
+				labels: data.select_date,
 				datasets: [
 					{
 						label: "開信率", 
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: data.mail_views_rate,
+						data: data.mail_views_rate_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "連結點擊率", 
 						backgroundColor: 'rgba(26,179,148,0.5)',
 						pointBorderColor: "#fff",
-						data:  data.mail_links_rate,
+						data:  data.mail_links_rate_select,
 						yAxisID: 'y-axis-1',
 					}
 				]
@@ -220,7 +264,7 @@ $('#submitdate').on('click', function () {
 						label: "流量數",
 						backgroundColor: 'rgba(220, 220, 220, 1)',
 						pointBorderColor: "#fff",
-						data: data.channel_user_week,
+						data: data.channel_user_select,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "跳出率",
@@ -228,7 +272,7 @@ $('#submitdate').on('click', function () {
 						borderColor: "rgba(26,179,148,0.7)",
 						pointBackgroundColor: "rgba(26,179,148,1)",
 						pointBorderColor: "#fff",
-						data: data.bounce_rate_week,
+						data: data.bounce_rate_select,
 						yAxisID: 'y-axis-2',
 					},
 				]
