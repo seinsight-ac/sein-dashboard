@@ -31,7 +31,6 @@ jobs:
           - vendor/bundle
 
       # Database setup
-      - run: bundle exec rake db:create
       - run: bundle exec rake db:schema:load
 
       # Rubocup
