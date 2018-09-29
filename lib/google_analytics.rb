@@ -14,13 +14,14 @@ class GoogleAnalytics
       client_id: CONFIG.GOOGLE_API_KEY,
       client_secret: CONFIG.GOOGLE_API_SECRET,
       scope: ["https://www.googleapis.com/auth/analytics.readonly"],
-      additional_parameters: { "access_type" => "offline" })
+      additional_parameters: { "access_type" => "offline" }
+    )
 
-    self.credentials.refresh_token = CONFIG.GOOGLE_REFRESH_TOKEN
-    self.credentials.fetch_access_token!
+    credentials.refresh_token = CONFIG.GOOGLE_REFRESH_TOKEN
+    credentials.fetch_access_token!
 
     self.analytics = AnalyticsReportingService.new
-    self.analytics.authorization = self.credentials
+    analytics.authorization = credentials
     @since = since
     @before = before
   end
@@ -89,17 +90,18 @@ class GoogleAnalytics
           {
             expression: "ga:users"
           }
-        ],dimensions:[
+        ], dimensions: [
           {
             name: "ga:userAgeBracket"
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
         ]
-      }]})
+      }] }
+    )
     response = analytics.batch_get_reports(request)
     JSON.parse(response.to_json)["reports"][0]["data"]
   end
@@ -132,19 +134,20 @@ class GoogleAnalytics
           {
             expression: "ga:pageviews"
           }
-        ],dimensions:[
+        ], dimensions: [
           {
             name: "ga:sessionCount"
-          },{
+          }, {
             name: "ga:date"
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
         ]
-      }]})
+      }] }
+    )
     return convert(request)
   end
 
@@ -156,19 +159,20 @@ class GoogleAnalytics
         view_id: "ga:55621750",
         metrics: [
           {
-            expression: "#{metrics}"
+            expression: metrics
           }
-        ],dimensions:[
+        ], dimensions: [
           {
-            name: "#{dim}"
+            name: dim
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
-        ],page_token: "#{token}"
-      }]})
+        ], page_token: token.to_s
+      }] }
+    )
     return convert(request)
   end
 
@@ -178,18 +182,18 @@ class GoogleAnalytics
         view_id: "ga:55621750",
         metrics: [
           {
-            expression: "#{metrics}"
+            expression: metrics
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
-        ],page_token: "#{token}"
-      }]})
+        ], page_token: token.to_s
+      }] }
+    )
     return convert(request)
   end
-
 
   def request_two_dim(metrics, dimensions, token = 0)
     request = GetReportsRequest.new(
@@ -197,24 +201,24 @@ class GoogleAnalytics
         view_id: "ga:55621750",
         metrics: [
           {
-            expression: "#{metrics}"
+            expression: metrics
           }
-        ],dimensions:[
+        ], dimensions: [
           {
             name: "ga:date"
-          },{
-            name: "#{dimensions}"
+          }, {
+            name: dimensions
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
-        ],page_token: "#{token}"
-      }]})
+        ], page_token: token.to_s
+      }] }
+    )
     return convert(request)
   end
-
 
   def request_two(metrics1, metrics2, dimensions, token = 0)
     request = GetReportsRequest.new(
@@ -222,23 +226,24 @@ class GoogleAnalytics
         view_id: "ga:55621750",
         metrics: [
           {
-            expression: "#{metrics1}"
-          },{
-            expression: "#{metrics2}"
+            expression: metrics1
+          }, {
+            expression: metrics2
           }
-        ],dimensions:[
+        ], dimensions: [
           {
             name: "ga:date"
-          },{
-            name: "#{dimensions}"
+          }, {
+            name: dimensions
           }
-        ],date_ranges:[
+        ], date_ranges: [
           {
             start_date: @since,
             end_date: @before
           }
-        ],page_token: "#{token}"
-      }]})
+        ], page_token: token.to_s
+      }] }
+    )
     return convert(request)
   end
 
