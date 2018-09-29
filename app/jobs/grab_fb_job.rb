@@ -25,7 +25,7 @@ class GrabFbJob < ApplicationJob
             old.fans_65 = gender[0]["values"][i]["value"].values[6, 13].inject(0, :+)
             old.save!
           elsif FbDb.last.date == fan[i]["end_time"]
-          elsif fan[i]["end_time"].to_date.strftime("%Y%m%d") == Date.today.strftime("%Y%m%d")
+          elsif fan[i]["end_time"].to_date >= Date.today
           else
             date = fan[i]["end_time"]
             if fan_add[0]["values"][i]["end_time"] != date
