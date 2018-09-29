@@ -306,6 +306,8 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
+    rollbar (2.18.0)
+      multi_json
     rubocop (0.49.1)
       parallel (~> 1.10)
       parser (>= 2.3.3.1, < 3.0)
@@ -438,6 +440,7 @@ DEPENDENCIES
   rails-i18n
   recaptcha
   rest-client
+  rollbar
   rubocop (~> 0.49.0)
   sass-rails (~> 5.0)
   selenium-webdriver

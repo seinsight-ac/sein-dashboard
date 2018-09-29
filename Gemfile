@@ -45,6 +45,9 @@ gem 'sinatra', :require => nil
 # web scraping
 gem 'mechanize'
 
+# CI
+gem 'rollbar'
+
 # Debug
 gem "pry"
 
