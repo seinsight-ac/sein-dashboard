@@ -11,20 +11,22 @@ class GrabAlexaJob < ApplicationJob
     @npost = Alexa.data("npost.tw")
     @womany = Alexa.data("womany.net")
 
-    def rank(data)
-      data[1].inner_text.delete(',').to_i
-    end
+    class << self
+      def rank(data)
+        data[1].inner_text.delete(',').to_i
+      end
 
-    def convert_rate(data)
-      data[2].inner_text.to_i / 100.to_f
-    end
+      def convert_rate(data)
+        data[2].inner_text.to_i / 100.to_f
+      end
 
-    def pageview(data)
-      data[3].inner_text.to_f
-    end
+      def pageview(data)
+        data[3].inner_text.to_f
+      end
 
-    def site(data)
-      data[4].inner_text.to_i * 60 + @sein[4].inner_text[3..4].to_i
+      def site(data)
+        data[4].inner_text.to_i * 60 + @sein[4].inner_text[3..4].to_i
+      end
     end
 
     AlexaDb.create(
