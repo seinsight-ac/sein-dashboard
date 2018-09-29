@@ -33,14 +33,6 @@ jobs:
       # Rubocup
       - run: bundle exec rubocop
 
-      # Run rspec in parallel
-      - type: shell
-        command: |
-          bundle exec rspec --profile 10 \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            --format progress \
-                            $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       # Save artifacts
       - type: store_test_results
         path: /tmp/test-results
