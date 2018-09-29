@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    parallelism: 3
+    working_directory: ~/ci-sample
+    docker:
+      - image: circleci/ruby:2.3.4-node
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: ubuntu
+          RAILS_ENV: test
+      - image: circleci/postgres:9.4.12-alpine
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: ci-sample-test
+          POSTGRES_PASSWORD: ""
+    steps:
+      - checkout
+
+      # Restore bundle cache
+      - type: cache-restore
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      # Store bundle cache
+      - type: cache-save
+        key: rails-demo-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Rubocup
+      - run: bundle exec rubocop
+
+      # Save artifacts
+      - type: store_test_results
+        path: /tmp/test-results

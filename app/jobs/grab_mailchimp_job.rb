@@ -4,22 +4,24 @@ class GrabMailchimpJob < ApplicationJob
   def perform(*args)
     count = MailchimpDb.count
 
-    def set_mailchimp_db(campaigns)
-      campaigns.each do |c|
-        if c["send_time"].split('T').first != MailchimpDb.last.date.to_s.split(" ").first
+    class << self
+      def set_mailchimp_db(campaigns)
+        campaigns.each do |c|
+          if c["send_time"].split('T').first != MailchimpDb.last.date.to_s.split(" ").first
 
-          link = Mailchimp.click_details(c["id"])
-          MailchimpDb.create(
-            date: c["send_time"], 
-            title: c["settings"]["subject_line"],
-            email_sent: c["emails_sent"],
-            open: c["report_summary"]["opens"],
-            open_rate: c["report_summary"]["open_rate"],
-            click: c["report_summary"]["subscriber_clicks"],
-            click_rate: c["report_summary"]["click_rate"],
-            most_click_title: link["url"],
-            most_click_time: link["unique_clicks"]
-            )
+            link = Mailchimp.click_details(c["id"])
+            MailchimpDb.create(
+              date: c["send_time"], 
+              title: c["settings"]["subject_line"],
+              email_sent: c["emails_sent"],
+              open: c["report_summary"]["opens"],
+              open_rate: c["report_summary"]["open_rate"],
+              click: c["report_summary"]["subscriber_clicks"],
+              click_rate: c["report_summary"]["click_rate"],
+              most_click_title: link["url"],
+              most_click_time: link["unique_clicks"]
+              )
+          end
         end
       end
     end
