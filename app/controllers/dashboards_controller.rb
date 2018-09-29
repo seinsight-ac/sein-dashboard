@@ -23,40 +23,40 @@ class DashboardsController < ApplicationController
 
       if (@endtime.to_date - @starttime.to_date) > 20
         # not yet
-    	else
-    		# 粉絲專頁讚數
-    		@fans_adds_select = @fb.pluck(:fans_adds_day)
-    		@fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
+      else
+        # 粉絲專頁讚數
+        @fans_adds_select = @fb.pluck(:fans_adds_day)
+        @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
 
-    		# 粉專曝光使用者
-    		@page_users_select = @fb.last.page_users_week
-    		@page_users_select = @fb.pluck(:page_users_day)
-    		@page_users_select_rate = convert_percentrate(@fb.last.page_users_week, @fb.first.page_users_week) 
-    		
-    		# 粉絲黏著度分析
-    		@posts_users_select = @fb.pluck(:posts_users_day)
-    		@enagements_users_select = @fb.pluck(:enagements_users_day)
-    		@fans_retention_rate_select = @enagements_users_select.zip(@posts_users_select).map { |x, y| (x / y.to_f).round(2) }
+        # 粉專曝光使用者
+        @page_users_select = @fb.last.page_users_week
+        @page_users_select = @fb.pluck(:page_users_day)
+        @page_users_select_rate = convert_percentrate(@fb.last.page_users_week, @fb.first.page_users_week) 
 
-    		# 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
-    		@fb_last_select = @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
+        # 粉絲黏著度分析
+        @posts_users_select = @fb.pluck(:posts_users_day)
+        @enagements_users_select = @fb.pluck(:enagements_users_day)
+        @fans_retention_rate_select = @enagements_users_select.zip(@posts_users_select).map { |x, y| (x / y.to_f).round(2) }
 
-    		# 官網使用者
-    		@web_users_select = @ga.last.web_users_week
-    		@web_users_last_select = @ga.pluck(:web_users_day)
-    		@web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_week)
-    		@all_users_views_select_data = @ga.pluck(:pageviews_day)
+        # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
+        @fb_last_select = @fb.pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
 
-    		# 官網瀏覽活躍度分析
-    		@activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map { |k| (k[0] - k[1]) }
-    		@users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map { |k| (k[0] / k[1].to_f).round(2) }
-    		
-    		# 日期
-    		@ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
-    		
-    		# 官網流量來源與跳出率分析
-    		@channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
-    		@bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
+        # 官網使用者
+        @web_users_select = @ga.last.web_users_week
+        @web_users_last_select = @ga.pluck(:web_users_day)
+        @web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_week)
+        @all_users_views_select_data = @ga.pluck(:pageviews_day)
+
+        # 官網瀏覽活躍度分析
+        @activeusers_views_select_data = @all_users_views_select_data.zip(@ga.pluck(:single_session)).map { |k| (k[0] - k[1]) }
+        @users_activity_rate_select = @activeusers_views_select_data.zip(@all_users_views_select_data).map { |k| (k[0] / k[1].to_f).round(2) }
+
+        # 日期
+        @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
+
+        # 官網流量來源與跳出率分析
+        @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
+        @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
       end
 
       # export to xls
@@ -387,15 +387,15 @@ class DashboardsController < ApplicationController
   end
 
   def bestpost
-    @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = @graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
-    @created_time = data["posts"]["data"].flat_map{|i|i.first[1]}
-    @message = data["posts"]["data"].flat_map{|i|i.select{|i|i == "message"}.values}.flat_map{|i|i.split('【')[1].to_s}.flat_map{|i|i.split('】').first}
-    @likes = data["posts"]["data"].flat_map{|i|i.select{|i|i == "likes"}}.flat_map{|i|i.values}.flat_map{|i|i.select{|i|i == "summary"}.values}.flat_map{|i|i.select{|i|i == "total_count"}.values}
-    @comments = data["posts"]["data"].flat_map{|i|i.select{|i|i == "comments"}}.flat_map{|i|i.values}.flat_map{|i|i.select{|i|i == "summary"}.values}.flat_map{|i|i.select{|i|i == "total_count"}.values}.flat_map{|i|i*3}
-    @shares = data["posts"]["data"].flat_map{|i|i.select{|i|i == "shares"}.values}.flat_map{|i|i.values}.flat_map{|i|i*5}
-    @posts = (@message.zip(@created_time).zip(@likes).zip(@shares).zip(@comments)).flatten.flatten.in_groups_of(5) 
-    @top5 = @message.zip(@created_time).zip((@likes.zip(@shares).zip(@comments)).flatten.in_groups_of(3).map{|i|i.sum { |e| e.to_i }}).flatten.in_groups_of(3).sort_by{|i|i[2]}.reverse[0..4] 
+    # @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    # data = @graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
+    # @created_time = data["posts"]["data"].flat_map{ |i| i.first[1] }
+    # @message = data["posts"]["data"].flat_map{ |a| a.select{ |i| i == "message" }.values }.flat_map{ |i| i.split('【')[1].to_s }.flat_map{|i|i.split('】').first}
+    # @likes = data["posts"]["data"].flat_map{ |a| a.select{ |b| b == "likes" } }.flat_map{ |c| c.values }.flat_map{ |d| d.select{ |e| e == "summary" }.values}.flat_map{ |f| f.select{|i|i == "total_count"}.values}
+    # @comments = data["posts"]["data"].flat_map{ |a| a.select{ |b| b == "comments" } }.flat_map{ |c| c.values }.flat_map{ |d| d.select{ |e| e == "summary" }.values}.flat_map{ |f| f.select{ |j| j == "total_count" }.values}.flat_map{ |i| i*3 }
+    # @shares = data["posts"]["data"].flat_map{ |a| a.select{ |i| i == "shares" }.values}.flat_map{ |i| i.values }.flat_map{ |i| i*5 }
+    # @posts = (@message.zip(@created_time).zip(@likes).zip(@shares).zip(@comments)).flatten.flatten.in_groups_of(5) 
+    # @top5 = @message.zip(@created_time).zip((@likes.zip(@shares).zip(@comments)).flatten.in_groups_of(3).map{ |i| i.sum { |e| e.to_i } }).flatten.in_groups_of(3).sort_by{ |i| i[2] }.reverse[0..4] 
   end
   
   

@@ -11,13 +11,13 @@ Metrics/MethodLength:
   Max: 25
 
 Metrics/AbcSize:
-  Max: 500
+  Max: 550
 
 Metrics/CyclomaticComplexity:
   Max: 40
 
 Metrics/MethodLength:
-  Max: 200
+  Max: 250
 
 Metrics/PerceivedComplexity:
   Max: 40
@@ -135,4 +135,7 @@ Naming/AccessorMethodName:
   Enabled: false
 
 Naming/VariableNumber:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
   Enabled: false
