@@ -7,15 +7,15 @@ class GrabMailchimpJob < ApplicationJob
     before = (Date.today - 2)
     since = (Date.today - 7)
 
-    campaigns = Mailchimp.campaigns(since.to_s, before.to_s)
-    campaigns.reverse!
-    set_mailchimp_db(campaigns)
+    @campaigns = Mailchimp.campaigns(since.to_s, before.to_s)
+    @campaigns.reverse!
+    set_mailchimp_db
 
     puts "add #{MailchimpDb.count - count} mailchimp data"
   end
 
-  def set_mailchimp_db(campaigns)
-    campaigns.each do |c|
+  def set_mailchimp_db
+    @campaigns.each do |c|
       if c["send_time"].split('T').first != MailchimpDb.last.date.to_s.split(" ").first
 
         link = Mailchimp.click_details(c["id"])

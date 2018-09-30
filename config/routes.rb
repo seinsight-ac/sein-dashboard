@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get :googleanalytics
       get :facebook
       get :excel
+      get :exceldate
     end
 
   end
