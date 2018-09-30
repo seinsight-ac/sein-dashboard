@@ -70,6 +70,9 @@ Style/ExpandPathArguments:
 Style/StderrPuts:
   Enabled: false
 
+Style/IfInsideElse:
+  Enabled: false
+
 Style/ConditionalAssignment:
   Enabled: false
 
