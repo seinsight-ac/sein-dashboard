@@ -215,6 +215,37 @@ class DashboardsController < ApplicationController
     @fans_age << FbDb.last(2).first.fans_45_54
     @fans_age << FbDb.last(2).first.fans_55_64
     @fans_age << FbDb.last(2).first.fans_65
+
+    graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    data = graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
+
+    # [created_time, message, like, comment, share, interact]
+    posts = []
+    data["posts"]["data"].each do |d|
+      unless d["message"].nil?
+        like = d["likes"]["summary"]["total_count"]
+        comment = d["comments"]["summary"]["total_count"]
+        share = d["shares"]["count"] unless d["shares"].nil?
+
+        if d["message"].split("【").second.nil?
+          message = d["message"][0..20]
+        else
+          message = d["message"].split("【").second.split("】").first
+        end
+
+        if share.nil?
+          interact = like + comment * 3
+        else
+          interact = like + comment * 3 + share * 5
+        end
+
+        posts << [d["created_time"], message, like, comment, share, interact]
+      end
+
+      posts.sort_by! { |item|
+        -item[5]
+      }
+    end
   end
 
   def googleanalytics
@@ -430,18 +461,6 @@ class DashboardsController < ApplicationController
     value << data3.compact.reduce(:+) / data3.compact.size
     value << data4.compact.reduce(:+) / data4.compact.size
     value << data5.compact.reduce(:+) / data5.compact.size
-  end
-
-  def bestpost
-    # @graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    # data = @graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
-    # @created_time = data["posts"]["data"].flat_map{ |i| i.first[1] }
-    # @message = data["posts"]["data"].flat_map{ |a| a.select{ |i| i == "message" }.values }.flat_map{ |i| i.split('【')[1].to_s }.flat_map{|i|i.split('】').first}
-    # @likes = data["posts"]["data"].flat_map{ |a| a.select{ |b| b == "likes" } }.flat_map{ |c| c.values }.flat_map{ |d| d.select{ |e| e == "summary" }.values}.flat_map{ |f| f.select{|i|i == "total_count"}.values}
-    # @comments = data["posts"]["data"].flat_map{ |a| a.select{ |b| b == "comments" } }.flat_map{ |c| c.values }.flat_map{ |d| d.select{ |e| e == "summary" }.values}.flat_map{ |f| f.select{ |j| j == "total_count" }.values}.flat_map{ |i| i*3 }
-    # @shares = data["posts"]["data"].flat_map{ |a| a.select{ |i| i == "shares" }.values}.flat_map{ |i| i.values }.flat_map{ |i| i*5 }
-    # @posts = (@message.zip(@created_time).zip(@likes).zip(@shares).zip(@comments)).flatten.flatten.in_groups_of(5) 
-    # @top5 = @message.zip(@created_time).zip((@likes.zip(@shares).zip(@comments)).flatten.in_groups_of(3).map{ |i| i.sum { |e| e.to_i } }).flatten.in_groups_of(3).sort_by{ |i| i[2] }.reverse[0..4] 
   end
   
 end
