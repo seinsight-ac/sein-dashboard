@@ -66,6 +66,51 @@ class DashboardsController < ApplicationController
           # 日期
           @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
         }
+
+        # 粉專貼文觸及人數
+        @posts_users_week = FbDb.last.posts_users_week
+        @posts_users_month = FbDb.last.posts_users_month 
+
+        # 粉專貼文觸及人數折線圖
+        @posts_users_last_30d = FbDb.last(28).pluck(:posts_users_day)
+        @posts_users_last_7d = @posts_users_last_30d.last(7)
+        
+         # 粉專貼文觸及人數比例
+        @posts_users_week_rate = convert_percentrate(@posts_users_week, FbDb.last(8).first.posts_users_week) 
+        @posts_users_month_rate = convert_percentrate(@posts_users_month, FbDb.last(29).first.posts_users_month)
+
+        # 粉專負面行動人數
+        @negative_users_week = FbDb.last.negative_users_week
+        @negative_users_month = FbDb.last.negative_users_month
+
+        # 粉專負面行動人數折線圖
+        @negative_users_last_30d = FbDb.last(28).pluck(:negative_users_day)
+        @negative_users_last_7d = @negative_users_last_30d.last(7)
+
+        # 粉專負面行動人數比例
+        @negative_users_week_rate = convert_percentrate(@negative_users_week, FbDb.last(7).first.negative_users_week) 
+        @negative_users_month_rate = convert_percentrate(@negative_users_month, FbDb.last(29).first.negative_users_month)
+
+        # 貼文點擊分析
+        # 貼文互動總數
+        @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
+        @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
+
+        # 連結點擊數
+        @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
+        @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
+
+        # 連結點擊率
+        @link_clicks_rate_7d = @link_clicks_last_7d.zip(@post_enagements_last_7d).map { |x, y| (x / y.to_f).round(2) }
+        @link_clicks_rate_30d = @link_clicks_last_4w.zip(@post_enagements_last_4w).map { |x, y| (x / y.to_f).round(2) }
+
+        # 粉專讚數趨勢
+        # 淨讚數
+        @fans_adds_last_4w = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
+
+        # 退讚數
+        @fans_losts_last_7d = FbDb.last(7).pluck(:fans_losts_day)
+        @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
       else
         # 粉絲黏著度分析
         @posts_users_last_select = @fb.pluck(:posts_users_day)
@@ -201,8 +246,10 @@ class DashboardsController < ApplicationController
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
-    
+
     data_month.each do |d|
+      date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
+
       unless d["message"].nil?
         like = d["likes"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
@@ -212,16 +259,16 @@ class DashboardsController < ApplicationController
         if d["message"].split("【").second.nil?
           message = d["message"][0..20]
         else
-          message = d["message"].split("【").second.split("】").first
+          message = d["message"].split("】").first.split("【").second.split("💡").second
         end
 
         interact = like + comment * 3 + share * 5
 
         if d["created_time"] >= since_week
-          posts_week << [d["created_time"], message, like, comment, share, interact]
+          posts_week << [date, message, like, comment, share, interact]
         end
 
-        posts << [d["created_time"], message, like, comment, share, interact]
+        posts << [date, message, like, comment, share, interact]
       end
 
       posts.sort_by! { |item|
