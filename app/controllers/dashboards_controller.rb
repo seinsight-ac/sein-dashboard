@@ -241,14 +241,13 @@ class DashboardsController < ApplicationController
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
-    since_week = (Date.today << 1).strftime("%Y-%m-%d")
-    data_month = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
 
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
 
-    data_month.each do |d|
+    data.each do |d|
       date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
 
       unless d["message"].nil?
@@ -265,7 +264,7 @@ class DashboardsController < ApplicationController
 
         interact = like + comment * 3 + share * 5
 
-        if d["created_time"] >= since_week
+        if d["created_time"] >= (Date.today - 7).strftime("%Y-%m-%d")
           posts_week << [date, message, like, comment, share, interact]
         end
 
@@ -282,6 +281,7 @@ class DashboardsController < ApplicationController
 
       @month_top_posts = posts.first(5)
       @week_top_posts = posts_week.first(5)
+      puts @week_top_posts
     end
   end
 
@@ -353,7 +353,7 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
-    export_xls.fb_post
+    export_xls.fb_post(@last, @end)
     
     respond_to do |format|
       format.xls { 
@@ -366,20 +366,23 @@ class DashboardsController < ApplicationController
   end
 
   def exceldate
-    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+    @starttime = params[:starttime].to_date
+    @endtime = params[:endtime].to_date
+    m = @endtime - @starttime
+    @last = @starttime - (m % 7)
 
-    @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-    @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-    @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+    fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
+    ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
+    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
 
     # export to xls
     export_xls = ExportXls.new
 
-    # export_xls.fb_xls(@fb)
-    # export_xls.ga_xls(@ga)
-    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
+    export_xls.fb_xls(fb) unless fb.nil?
+    export_xls.ga_xls(ga) unless ga.nil?
+    export_xls.mailchimp_xls(mailchimp) unless mailchimp.nil?
     export_xls.alexa_xls(AlexaDb.last)
+    export_xls.fb_post(@starttime, @endtime)
 
     respond_to do |format|
       format.xls { 

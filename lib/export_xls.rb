@@ -51,8 +51,8 @@ class ExportXls
 
     i = 0
     c = 1
-    # to-do flex
-    4.times do 
+   
+    (data.size / 7).times do 
       @sheet1.row(0).set_format(c, head)
       @sheet1[0, c] = "week#{c}"
       @sheet1[1, c] = "#{data[i].date.strftime("%m/%d")}-#{data[i + 6].date.strftime("%m/%d")}"
@@ -76,7 +76,6 @@ class ExportXls
     end
   end
 
-  # to-do week data
   def ga_xls(data) 
     @sheet2.row(0).set_format(0, head)
     @sheet2[0, 0] = "GA各項指標"
@@ -114,8 +113,8 @@ class ExportXls
 
     i = 0
     c = 1
-    # to-do flex
-    4.times do 
+
+    (data.size / 7).times do 
       ga = GoogleAnalytics.new(data[i].date.strftime("%Y-%m-%d"), data[i + 6].date.strftime("%Y-%m-%d"))
       user_type = ga.user_type_week
       age = ga.bracket_week
@@ -179,6 +178,7 @@ class ExportXls
   end
 
   def mailchimp_xls(data)
+    puts data
     data = data.pluck(:date, :email_sent, :title, :open, :open_rate, :click, :most_click_title, :most_click_time)
 
     @sheet3.row(0).set_format(0, head)
@@ -283,7 +283,7 @@ class ExportXls
     @sheet3[19, 5] = "#{data.womany_on_site / 60}分#{data.womany_on_site % 60}秒"
   end
 
-  def fb_post
+  def fb_post(since, before = Date.today.strftime("%Y-%m-%d"))
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since = (Date.today << 1).strftime("%Y-%m-%d")
     data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
