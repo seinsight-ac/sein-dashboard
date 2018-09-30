@@ -20,12 +20,17 @@
 				<li>
 					<button type="button" id= "submitdate" class="btn btn-sm btn-primary"> Go!</button>
 				</li>
+				<li>
+					<button type="button" id= "exceldate" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></button>
+				</li>
 			</ul>
 		</ul>
 	</nav>
 </div>
 
 <script type="text/javascript">
+
+$('#exceldate').hide();
 
 var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 
@@ -45,8 +50,25 @@ $('#starttime').on("dp.change", function(e) {
 	$('#endtime').data("DateTimePicker").minDate(e.date);
 })
 
+$('#exceldate').on('click', function () {
+	event.preventDefault();
+	$('#exceldate').hide();
+	$.ajax({
+		url: '/dashboards/exceldate',
+		method: 'GET',
+		dataType: "json",
+		data:{
+				starttime: $('#starttime').data('date'),
+				endtime: $('#endtime').data('date'),
+			},
+		success: function(data){
+		}
+	});
+});
+
 $('#submitdate').on('click', function () {
 	event.preventDefault();
+	$('#exceldate').show();
 	$.ajax({
 		url: '/dashboards',
 		method: 'POST',
