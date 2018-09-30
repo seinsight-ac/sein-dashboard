@@ -240,7 +240,6 @@ class DashboardsController < ApplicationController
         -item[5]
       }
     end
-
   end
 
   def googleanalytics
