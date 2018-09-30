@@ -1,8 +1,14 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
-  before_action :gainformation, :only => [:index, :googleanalytics]
-  
+	before_action :gainformation, :only => [:index, :googleanalytics]
+	
+	def exceldate
+		@starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
+		@endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+
+	end
+	
   def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
