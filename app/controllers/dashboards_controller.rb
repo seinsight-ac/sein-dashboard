@@ -97,8 +97,8 @@ class DashboardsController < ApplicationController
           @fb_last_select << @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }[i]
 
           # 官網瀏覽活躍度分析
-          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i - 6 + data % 7..i].reduce(:+)
-          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i - 6 + data % 7..i].reduce(:+)
+          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
+          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
 
           # 日期
           @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
@@ -109,12 +109,12 @@ class DashboardsController < ApplicationController
         @enagements_users_last_select = @fb.pluck(:enagements_users_day)
         
         # 貼文點擊分析
-        @post_enagements_last_select = @fb.pluck(:post_enagements_week)
-        @link_clicks_last_select = @fb.pluck(:link_clicks_week)
+        @post_enagements_last_select = @fb.pluck(:post_enagements_day)
+        @link_clicks_last_select = @fb.pluck(:link_clicks_day)
         
         # 粉專讚數趨勢
-        @fans_adds_last_select_week = @fb.pluck(:fans_adds_week)
-        @fans_losts_last_select = @fb.pluck(:fans_losts_week)
+        @fans_adds_last_select_week = @fb.pluck(:fans_adds_day)
+        @fans_losts_last_select = @fb.pluck(:fans_losts_day)
 
         # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
         @fb_last_select = @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }
@@ -361,7 +361,6 @@ class DashboardsController < ApplicationController
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
       }
-      format.html
     end
   end
 
@@ -390,7 +389,6 @@ class DashboardsController < ApplicationController
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
       }
-      format.html
     end
   end
 

@@ -21,9 +21,7 @@
 					<button type="button" id= "submitdate" class="btn btn-sm btn-primary"> Go!</button>
 				</li>
 				<li>
-					<%= link_to exceldate_dashboards_path(format: :xls) do %>
-						<button type="button" id= "exceldate" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></button>
-					<% end %> 
+					<button type="button" id= "exceldate" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></button>
 				</li>
 			</ul>
 		</ul>
@@ -56,14 +54,14 @@ $('#exceldate').on('click', function () {
 	event.preventDefault();
 	$('#exceldate').hide();
 	$.ajax({
-		url: '/dashboards/exceldate',
+		url: '/dashboards/exceldate.xls',
 		method: 'GET',
 		dataType: "json",
 		data:{
 				starttime: $('#starttime').data('date'),
 				endtime: $('#endtime').data('date'),
 			},
-		success: function(data){
+		success: function(data){ 
 		}
 	});
 });
