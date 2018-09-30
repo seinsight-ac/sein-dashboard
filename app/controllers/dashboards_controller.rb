@@ -1,14 +1,8 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
-	before_action :gainformation, :only => [:index, :googleanalytics]
-	
-	def exceldate
-		@starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-		@endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+  before_action :gainformation, :only => [:index, :googleanalytics]
 
-	end
-	
   def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
@@ -137,23 +131,6 @@ class DashboardsController < ApplicationController
 
     # 日期
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
-
-    # export to xls
-    export_xls = ExportXls.new
-
-    # export_xls.fb_xls(@fb)
-    # export_xls.ga_xls(@ga)
-    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
-    export_xls.alexa_xls(AlexaDb.last)
-
-    respond_to do |format|
-      format.xls { 
-        send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
-      }
-      format.html
-    end
   end
 
   def facebook
@@ -217,15 +194,20 @@ class DashboardsController < ApplicationController
     @fans_age << FbDb.last(2).first.fans_65
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
+    since_month = (Date.today << 1).strftime("%Y-%m-%d")
+    since_week = (Date.today << 1).strftime("%Y-%m-%d")
+    data_month = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
 
     # [created_time, message, like, comment, share, interact]
-    @posts = []
-    data["posts"]["data"].each do |d|
+    posts = []
+    posts_week = []
+    
+    data_month.each do |d|
       unless d["message"].nil?
         like = d["likes"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
+        share = 0 if d["shares"].nil?
 
         if d["message"].split("【").second.nil?
           message = d["message"][0..20]
@@ -233,18 +215,25 @@ class DashboardsController < ApplicationController
           message = d["message"].split("【").second.split("】").first
         end
 
-        if share.nil?
-          interact = like + comment * 3
-        else
-          interact = like + comment * 3 + share * 5
+        interact = like + comment * 3 + share * 5
+
+        if d["created_time"] >= since_week
+          posts_week << [d["created_time"], message, like, comment, share, interact]
         end
 
-        @posts << [d["created_time"], message, like, comment, share, interact]
+        posts << [d["created_time"], message, like, comment, share, interact]
       end
 
-      @posts.sort_by! { |item|
+      posts.sort_by! { |item|
         -item[5]
       }
+
+      posts_week.sort_by! { |item|
+        -item[5]
+      }
+
+      @month_top_posts = posts.first(5)
+      @week_top_posts = posts_week.first(5)
     end
   end
 
@@ -316,12 +305,39 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
+    export_xls.fb_post
     
     respond_to do |format|
       format.xls { 
         send_data(export_xls.export,
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+      }
+      format.html
+    end
+  end
+
+  def exceldate
+    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
+    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+
+    @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+    @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+    @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+
+    # export to xls
+    export_xls = ExportXls.new
+
+    # export_xls.fb_xls(@fb)
+    # export_xls.ga_xls(@ga)
+    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
+    export_xls.alexa_xls(AlexaDb.last)
+
+    respond_to do |format|
+      format.xls { 
+        send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
       }
       format.html
     end

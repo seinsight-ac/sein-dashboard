@@ -26,7 +26,7 @@ Metrics/ParameterLists:
   Max: 20
 
 Metrics/ClassLength:
-  Max: 300
+  Max: 350
 
 Metrics/BlockLength:
   Enabled: false
