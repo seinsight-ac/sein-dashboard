@@ -29,10 +29,13 @@
 </div>
 
 <script type="text/javascript">
-
+// 隱藏下載按鈕
 $('#exceldate').hide();
 
-var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+// 設定時間
+var utc = new Date();
+utc.setDate(utc.getDate() - 1);
+utc = utc.toJSON().slice(0,10).replace(/-/g,'/');
 
 $('#starttime').datetimepicker({
 	format: 'YYYY/MM/DD',
