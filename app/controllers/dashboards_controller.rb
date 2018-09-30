@@ -220,7 +220,7 @@ class DashboardsController < ApplicationController
     data = graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
 
     # [created_time, message, like, comment, share, interact]
-    posts = []
+    @posts = []
     data["posts"]["data"].each do |d|
       unless d["message"].nil?
         like = d["likes"]["summary"]["total_count"]
@@ -239,10 +239,10 @@ class DashboardsController < ApplicationController
           interact = like + comment * 3 + share * 5
         end
 
-        posts << [d["created_time"], message, like, comment, share, interact]
+        @posts << [d["created_time"], message, like, comment, share, interact]
       end
 
-      posts.sort_by! { |item|
+      @posts.sort_by! { |item|
         -item[5]
       }
     end

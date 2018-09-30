@@ -1,0 +1,52 @@
+<div class="ibox-title">
+  <div class="pull-right">
+    <div class="btn-group">
+      <button id="<%= idw %>" type="button" class="btn btn-xs btn-white active">Week</button>
+      <button id="<%= idm %>" type="button" class="btn btn-xs btn-white">Month</button>
+    </div>
+  </div>
+  <li class="dropdown" style='list-style-type:none'>
+    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+      <h5><%= title %></h5>              
+    </a>
+    <ul class="dropdown-menu">
+      <div>
+        <span class="text-muted" style="font-size: 15px;"><%= content %></span>
+      </div>
+    </ul>
+  </li>
+</div>
+<div class="ibox-content">
+  <ul class="list-group clear-list m-t">
+    <li class="list-group-item fist-item">
+      <span class="pull-right">
+        <%= @posts[0][0] %>
+      </span>
+      <span class="label label-success">1</span><%= @posts[0][1] %>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right">
+        <%= @posts[1][0] %>
+      </span>
+      <span class="label label-info">2</span><%= @posts[1][1] %>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right">
+        <%= @posts[2][0] %>
+      </span>
+      <span class="label label-default">3</span><%= @posts[2][1] %>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right">
+        <%= @posts[3][0] %>
+      </span>
+    <span class="label label-primary">4</span><%= @posts[3][1] %>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right">
+        <%= @posts[4][0] %>
+      </span>
+      <span class="label label-primary">5</span><%= @posts[4][1] %>
+    </li>
+  </ul>
+</div>
