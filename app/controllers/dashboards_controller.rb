@@ -1,14 +1,8 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :fbinformation, :only => [:index, :facebook]
-	before_action :gainformation, :only => [:index, :googleanalytics]
-	
-	def exceldate
-		@starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-		@endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+  before_action :gainformation, :only => [:index, :googleanalytics]
 
-	end
-	
   def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
@@ -72,6 +66,51 @@ class DashboardsController < ApplicationController
           # 日期
           @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
         }
+
+        # 粉專貼文觸及人數
+        @posts_users_week = FbDb.last.posts_users_week
+        @posts_users_month = FbDb.last.posts_users_month 
+
+        # 粉專貼文觸及人數折線圖
+        @posts_users_last_30d = FbDb.last(28).pluck(:posts_users_day)
+        @posts_users_last_7d = @posts_users_last_30d.last(7)
+        
+         # 粉專貼文觸及人數比例
+        @posts_users_week_rate = convert_percentrate(@posts_users_week, FbDb.last(8).first.posts_users_week) 
+        @posts_users_month_rate = convert_percentrate(@posts_users_month, FbDb.last(29).first.posts_users_month)
+
+        # 粉專負面行動人數
+        @negative_users_week = FbDb.last.negative_users_week
+        @negative_users_month = FbDb.last.negative_users_month
+
+        # 粉專負面行動人數折線圖
+        @negative_users_last_30d = FbDb.last(28).pluck(:negative_users_day)
+        @negative_users_last_7d = @negative_users_last_30d.last(7)
+
+        # 粉專負面行動人數比例
+        @negative_users_week_rate = convert_percentrate(@negative_users_week, FbDb.last(7).first.negative_users_week) 
+        @negative_users_month_rate = convert_percentrate(@negative_users_month, FbDb.last(29).first.negative_users_month)
+
+        # 貼文點擊分析
+        # 貼文互動總數
+        @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
+        @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
+
+        # 連結點擊數
+        @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
+        @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
+
+        # 連結點擊率
+        @link_clicks_rate_7d = @link_clicks_last_7d.zip(@post_enagements_last_7d).map { |x, y| (x / y.to_f).round(2) }
+        @link_clicks_rate_30d = @link_clicks_last_4w.zip(@post_enagements_last_4w).map { |x, y| (x / y.to_f).round(2) }
+
+        # 粉專讚數趨勢
+        # 淨讚數
+        @fans_adds_last_4w = FbDb.last(22).pluck(:fans_adds_week).values_at(0, 7, 14, 21)
+
+        # 退讚數
+        @fans_losts_last_7d = FbDb.last(7).pluck(:fans_losts_day)
+        @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
       else
         # 粉絲黏著度分析
         @posts_users_last_select = @fb.pluck(:posts_users_day)
@@ -137,23 +176,6 @@ class DashboardsController < ApplicationController
 
     # 日期
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
-
-    # export to xls
-    export_xls = ExportXls.new
-
-    # export_xls.fb_xls(@fb)
-    # export_xls.ga_xls(@ga)
-    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
-    export_xls.alexa_xls(AlexaDb.last)
-
-    respond_to do |format|
-      format.xls { 
-        send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
-      }
-      format.html
-    end
   end
 
   def facebook
@@ -217,34 +239,48 @@ class DashboardsController < ApplicationController
     @fans_age << FbDb.last(2).first.fans_65
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
+    since_month = (Date.today << 1).strftime("%Y-%m-%d")
+    since_week = (Date.today << 1).strftime("%Y-%m-%d")
+    data_month = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
 
     # [created_time, message, like, comment, share, interact]
     posts = []
-    data["posts"]["data"].each do |d|
+    posts_week = []
+
+    data_month.each do |d|
+      date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
+
       unless d["message"].nil?
         like = d["likes"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
+        share = 0 if d["shares"].nil?
 
         if d["message"].split("【").second.nil?
           message = d["message"][0..20]
         else
-          message = d["message"].split("【").second.split("】").first
+          message = d["message"].split("】").first.split("【").second.split("💡").second
         end
 
-        if share.nil?
-          interact = like + comment * 3
-        else
-          interact = like + comment * 3 + share * 5
+        interact = like + comment * 3 + share * 5
+
+        if d["created_time"] >= since_week
+          posts_week << [date, message, like, comment, share, interact]
         end
 
-        posts << [d["created_time"], message, like, comment, share, interact]
+        posts << [date, message, like, comment, share, interact]
       end
 
       posts.sort_by! { |item|
         -item[5]
       }
+
+      posts_week.sort_by! { |item|
+        -item[5]
+      }
+
+      @month_top_posts = posts.first(5)
+      @week_top_posts = posts_week.first(5)
     end
   end
 
@@ -316,12 +352,39 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
+    export_xls.fb_post
     
     respond_to do |format|
       format.xls { 
         send_data(export_xls.export,
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
+      }
+      format.html
+    end
+  end
+
+  def exceldate
+    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
+    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+
+    @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+    @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+    @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+
+    # export to xls
+    export_xls = ExportXls.new
+
+    # export_xls.fb_xls(@fb)
+    # export_xls.ga_xls(@ga)
+    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
+    export_xls.alexa_xls(AlexaDb.last)
+
+    respond_to do |format|
+      format.xls { 
+        send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
       }
       format.html
     end
