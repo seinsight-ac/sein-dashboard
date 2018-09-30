@@ -7,6 +7,7 @@ class ExportXls
   mattr_accessor :center
   mattr_accessor :left
   mattr_accessor :round
+  mattr_accessor :percent_simple
 
   def initialize
     self.xls_report = StringIO.new
@@ -14,10 +15,11 @@ class ExportXls
 
     self.head = Spreadsheet::Format.new :pattern_fg_color => :orange, :vertical_align => :center, 
     :weight => :bold, :size => 14, :pattern => 1, :horizontal_align => :center
-    self.percent = Spreadsheet::Format.new :number_format => '##.##%', :horizontal_align => :center
+    self.percent = Spreadsheet::Format.new :number_format => '#0.##%', :horizontal_align => :center
     self.center = Spreadsheet::Format.new :horizontal_align => :center, :vertical_align => :center
     self.left = Spreadsheet::Format.new :horizontal_align => :left, :vertical_align => :center
-    self.round = Spreadsheet::Format.new :number_format => '##.##', :horizontal_align => :center
+    self.round = Spreadsheet::Format.new :number_format => '#0.##', :horizontal_align => :center
+    self.percent_simple = Spreadsheet::Format.new :number_format => '##%', :horizontal_align => :center
 
 
     @sheet1 = book.create_worksheet :name => "FB"
@@ -26,6 +28,8 @@ class ExportXls
     @sheet2.default_format = center
     @sheet3 = book.create_worksheet :name => "Mailchimp&Alexa"
     @sheet3.default_format = center
+    @sheet4 = book.create_worksheet :name => "貼文"
+    @sheet4.default_format = center
   end
 
   def fb_xls(data)
@@ -251,17 +255,17 @@ class ExportXls
     @sheet3[18, 2] = data.npost_rank
     @sheet3[19, 2] = data.womany_rank
 
-    @sheet3.row(14).set_format(3, percent)
+    @sheet3.row(14).set_format(3, percent_simple)
     @sheet3[14, 3] = data.sein_bounce_rate
-    @sheet3.row(15).set_format(3, percent)
+    @sheet3.row(15).set_format(3, percent_simple)
     @sheet3[15, 3] = data.newsmarket_bounce_rate
-    @sheet3.row(16).set_format(3, percent)
+    @sheet3.row(16).set_format(3, percent_simple)
     @sheet3[16, 3] = data.pansci_bounce_rate
-    @sheet3.row(17).set_format(3, percent)
+    @sheet3.row(17).set_format(3, percent_simple)
     @sheet3[17, 3] = data.einfo_bounce_rate
-    @sheet3.row(18).set_format(3, percent)
+    @sheet3.row(18).set_format(3, percent_simple)
     @sheet3[18, 3] = data.npost_bounce_rate
-    @sheet3.row(19).set_format(3, percent)
+    @sheet3.row(19).set_format(3, percent_simple)
     @sheet3[19, 3] = data.womany_bounce_rate
 
     @sheet3[14, 4] = data.sein_pageview
@@ -277,6 +281,62 @@ class ExportXls
     @sheet3[17, 5] = "#{data.einfo_on_site / 60}分#{data.einfo_on_site % 60}秒"
     @sheet3[18, 5] = "#{data.npost_on_site / 60}分#{data.npost_on_site % 60}秒"
     @sheet3[19, 5] = "#{data.womany_on_site / 60}分#{data.womany_on_site % 60}秒"
+  end
+
+  def fb_post
+    graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+    since = (Date.today << 1).strftime("%Y-%m-%d")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
+
+    @sheet4.row(0).set_format(0, head)
+    @sheet4[0, 0] = "發文日期"
+    @sheet4[1, 0] = "星期"
+    @sheet4[2, 0] = "發文時間"
+    @sheet4[3, 0] = "臉書發文"
+    @sheet4[4, 0] = "讚數"
+    @sheet4[5, 0] = "留言數"
+    @sheet4[6, 0] = "分享數"
+    @sheet4[7, 0] = "觸及人數"
+    @sheet4[8, 0] = "貼文互動次數"
+    @sheet4[9, 0] = "連結點擊次數"
+    @sheet4[10, 0] = "互動率"
+    @sheet4[11, 0] = "點擊率"
+    @sheet4.column(0).width = 15
+
+    data.reverse!
+    i = 1
+    data.each do |d|
+      unless d["message"].nil?
+        date = d["created_time"].to_time
+        like = d["likes"]["summary"]["total_count"]
+        comment = d["comments"]["summary"]["total_count"]
+        share = d["shares"]["count"] unless d["shares"].nil?
+        share = 0 if d["shares"].nil?
+        interact = like + comment + share
+        reach = d["insights"]["data"][0]["values"][0]["value"]
+        click = d["insights"]["data"][1]["values"][0]["value"]["link clicks"]
+
+        @sheet4.row(0).set_format(i, head)
+        @sheet4[0, i] = date.strftime("%m/%d")
+        @sheet4[1, i] = date.strftime("%a")
+        # 補時差
+        @sheet4[2, i] = (date + 8 * 60 * 60).strftime("%H:%M")
+        @sheet4.row(3).set_format(i, left)
+        @sheet4[3, i] = d["message"].split("【").second.split("】").first unless d["message"].split("【").second.nil?
+        @sheet4[4, i] = like
+        @sheet4[5, i] = comment
+        @sheet4[6, i] = share
+        @sheet4[7, i] = reach
+        @sheet4[8, i] = interact
+        @sheet4[9, i] = click
+        @sheet4.row(10).set_format(i, percent)
+        @sheet4[10, i] = interact / reach.to_f
+        @sheet4.row(11).set_format(i, percent)
+        @sheet4[11, i] = click / reach.to_f
+        @sheet4.column(i).width = 15
+        i += 1
+      end
+    end
   end
 
   def export

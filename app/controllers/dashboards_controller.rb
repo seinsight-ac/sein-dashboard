@@ -310,6 +310,7 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
+    export_xls.fb_post
     
     respond_to do |format|
       format.xls { 
