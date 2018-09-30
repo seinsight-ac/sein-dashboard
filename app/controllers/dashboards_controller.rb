@@ -143,7 +143,16 @@ class DashboardsController < ApplicationController
         :web_users_last_select => @web_users_last_select, :web_users_select_rate => @web_users_select_rate, 
         :all_users_views_last_select => @all_users_views_last_select, :activeusers_views_last_select => @activeusers_views_last_select, 
         :users_activity_rate_select => @users_activity_rate_select, :ga_last_select_date => @ga_last_select_date, 
-        :channel_user_select => @channel_user_select, :bounce_rate_select => @bounce_rate_select 
+        :channel_user_select => @channel_user_select, :bounce_rate_select => @bounce_rate_select, 
+      #FB
+        :posts_users_select => @posts_users_select, :posts_users_select_rate => @posts_users_select_rate,
+        :negative_users_select => @negative_users_select, :negative_users_last_select => @negative_users_last_select, :negative_users_select_rate => @negative_users_select_rate,
+        :fans_adds_last_select_week => @fans_adds_last_select_week, :fans_losts_last_select => @fans_losts_last_select, 
+        :post_enagements_last_select => @post_enagements_last_select, :link_clicks_last_select => @link_clicks_last_select, :link_clicks_rate_select => @link_clicks_rate_select,
+      #GA  
+        :pageviews_select => @pageviews_select, :pageviews_last_select => @pageviews_last_select, :page_users_select_rate => @pageviews_select_rate,
+        :pageviews_per_session_select => @pageviews_per_session_select, :pageviews_per_session_last_select => @pageviews_per_session_last_select, :pageviews_per_session_select_rate => @pageviews_per_session_select_rate,
+        :avg_session_duration_select => @avg_session_duration_select, :avg_session_duration_last_select => @avg_session_duration_last_select, :avg_session_duration_week_rate => @avg_session_duration_week_rate
       }
     end
   end

@@ -581,10 +581,10 @@ $('#submitdate').on('click', function () {
 			});
 			
 			$('#sparklineavgsessionduration').parent('.ibox-content').children('h1').html(data.avg_session_duration_select);
-			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').html(data.avg_session_duration_select_rate);
+			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').html(data.avg_session_duration_week_rate);
 			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').removeClass();
-			if (data.avg_session_duration_select_rate > 0 ) {
+			if (data.avg_session_duration_week_rate > 0 ) {
 				$('#sparklineavgsessionduration').prev().children('i').addClass('fa fa-level-up');
 				$('#sparklineavgsessionduration').prev().addClass('stat-percent font-bold text-navy');
 			}	else {
