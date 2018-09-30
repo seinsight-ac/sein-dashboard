@@ -447,7 +447,7 @@ $('#submitdate').on('click', function () {
 						backgroundColor: 'rgba(220, 220, 220, 0.3)',
 						pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 						pointBorderColor: "#fff",
-						data: data.fans_adds_last_select,
+						data: data.fans_adds_last_select_week,
 						yAxisID: 'y-axis-1',
 					},{
 						label: "退讚數", 
@@ -561,18 +561,18 @@ $('#submitdate').on('click', function () {
 				lineColor: '#1ab394',
 				fillColor: "#ffffff"
 			});
-		 	$('#sparklinepageviewspersession').parent('.ibox-content').children('h1').html(data.pageviewspersession_select);
-			$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('span').html(data.pageviewspersession_select_rate);
+		 	$('#sparklinepageviewspersession').parent('.ibox-content').children('h1').html(data.pageviews_per_session_select);
+			$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('span').html(data.pageviews_per_session_select_rate);
 			$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 			$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').removeClass();
-			if (data.pageviewspersession_select_rate > 0 ) {
+			if (data.pageviews_per_session_select_rate > 0 ) {
 				$('#sparklinepageviewspersession').prev().children('i').addClass('fa fa-level-up');
 				$('ssparklinepageviewspersession').prev().addClass('stat-percent font-bold text-navy');
 			}	else {
 				$('#sparklinepageviewspersession').prev().children('i').addClass('fa fa-level-down');
 				$('#sparklinepageviewspersession').prev().addClass('stat-percent font-bold text-danger');
 			}
-			$("#sparklinepageviewspersession").sparkline(data.pageviewspersession_last_select, {
+			$("#sparklinepageviewspersession").sparkline(data.pageviews_per_session_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
@@ -580,18 +580,18 @@ $('#submitdate').on('click', function () {
 				fillColor: "#ffffff"
 			});
 			
-			$('#sparklineavgsessionduration').parent('.ibox-content').children('h1').html(data.avgsessionduration_select);
-			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').html(data.avgsessionduration_select_rate);
+			$('#sparklineavgsessionduration').parent('.ibox-content').children('h1').html(data.avg_session_duration_select);
+			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').html(data.avg_session_duration_select_rate);
 			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 			$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').removeClass();
-			if (data.avgsessionduration_select_rate > 0 ) {
+			if (data.avg_session_duration_select_rate > 0 ) {
 				$('#sparklineavgsessionduration').prev().children('i').addClass('fa fa-level-up');
 				$('#sparklineavgsessionduration').prev().addClass('stat-percent font-bold text-navy');
 			}	else {
 				$('#sparklineavgsessionduration').prev().children('i').addClass('fa fa-level-down');
 				$('#sparklineavgsessionduration').prev().addClass('stat-percent font-bold text-danger');
 			}
-			$("#sparklineavgsessionduration").sparkline(data.avgsessionduration_last_select, {
+			$("#sparklineavgsessionduration").sparkline(data.avg_session_duration_last_select, {
 				type: 'line',
 				width: '100%',
 				height: '60',
