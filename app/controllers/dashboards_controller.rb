@@ -6,11 +6,23 @@ class DashboardsController < ApplicationController
   def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-      @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+      @endtime = (params[:endtime].to_date + 1).strftime("%Y-%m-%d")
+      @fb_end = (params[:endtime].to_date + 2).strftime("%Y-%m-%d")
+      @fb_start = (params[:starttime].to_date + 1).strftime("%Y-%m-%d")
 
-      @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      puts @starttime
+      puts @endtime
+      puts @fb_end
+      puts @fb_start
+
+      @fb = FbDb.where("date >= ? AND date <= ?", @fb_start, @fb_end)
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+
+      puts @fb.last.date
+      puts @fb[0].date
+      puts @ga.last.date
+      puts @ga[0].date
 
       unless @mailchimp.empty?
         @mail_users_select = @mailchimp.last.email_sent
@@ -26,12 +38,12 @@ class DashboardsController < ApplicationController
       @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_day, @fb.first.fans_adds_day)
 
       # 粉專曝光使用者
-      @page_users_select = @fb.last.page_users_day
+      @page_users_select = @fb.pluck(:page_users_day).reduce(:+)
       @page_users_last_select = @fb.pluck(:page_users_day)
       @page_users_select_rate = convert_percentrate(@page_users_select, @fb.first.page_users_day) 
 
       # 官網使用者
-      @web_users_select = @ga.last.web_users_day
+      @web_users_select = @ga.pluck(:web_users_day).reduce(:+)
       @web_users_last_select = @ga.pluck(:web_users_day)
       @web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_day)
 
@@ -40,33 +52,31 @@ class DashboardsController < ApplicationController
       @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
 
       # 粉專貼文觸及
-      @posts_users_select = @fb.last.posts_users_day
+      @posts_users_select = @fb.pluck(:posts_users_day).reduce(:+)
       @posts_users_last_select = @fb.pluck(:posts_users_day)
       @posts_users_select_rate = convert_percentrate(@posts_users_select, @fb.first.posts_users_day) 
 
       # 粉專負面行動人數
-      @negative_users_select = @fb.last.negative_users_day
+      @negative_users_select = @fb.pluck(:negative_users_day).reduce(:+)
       @negative_users_last_select = @fb.pluck(:negative_users_day)
       @negative_users_select_rate = convert_percentrate(@negative_users_select, @fb.first.negative_users_day) 
 
       # 官網瀏覽量
-      @pageviews_select = @ga.last.pageviews_day
+      @pageviews_select = @ga.pluck(:pageviews_day).reduce(:+)
       @pageviews_last_select = @ga.pluck(:pageviews_day)
       @pageviews_select_rate = convert_percentrate(@pageviews_select, @ga.first.pageviews_day)
       
       # 官網平均瀏覽頁數
-      @pageviews_per_session_select = @ga.last.pageviews_per_session_day
+      @pageviews_per_session_select = (@ga.pluck(:pageviews_per_session_day).reduce(:+) / @ga.pluck(:pageviews_per_session_day).size).round(2)
       @pageviews_per_session_last_select = @ga.pluck(:pageviews_per_session_day).map { |i| i.round(2) }
       @pageviews_per_session_select_rate = convert_percentrate(@pageviews_per_session_select, @ga.first.pageviews_per_session_day)  
 
       # 官網平均停留時間
-      @avg_session_duration_select = @ga.last.avg_session_duration_day
+      @avg_session_duration_select = (@ga.pluck(:avg_session_duration_day).reduce(:+) / @ga.pluck(:avg_session_duration_day).size).round(2)
       @avg_session_duration_last_select = @ga.pluck(:avg_session_duration_day).flat_map { |i| i.round(2) }
       @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_select, @ga.first.avg_session_duration_day)
 
       if (@endtime.to_date - @starttime.to_date) > 20
-        data = @endtime.to_date - @starttime.to_date
-
         @posts_users_last_select = []
         @enagements_users_last_select = []
         @fb_last_select = []
@@ -78,9 +88,15 @@ class DashboardsController < ApplicationController
         @fans_adds_last_select_week = []
         @fans_losts_last_select = []
 
-        @ga = GaDb.where("date >= ? AND date <= ?", (@starttime.to_date - data % 7).strftime("%Y-%m-%d"), @endtime)
+        data = @fb.size
+        @ga = GaDb.where("date >= ? AND date <= ?", (@starttime.to_date + data % 7 - 7).strftime("%Y-%m-%d"), @endtime)
 
-        (data % 7 - 1).step(data, 7) { |i| 
+        if data % 7 == 0
+          start = 6
+        else
+          start = (data % 7) -1
+        end
+        (start).step(data, 7) { |i| 
           # 粉絲黏著度分析
           @posts_users_last_select << @fb.pluck(:posts_users_week)[i]
           @enagements_users_last_select << @fb.pluck(:enagements_users_week)[i]
@@ -94,14 +110,14 @@ class DashboardsController < ApplicationController
           @fans_losts_last_select << @fb.pluck(:fans_losts_week)
 
           # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
-          @fb_last_select << @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }[i]
+          @fb_last_select << @fb.pluck(:date).map { |a| (a.to_date - 1).strftime("%m%d").to_i }[i]
 
           # 官網瀏覽活躍度分析
-          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
-          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
+          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i - data % 7 + 1..i - data % 7 + 7].reduce(:+)
+          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i - data % 7 + 1..i - data % 7 + 7].reduce(:+)
 
           # 日期
-          @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
+          @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i - data % 7 + 7]
         }
       else
         # 粉絲黏著度分析
@@ -469,8 +485,8 @@ class DashboardsController < ApplicationController
     @fans_retention_rate_30d = @enagements_users_last_4w.zip(@posts_users_last_4w).map { |x, y| (x / y.to_f).round(2) }
 
     # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
-    @fb_last_7d_date = FbDb.last(7).pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }
-    @fb_last_4w_date = FbDb.last(22).pluck(:date).map { |a| a.strftime("%m%d").to_i - 1 }.values_at(0, 7, 14, 21)
+    @fb_last_7d_date = FbDb.last(7).pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }
+    @fb_last_4w_date = FbDb.last(22).pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }.values_at(0, 7, 14, 21)
   end
 
   def gainformation
