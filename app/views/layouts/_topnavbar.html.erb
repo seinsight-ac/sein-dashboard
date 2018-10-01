@@ -57,14 +57,15 @@ $('#exceldate').on('click', function () {
 	event.preventDefault();
 	$('#exceldate').hide();
 	$.ajax({
-		url: '/dashboards/exceldate.xls',
+		url: '/dashboards/exceldate',
 		method: 'GET',
-		dataType: "json",
+		dataType: "text/xls",
 		data:{
-				starttime: $('#starttime').data('date'),
-				endtime: $('#endtime').data('date'),
-			},
-		success: function(data){ 
+			starttime: $('#starttime').data('date'),
+			endtime: $('#endtime').data('date'),
+		},
+		complete: function(data){ 
+			window.open('/dashboards/exceldate.xls','_blank');
 		}
 	});
 });

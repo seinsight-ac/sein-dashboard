@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180923100123) do
+ActiveRecord::Schema.define(version: 20181001055130) do
 
   create_table "alexa_dbs", force: :cascade do |t|
     t.integer "sein_rank"
@@ -37,6 +37,18 @@ ActiveRecord::Schema.define(version: 20180923100123) do
     t.integer "einfo_on_site"
     t.integer "npost_on_site"
     t.integer "womany_on_site"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "dashboards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "excel_dbs", force: :cascade do |t|
+    t.string "start"
+    t.string "before"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
