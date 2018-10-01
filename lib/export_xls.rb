@@ -66,9 +66,9 @@ class ExportXls
       @sheet1[11, c] = data[i + 6].link_clicks_week
       @sheet1[6, c] = data[i + 6].posts_users_week
       @sheet1.row(10).set_format(c, percent)
-      @sheet1[10, c] = data[i + 6].enagements_users_day / data[i + 6].posts_users_week.to_f
+      @sheet1[10, c] = data[i + 6].enagements_users_week / data[i + 6].posts_users_week.to_f
       @sheet1.row(12).set_format(c, percent)
-      @sheet1[12, c] = data[i + 6].enagements_users_day / data[i + 6].link_clicks_week.to_f
+      @sheet1[12, c] = data[i + 6].enagements_users_week / data[i + 6].link_clicks_week.to_f
       @sheet3.column(c).width = 20
 
       i  += 7
@@ -285,7 +285,6 @@ class ExportXls
 
   def fb_post(since, before = Date.today.strftime("%Y-%m-%d"))
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    since = (Date.today << 1).strftime("%Y-%m-%d")
     data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
 
     @sheet4.row(0).set_format(0, head)
