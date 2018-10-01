@@ -374,7 +374,7 @@ class DashboardsController < ApplicationController
   end
 
   def exceldate
-    unless params[:starttime].nil?
+    if !params[:starttime].nil?
       excel = ExcelDb.new
       excel.start = params[:starttime]
       excel.before = params[:endtime]
