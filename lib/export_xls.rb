@@ -283,7 +283,7 @@ class ExportXls
     @sheet3[19, 5] = "#{data.womany_on_site / 60}分#{data.womany_on_site % 60}秒"
   end
 
-  def fb_post(since, before = Date.today.strftime("%Y-%m-%d"))
+  def fb_post
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since = (Date.today << 1).strftime("%Y-%m-%d")
     data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
