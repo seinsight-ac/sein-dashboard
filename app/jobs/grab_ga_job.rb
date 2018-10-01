@@ -42,8 +42,10 @@ class GrabGaJob < ApplicationJob
       date = @user[i]["dimensions"][0]
       if GaDb.last.date > date
         puts "error execute seed first"
+        i += 1
       elsif GaDb.last.date == date
         puts "already save"
+        i += 1
       else
         ga = GaDb.new
         ga.date = @user[i]["dimensions"][0]
