@@ -3,11 +3,6 @@ class DashboardsController < ApplicationController
   before_action :fbinformation, :only => [:index, :facebook]
   before_action :gainformation, :only => [:index, :googleanalytics]
 
-  def exceldate
-    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
-  end
-
   def create
     if params[:starttime]
       @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
@@ -28,21 +23,46 @@ class DashboardsController < ApplicationController
 
       # 粉絲專頁讚數
       @fans_adds_last_select = @fb.pluck(:fans_adds_day)
-      @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_week, @fb.first.fans_adds_week)
+      @fans_adds_select_rate = convert_percentrate(@fb.last.fans_adds_day, @fb.first.fans_adds_day)
 
       # 粉專曝光使用者
-      @page_users_select = @fb.last.page_users_week
+      @page_users_select = @fb.last.page_users_day
       @page_users_last_select = @fb.pluck(:page_users_day)
-      @page_users_select_rate = convert_percentrate(@fb.last.page_users_week, @fb.first.page_users_week) 
+      @page_users_select_rate = convert_percentrate(@page_users_select, @fb.first.page_users_day) 
 
       # 官網使用者
-      @web_users_select = @ga.last.web_users_week
+      @web_users_select = @ga.last.web_users_day
       @web_users_last_select = @ga.pluck(:web_users_day)
-      @web_users_select_rate = convert_percentrate(@ga.last.web_users_week, @ga.first.web_users_week)
+      @web_users_select_rate = convert_percentrate(@web_users_select, @ga.first.web_users_day)
 
       # 官網流量來源與跳出率分析
       @channel_user_select = ga_preprocess(@ga.pluck(:oganic_search_day), @ga.pluck(:social_user_day), @ga.pluck(:direct_user_day), @ga.pluck(:referral_user_day), @ga.pluck(:email_user_day))
       @bounce_rate_select = ga_preprocess_rate(@ga.pluck(:oganic_search_bounce), @ga.pluck(:social_bounce), @ga.pluck(:direct_bounce), @ga.pluck(:referral_bounce), @ga.pluck(:email_bounce))
+
+      # 粉專貼文觸及
+      @posts_users_select = @fb.last.posts_users_day
+      @posts_users_last_select = @fb.pluck(:posts_users_day)
+      @posts_users_select_rate = convert_percentrate(@posts_users_select, @fb.first.posts_users_day) 
+
+      # 粉專負面行動人數
+      @negative_users_select = @fb.last.negative_users_day
+      @negative_users_last_select = @fb.pluck(:negative_users_day)
+      @negative_users_select_rate = convert_percentrate(@negative_users_select, @fb.first.negative_users_day) 
+
+      # 官網瀏覽量
+      @pageviews_select = @ga.last.pageviews_day
+      @pageviews_last_select = @ga.pluck(:pageviews_day)
+      @pageviews_select_rate = convert_percentrate(@pageviews_select, @ga.first.pageviews_day)
+      
+      # 官網平均瀏覽頁數
+      @pageviews_per_session_select = @ga.last.pageviews_per_session_day
+      @pageviews_per_session_last_select = @ga.pluck(:pageviews_per_session_day).map { |i| i.round(2) }
+      @pageviews_per_session_select_rate = convert_percentrate(@pageviews_per_session_select, @ga.first.pageviews_per_session_day)  
+
+      # 官網平均停留時間
+      @avg_session_duration_select = @ga.last.avg_session_duration_day
+      @avg_session_duration_last_select = @ga.pluck(:avg_session_duration_day).flat_map { |i| i.round(2) }
+      @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_select, @ga.first.avg_session_duration_day)
 
       if (@endtime.to_date - @starttime.to_date) > 20
         data = @endtime.to_date - @starttime.to_date
@@ -53,21 +73,33 @@ class DashboardsController < ApplicationController
         @all_users_views_last_select = []
         @activeusers_views_last_select = []
         @ga_last_select_date = []
+        @post_enagements_last_select = []
+        @link_clicks_last_select = []
+        @fans_adds_last_select_week = []
+        @fans_losts_last_select = []
 
         @ga = GaDb.where("date >= ? AND date <= ?", (@starttime.to_date - data % 7).strftime("%Y-%m-%d"), @endtime)
 
         (data % 7 - 1).step(data, 7) { |i| 
-          puts i
           # 粉絲黏著度分析
           @posts_users_last_select << @fb.pluck(:posts_users_week)[i]
           @enagements_users_last_select << @fb.pluck(:enagements_users_week)[i]
+
+          # 貼文點擊分析
+          @post_enagements_last_select << @fb.pluck(:post_enagements_week)[i]
+          @link_clicks_last_select << @fb.pluck(:link_clicks_week)[i]
+          
+          # 粉專讚數趨勢
+          @fans_adds_last_select_week << @fb.pluck(:fans_adds_week)
+          @fans_losts_last_select << @fb.pluck(:fans_losts_week)
 
           # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
           @fb_last_select << @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }[i]
 
           # 官網瀏覽活躍度分析
-          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i - 6 + data % 7..i].reduce(:+)
-          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i - 6 + data % 7..i].reduce(:+)
+          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
+          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
+
           # 日期
           @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
         }
@@ -76,6 +108,14 @@ class DashboardsController < ApplicationController
         @posts_users_last_select = @fb.pluck(:posts_users_day)
         @enagements_users_last_select = @fb.pluck(:enagements_users_day)
         
+        # 貼文點擊分析
+        @post_enagements_last_select = @fb.pluck(:post_enagements_day)
+        @link_clicks_last_select = @fb.pluck(:link_clicks_day)
+        
+        # 粉專讚數趨勢
+        @fans_adds_last_select_week = @fb.pluck(:fans_adds_day)
+        @fans_losts_last_select = @fb.pluck(:fans_losts_day)
+
         # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
         @fb_last_select = @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }
 
@@ -88,7 +128,8 @@ class DashboardsController < ApplicationController
       end
 
       @fans_retention_rate_select = @enagements_users_last_select.zip(@posts_users_last_select).map { |x, y| (x / y.to_f).round(2) }
-      @users_activity_rate_select = @activeusers_views_last_select.zip(@all_users_views_last_select).map { |k| (k[0] / k[1].to_f).round(2) }
+      @users_activity_rate_select = @activeusers_views_last_select.zip(@all_users_views_last_select).map { |x, y| (x / y.to_f).round(2) }
+      @link_clicks_rate_select = @link_clicks_last_select.zip(@post_enagements_last_select).map { |x, y| (x / y.to_f).round(2) }
 
       render :json => { 
         :mail_users_select => @mail_users_select, :mail_users_last_select => @mail_users_last_select, 
@@ -102,7 +143,16 @@ class DashboardsController < ApplicationController
         :web_users_last_select => @web_users_last_select, :web_users_select_rate => @web_users_select_rate, 
         :all_users_views_last_select => @all_users_views_last_select, :activeusers_views_last_select => @activeusers_views_last_select, 
         :users_activity_rate_select => @users_activity_rate_select, :ga_last_select_date => @ga_last_select_date, 
-        :channel_user_select => @channel_user_select, :bounce_rate_select => @bounce_rate_select 
+        :channel_user_select => @channel_user_select, :bounce_rate_select => @bounce_rate_select, 
+      # FB
+        :posts_users_select => @posts_users_select, :posts_users_select_rate => @posts_users_select_rate,
+        :negative_users_select => @negative_users_select, :negative_users_last_select => @negative_users_last_select, :negative_users_select_rate => @negative_users_select_rate,
+        :fans_adds_last_select_week => @fans_adds_last_select_week, :fans_losts_last_select => @fans_losts_last_select, 
+        :post_enagements_last_select => @post_enagements_last_select, :link_clicks_last_select => @link_clicks_last_select, :link_clicks_rate_select => @link_clicks_rate_select,
+      # GA  
+        :pageviews_select => @pageviews_select, :pageviews_last_select => @pageviews_last_select, :pageviews_select_rate => @pageviews_select_rate,
+        :pageviews_per_session_select => @pageviews_per_session_select, :pageviews_per_session_last_select => @pageviews_per_session_last_select, :pageviews_per_session_select_rate => @pageviews_per_session_select_rate,
+        :avg_session_duration_select => @avg_session_duration_select, :avg_session_duration_last_select => @avg_session_duration_last_select, :avg_session_duration_week_rate => @avg_session_duration_week_rate
       }
     end
   end
@@ -136,23 +186,6 @@ class DashboardsController < ApplicationController
 
     # 日期
     @created_at = AlexaDb.last.created_at.strftime("%Y-%m-%d")
-
-    # export to xls
-    export_xls = ExportXls.new
-
-    # export_xls.fb_xls(@fb)
-    # export_xls.ga_xls(@ga)
-    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
-    export_xls.alexa_xls(AlexaDb.last)
-
-    respond_to do |format|
-      format.xls { 
-        send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
-      }
-      format.html
-    end
   end
 
   def facebook
@@ -216,34 +249,48 @@ class DashboardsController < ApplicationController
     @fans_age << FbDb.last(2).first.fans_65
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = graph.get_object("278666028863859?fields=posts.limit(100){created_time, message, likes.summary(true), comments.summary(true), shares}")
+    since_month = (Date.today << 1).strftime("%Y-%m-%d")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
 
     # [created_time, message, like, comment, share, interact]
     posts = []
-    data["posts"]["data"].each do |d|
+    posts_week = []
+
+    data.each do |d|
+      date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
+
       unless d["message"].nil?
         like = d["likes"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
+        share = 0 if d["shares"].nil?
 
         if d["message"].split("【").second.nil?
           message = d["message"][0..20]
         else
-          message = d["message"].split("【").second.split("】").first
+          message = d["message"].split("】").first.split("【").second.split("💡").second
         end
 
-        if share.nil?
-          interact = like + comment * 3
-        else
-          interact = like + comment * 3 + share * 5
+        interact = like + comment * 3 + share * 5
+
+        if d["created_time"] >= (Date.today - 7).strftime("%Y-%m-%d")
+          posts_week << [date, message, like, comment, share, interact]
         end
 
-        posts << [d["created_time"], message, like, comment, share, interact]
+        posts << [date, message, like, comment, share, interact]
       end
 
       posts.sort_by! { |item|
         -item[5]
       }
+
+      posts_week.sort_by! { |item|
+        -item[5]
+      }
+
+      @month_top_posts = posts.first(5)
+      @week_top_posts = posts_week.first(5)
+      puts @week_top_posts
     end
   end
 
@@ -315,7 +362,7 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
-    export_xls.fb_post
+    export_xls.fb_post(@last, @end)
     
     respond_to do |format|
       format.xls { 
@@ -323,7 +370,34 @@ class DashboardsController < ApplicationController
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
       }
-      format.html
+    end
+  end
+
+  def exceldate
+    @starttime = params[:starttime].to_date
+    @endtime = params[:endtime].to_date
+    m = @endtime - @starttime
+    @last = @starttime - (m % 7)
+
+    fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
+    ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
+    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+
+    # export to xls
+    export_xls = ExportXls.new
+
+    export_xls.fb_xls(fb) unless fb.nil?
+    export_xls.ga_xls(ga) unless ga.nil?
+    export_xls.mailchimp_xls(mailchimp) unless mailchimp.nil?
+    export_xls.alexa_xls(AlexaDb.last)
+    export_xls.fb_post(@starttime, @endtime)
+
+    respond_to do |format|
+      format.xls { 
+        send_data(export_xls.export,
+        :type => "text/excel; charset=utf-8; header=present",
+        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
+      }
     end
   end
 
