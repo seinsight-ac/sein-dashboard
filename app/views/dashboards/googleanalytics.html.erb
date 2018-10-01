@@ -1,16 +1,16 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為在一定期間至少有一個工作階段的不重複使用者人數(週從昨天往前推算7天，月為28天)'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm',title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為在一定期間至少有一個工作階段的不重複使用者人數(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%', content:'「瀏覽量」是網頁的總瀏覽數。重複瀏覽同一個網頁也計算在內。(週從昨天往前推算7天，月為28天)。'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewsw', idm: 'labelpageviewsm', title: '官網瀏覽量', data: @pageviews_week, rate: @pageviews_week_rate, linechart: 'sparklinepageviwes', percent: '%', content:'「瀏覽量」是網頁的總瀏覽數。重複瀏覽同一個網頁也計算在內。(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)'} %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', title: '官網平均瀏覽頁數', data: @pageviews_per_session_week, rate: @pageviews_per_session_week_rate, linechart: 'sparklinepageviewspersession', percent: '%', content:'「平均瀏覽頁數」(單次工作階段頁數)指每個工作階段的平均網頁瀏覽量，此數據包括單頁的重複瀏覽。(週從昨天往前推算7天，月為30天)'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageviewspersessionw', idm: 'labelpageviewspersessionm', title: '官網平均瀏覽頁數', data: @pageviews_per_session_week, rate: @pageviews_per_session_week_rate, linechart: 'sparklinepageviewspersession', percent: '%', content:'「平均瀏覽頁數」(單次工作階段頁數)指每個工作階段的平均網頁瀏覽量，此數據包括單頁的重複瀏覽。(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總平均、折線圖呈現每日平均變化)'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '%', content:'使用者在工作階段中平均停留的時間（以秒為單位）(週從昨天往前推算7天，月為28天)'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '%', content:'使用者在工作階段中平均停留的時間（以秒為單位）(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總平均、折線圖呈現每日平均變化)'} %>
     </div>
   </div>
    <div class="row">
@@ -18,7 +18,7 @@
       <%= render partial: "shared/barchartmonth6", locals: {id: 'labeluseragew', title: '官網使用者年齡分佈', linechartid: 'barChartuserage', content:'使用者的年齡層(月為昨天往前算28天)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw', idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量/所有工作階段瀏覽量。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw', idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量/所有工作階段瀏覽量。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
 
 
     </div>
@@ -28,7 +28,7 @@
   </div>
   <div class="row">
     <div class="col-lg-6">
-      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'透過廣告獲得流量的來源、媒介，了解使用者從哪些管道進入網站並搭配使用者未與網頁互動的跳出率更準確地看出使用者的實際使用情況。(週從昨天往前推算7天，月為28天)' } %>
+      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'透過廣告獲得流量的來源、媒介，了解使用者從哪些管道進入網站並搭配使用者未與網頁互動的跳出率更準確地看出使用者的實際使用情況。(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總、跳出率呈現加總平均)' } %>
     </div>
     <div class="col-lg-3">
       <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '官網使用者性別比例', linechartid: 'lineChartfansgender', period:'Month', height:310, content:'使用者的性別：男性、女性(月為昨天往前算28天)' } %>

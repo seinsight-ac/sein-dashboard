@@ -1,26 +1,26 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw',idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '%', content:'目前粉專讚數，折線圖為新增加的讚數，比例公式:( 這週(月)新讚數 - 上週(月)新讚數 ) / 上週(月)新讚數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw',idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '%', content:'目前粉專讚數，折線圖為新增加的讚數，比例公式:( 這週(月)新讚數 - 上週(月)新讚數 ) / 上週(月)新讚數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%', content:'這週(月)看見粉專的使用者數目，折線圖為每天的人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%', content:'這週(月)看見粉專的使用者數目，折線圖為每天的人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpostsusersw',idm: 'labelpostsusersm', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%', content:'這週(月)接觸到粉專貼文的使用者數目，折線圖為每天人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpostsusersw',idm: 'labelpostsusersm', title: '粉專貼文觸及人數', data: @posts_users_week, rate: @posts_users_week_rate, linechart: 'sparklinepostsusers', percent: '%', content:'這週(月)接觸到粉專貼文的使用者數目，折線圖為每天人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelnegativeusersw',idm: 'labelnegativeusersm', title: '粉專負面行動人數', data: @negative_users_week, rate: @negative_users_week_rate, linechart: 'sparklinenegativeusers', percent: '%', content:'這週(月)粉專中的負面行為(憤怒、退讚、檢舉等)使用者數目，折線圖為每天人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelnegativeusersw',idm: 'labelnegativeusersm', title: '粉專負面行動人數', data: @negative_users_week, rate: @negative_users_week_rate, linechart: 'sparklinenegativeusers', percent: '%', content:'這週(月)粉專中的負面行為(憤怒、退讚、檢舉等)使用者數目，折線圖為每天人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>
   </div>
 
   <div class="row">
 
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:213, content:'這週(月)粉絲與貼文互動（心情、留言、分享等）比例，互動率公式:日(週)互動人數 / 日(週)觸及人數。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:213, content:'這週(月)粉絲與貼文互動（心情、留言、分享等）比例，互動率公式:日(週)互動人數 / 日(週)觸及人數。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labellinkclicksw',idm: 'labellinkclicksm', title: '貼文點擊分析', linechartid: 'lineChartlinkclicks', height:213, content:'這週(月)貼文互動（心情、留言、分享等）數中連結點擊比例，互動率公式:日(週)連結點擊數 / 日(週)貼文互動觸數。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labellinkclicksw',idm: 'labellinkclicksm', title: '貼文點擊分析', linechartid: 'lineChartlinkclicks', height:213, content:'這週(月)貼文互動（心情、留言、分享等）數中連結點擊比例，互動率公式:日(週)連結點擊數 / 日(週)貼文互動觸數。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
       <%= render partial: "shared/top5", locals: {idw: 'labeltop5w',idm: 'labeltop5m', title: '最佳貼文', height:213, content:'' } %>
@@ -28,13 +28,13 @@
   </div>
   <div class="row">
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelfansaddsw',idm: 'labelfansaddsm', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds', height:213, content:'這週(月)粉專新增讚數與退讚數趨勢。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelfansaddsw',idm: 'labelfansaddsm', title: '粉專讚數趨勢', linechartid: 'lineChartfansadds', height:213, content:'這週(月)粉專新增讚數與退讚數趨勢。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '粉絲男女比例', linechartid: 'lineChartfansgender', period:'Lifetime', height:213, content:'目前粉絲性別組成。(自粉專成立至兩天前)' } %>
+      <%= render partial: "shared/doughnutschart", locals: {id: 'labelfansgender', title: '粉絲男女比例', linechartid: 'lineChartfansgender', period:'Lifetime', height:213, content:'目前粉絲性別組成。(自粉專成立至昨天)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/hbarchartlifetimeonly", locals: {id: 'labelfansage', title: '粉絲年齡分佈', linechartid: 'barChartfansage', content:'(目前粉絲年齡組成。自粉專成立至兩天前)' } %>
+      <%= render partial: "shared/hbarchartlifetimeonly", locals: {id: 'labelfansage', title: '粉絲年齡分佈', linechartid: 'barChartfansage', content:'目前粉絲年齡組成。（自粉專成立至昨天)' } %>
     </div>
 
   </div>
