@@ -91,10 +91,10 @@ class DashboardsController < ApplicationController
         data = @fb.size
         @ga = GaDb.where("date >= ? AND date <= ?", (@starttime.to_date + data % 7 - 7).strftime("%Y-%m-%d"), @endtime)
 
-        if data % 7 == 0
+        if (data % 7).zero?
           start = 6
         else
-          start = (data % 7) -1
+          start = (data % 7) - 1
         end
         (start).step(data, 7) { |i| 
           # 粉絲黏著度分析

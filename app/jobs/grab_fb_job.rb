@@ -115,7 +115,7 @@ class GrabFbJob < ApplicationJob
           puts "didn't have link click data"
         end
 
-        if !@gender[0].nil? && @gender[0]["values"].nil? && @gender[0]["values"][i].nil? && @gender[0]["values"][i]["end_time"].to_date == api_date
+        if !@gender[0].nil? && !@gender[0]["values"].nil? && !@gender[0]["values"][i].nil? && @gender[0]["values"][i]["end_time"].to_date == api_date
           fb.fans_female_day = @gender[0]["values"][i]["value"].values[0..6].inject(0, :+)
           fb.fans_male_day = @gender[0]["values"][i]["value"].values[7..13].inject(0, :+)
           fb.fans_13_17 = @gender[0]["values"][i]["value"].values[0, 7].inject(0, :+)
