@@ -374,30 +374,37 @@ class DashboardsController < ApplicationController
   end
 
   def exceldate
-    @starttime = params[:starttime].to_date
-    @endtime = params[:endtime].to_date
-    m = @endtime - @starttime
-    @last = @starttime - (m % 7)
+    unless params[:starttime].nil?
+      excel = ExcelDb.new
+      excel.start = params[:starttime]
+      excel.before = params[:endtime]
+      excel.save!
+    else
+      @starttime = ExcelDb.last.start.to_date
+      @endtime = ExcelDb.last.before.to_date
+      m = @endtime - @starttime
+      @last = @starttime - (m % 7)
 
-    fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
-    ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
-    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
+      ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
+      mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
 
-    # export to xls
-    export_xls = ExportXls.new
+      # export to xls
+      export_xls = ExportXls.new
 
-    export_xls.fb_xls(fb) unless fb.nil?
-    export_xls.ga_xls(ga) unless ga.nil?
-    export_xls.mailchimp_xls(mailchimp) unless mailchimp.nil?
-    export_xls.alexa_xls(AlexaDb.last)
-    export_xls.fb_post(@starttime, @endtime)
+      export_xls.fb_xls(fb) unless fb.nil?
+      export_xls.ga_xls(ga) unless ga.nil?
+      export_xls.mailchimp_xls(mailchimp) unless mailchimp.nil?
+      export_xls.alexa_xls(AlexaDb.last)
+      export_xls.fb_post(@starttime, @endtime)
 
-    respond_to do |format|
-      format.xls { 
-        send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
-      }
+      respond_to do |format|
+        format.xls { 
+          send_data(export_xls.export,
+          :type => "text/excel; charset=utf-8; header=present",
+          :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
+        }
+      end
     end
   end
 
