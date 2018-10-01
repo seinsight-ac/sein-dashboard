@@ -59,19 +59,30 @@ $('#exceldate').on('click', function () {
 	$.ajax({
 		url: '/dashboards/exceldate',
 		method: 'GET',
-		dataType: "json",
+		dataType: "text/xls",
 		data:{
-				starttime: $('#starttime').data('date'),
-				endtime: $('#endtime').data('date'),
-			},
-		success: function(data){
+			starttime: $('#starttime').data('date'),
+			endtime: $('#endtime').data('date'),
+		},
+		complete: function(data){ 
+			window.open('/dashboards/exceldate.xls','_blank');
 		}
 	});
 });
 
 $('#submitdate').on('click', function () {
 	event.preventDefault();
-	$('#exceldate').show();
+	var date_diff_indays = function(date1, date2) {
+		dt1 = new Date(date1);
+		dt2 = new Date(date2);
+		return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+	}
+	$('#exceldate').hide();
+	// let timeDiff = Math.abs($('#endtime').data('date').getTime() - $('#starttime').data('date').getTime());
+	// let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	if ( date_diff_indays($('#starttime').data('date'), $('#endtime').data('date')) > 6 ) {
+		$('#exceldate').show();
+	}
 	$.ajax({
 		url: '/dashboards',
 		method: 'POST',

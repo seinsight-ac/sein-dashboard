@@ -97,8 +97,8 @@ class DashboardsController < ApplicationController
           @fb_last_select << @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }[i]
 
           # 官網瀏覽活躍度分析
-          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i - 6 + data % 7..i].reduce(:+)
-          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i - 6 + data % 7..i].reduce(:+)
+          @all_users_views_last_select << @ga.pluck(:pageviews_day)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
+          @activeusers_views_last_select << @all_users_views_last_select.last - @ga.pluck(:single_session)[i + 1 - data % 7..i + data % 7 - 1].reduce(:+)
 
           # 日期
           @ga_last_select_date << @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }[i + data % 7]
@@ -109,12 +109,12 @@ class DashboardsController < ApplicationController
         @enagements_users_last_select = @fb.pluck(:enagements_users_day)
         
         # 貼文點擊分析
-        @post_enagements_last_select = @fb.pluck(:post_enagements_week)
-        @link_clicks_last_select = @fb.pluck(:link_clicks_week)
+        @post_enagements_last_select = @fb.pluck(:post_enagements_day)
+        @link_clicks_last_select = @fb.pluck(:link_clicks_day)
         
         # 粉專讚數趨勢
-        @fans_adds_last_select_week = @fb.pluck(:fans_adds_week)
-        @fans_losts_last_select = @fb.pluck(:fans_losts_week)
+        @fans_adds_last_select_week = @fb.pluck(:fans_adds_day)
+        @fans_losts_last_select = @fb.pluck(:fans_losts_day)
 
         # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
         @fb_last_select = @fb.pluck(:date).map { |a| (a - 1).strftime("%m%d").to_i }
@@ -250,14 +250,13 @@ class DashboardsController < ApplicationController
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
-    since_week = (Date.today << 1).strftime("%Y-%m-%d")
-    data_month = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
 
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
 
-    data_month.each do |d|
+    data.each do |d|
       date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
 
       unless d["message"].nil?
@@ -274,7 +273,7 @@ class DashboardsController < ApplicationController
 
         interact = like + comment * 3 + share * 5
 
-        if d["created_time"] >= since_week
+        if d["created_time"] >= (Date.today - 7).strftime("%Y-%m-%d")
           posts_week << [date, message, like, comment, share, interact]
         end
 
@@ -291,6 +290,7 @@ class DashboardsController < ApplicationController
 
       @month_top_posts = posts.first(5)
       @week_top_posts = posts_week.first(5)
+      puts @week_top_posts
     end
   end
 
@@ -362,7 +362,7 @@ class DashboardsController < ApplicationController
     export_xls.ga_xls(ga)
     export_xls.mailchimp_xls(mailchimp)
     export_xls.alexa_xls(AlexaDb.last)
-    export_xls.fb_post
+    export_xls.fb_post(@last, @end)
     
     respond_to do |format|
       format.xls { 
@@ -370,33 +370,41 @@ class DashboardsController < ApplicationController
         :type => "text/excel; charset=utf-8; header=present",
         :filename => "社企流#{(Date.today << 1).strftime("%m")[1]}月資料分析.xls")
       }
-      format.html
     end
   end
 
   def exceldate
-    @starttime = params[:starttime].to_date.strftime("%Y-%m-%d")
-    @endtime = params[:endtime].to_date.strftime("%Y-%m-%d")
+    unless params[:starttime].nil?
+      excel = ExcelDb.new
+      excel.start = params[:starttime]
+      excel.before = params[:endtime]
+      excel.save!
+    else
+      @starttime = ExcelDb.last.start.to_date
+      @endtime = ExcelDb.last.before.to_date
+      m = @endtime - @starttime
+      @last = @starttime - (m % 7)
 
-    @fb = FbDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-    @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-    @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
+      ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
+      mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
 
-    # export to xls
-    export_xls = ExportXls.new
+      # export to xls
+      export_xls = ExportXls.new
 
-    # export_xls.fb_xls(@fb)
-    # export_xls.ga_xls(@ga)
-    # export_xls.mailchimp_xls(@mailchimp) if @mailchimp != []
-    export_xls.alexa_xls(AlexaDb.last)
+      export_xls.fb_xls(fb) unless fb.nil?
+      export_xls.ga_xls(ga) unless ga.nil?
+      export_xls.mailchimp_xls(mailchimp) unless mailchimp.nil?
+      export_xls.alexa_xls(AlexaDb.last)
+      export_xls.fb_post(@starttime, @endtime)
 
-    respond_to do |format|
-      format.xls { 
-        send_data(export_xls.export,
-        :type => "text/excel; charset=utf-8; header=present",
-        :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
-      }
-      format.html
+      respond_to do |format|
+        format.xls { 
+          send_data(export_xls.export,
+          :type => "text/excel; charset=utf-8; header=present",
+          :filename => "#{@starttime}~#{@endtime}社企流資料分析.xls")
+        }
+      end
     end
   end
 
