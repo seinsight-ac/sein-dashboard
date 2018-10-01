@@ -13,125 +13,91 @@ FbDb.destroy_all
 
 def set_fb_db(fan, fan_add, page, post, enagement, negative, gender, fan_lost, post_enagement, link_click, i)
   while i < fan.length
+    api_date = fan[i]["end_time"].to_date
 
-    date = fan[i]["end_time"]
-    if fan_add[0]["values"][i]["end_time"] != date
-      puts "fan_add"
-      puts date
-      puts fan_add[0]["values"][i]["end_time"]
-      break
-    elsif fan_lost[0]["values"][i]["end_time"] != date 
-      puts "fan_lost"
-      puts date
-      puts fan_lost[0]["values"][i]["end_time"]
-      break
-    elsif page[0]["values"][i]["end_time"] != date 
-      puts "page"
-      puts date
-      puts page[0]["values"][i]["end_time"]
-      break
-    elsif post[0]["values"][i]["end_time"] != date 
-      puts "post"
-      puts date
-      puts post[0]["values"][i]["end_time"]
-      break
-    elsif enagement[0]["values"][i]["end_time"] != date 
-      puts "enagement"
-      puts date
-      puts enagement[0]["values"][i]["end_time"]
-      break
-    elsif negative[0]["values"][i]["end_time"] != date 
-      puts "negative"
-      puts date
-      puts negative[0]["values"][i]["end_time"]
-      break
-    elsif post_enagement[0]["values"][i]["end_time"] != date 
-      puts "fan_lost"
-      puts date
-      puts post_enagement[0]["values"][i]["end_time"]
-      break
-    elsif link_click[0]["values"][i]["end_time"] != date 
-      puts "link_click"
-      puts date
-      puts link_click[0]["values"][i]["end_time"]
-      break
-    elsif gender[i].nil?
-      FbDb.create(
-        date: fan[i]["end_time"],
-        fans: fan[i]["value"],
-        fans_adds_day: fan_add[0]["values"][i]["value"],
-        fans_losts_day: fan_lost[0]["values"][i]["value"],
-        page_users_day: page[0]["values"][i]["value"],
-        posts_users_day: post[0]["values"][i]["value"],
-        fans_adds_week: fan_add[1]["values"][i]["value"],
-        fans_losts_week: fan_lost[1]["values"][i]["value"],
-        page_users_week: page[1]["values"][i]["value"],
-        posts_users_week: post[1]["values"][i]["value"],
-        fans_adds_month: fan_add[2]["values"][i]["value"],
-        fans_losts_month: fan_lost[2]["values"][i]["value"],
-        page_users_month: page[2]["values"][i]["value"],
-        posts_users_month: post[2]["values"][i]["value"],
-        post_enagements_day: post_enagement[0]["values"][i]["value"],
-        negative_users_day: negative[0]["values"][i]["value"],
-        post_enagements_week: post_enagement[1]["values"][i]["value"],
-        negative_users_week: negative[1]["values"][i]["value"],
-        post_enagements_month: post_enagement[2]["values"][i]["value"],
-        negative_users_month: negative[2]["values"][i]["value"],
-        link_clicks_day: link_click[0]["values"][i]["value"]["link clicks"],
-        link_clicks_week: link_click[1]["values"][i]["value"]["link clicks"],
-        link_clicks_month: link_click[2]["values"][i]["value"]["link clicks"],
-        enagements_users_day: enagement[0]["values"][i]["value"],
-        enagements_users_week: enagement[1]["values"][i]["value"],
-        enagements_users_month: enagement[2]["values"][i]["value"]
-        )
-      i += 1
-    elsif gender[i]["end_time"] != date
-      puts "gender"
-      puts date
-      puts gender[i]["end_time"]
-      break
-    else
-      FbDb.create(
-        date: fan[i]["end_time"],
-        fans: fan[i]["value"],
-        fans_adds_day: fan_add[0]["values"][i]["value"],
-        fans_losts_day: fan_lost[0]["values"][i]["value"],
-        page_users_day: page[0]["values"][i]["value"],
-        posts_users_day: post[0]["values"][i]["value"],
-        fans_adds_week: fan_add[1]["values"][i]["value"],
-        fans_losts_week: fan_lost[1]["values"][i]["value"],
-        page_users_week: page[1]["values"][i]["value"],
-        posts_users_week: post[1]["values"][i]["value"],
-        fans_adds_month: fan_add[2]["values"][i]["value"],
-        fans_losts_month: fan_lost[2]["values"][i]["value"],
-        page_users_month: page[2]["values"][i]["value"],
-        posts_users_month: post[2]["values"][i]["value"],
-        post_enagements_day: post_enagement[0]["values"][i]["value"],
-        negative_users_day: negative[0]["values"][i]["value"],
-        post_enagements_week: post_enagement[1]["values"][i]["value"],
-        negative_users_week: negative[1]["values"][i]["value"],
-        post_enagements_month: post_enagement[2]["values"][i]["value"],
-        negative_users_month: negative[2]["values"][i]["value"],
-        link_clicks_day: link_click[0]["values"][i]["value"]["link clicks"],
-        link_clicks_week: link_click[1]["values"][i]["value"]["link clicks"],
-        link_clicks_month: link_click[2]["values"][i]["value"]["link clicks"],
-        fans_female_day: gender[i]["value"].values[0..6].inject(0, :+),
-        fans_male_day: gender[i]["value"].values[7..13].inject(0, :+),
-        fans_13_17: gender[i]["value"].values[0, 7].inject(0, :+),
-        fans_18_24: gender[i]["value"].values[1, 8].inject(0, :+),
-        fans_25_34: gender[i]["value"].values[2, 9].inject(0, :+),
-        fans_35_44: gender[i]["value"].values[3, 10].inject(0, :+),
-        fans_45_54: gender[i]["value"].values[4, 11].inject(0, :+),
-        fans_55_64: gender[i]["value"].values[5, 12].inject(0, :+),
-        fans_65: gender[i]["value"].values[6, 13].inject(0, :+),
-        enagements_users_day: enagement[0]["values"][i]["value"],
-        enagements_users_week: enagement[1]["values"][i]["value"],
-        enagements_users_month: enagement[2]["values"][i]["value"]
-        )
+    fb = FbDb.new
+    fb.date = api_date
+    fb.fans = fan[i]["value"]
+
+    if !fan_add[0]["values"][i].nil? && fan_add[0]["values"][i]["end_time"].to_date == api_date
+      fb.fans_adds_day = fan_add[0]["values"][i]["value"]
+      fb.fans_adds_week = fan_add[1]["values"][i]["value"]
+      fb.fans_adds_month = fan_add[2]["values"][i]["value"]
+    else 
+      puts "didn't have fan_add date"
     end
 
-    i += 1
+    if !fan_lost[0]["values"][i].nil? && fan_lost[0]["values"][i]["end_time"].to_date == api_date
+      fb.fans_losts_day = fan_lost[0]["values"][i]["value"]
+      fb.fans_losts_week = fan_lost[1]["values"][i]["value"]
+      fb.fans_losts_month = fan_lost[2]["values"][i]["value"]
+    else 
+      puts "didn't have fans_lost data"
+    end
 
+    if !page[0]["values"][i].nil? && page[0]["values"][i]["end_time"].to_date == api_date
+      fb.page_users_day = page[0]["values"][i]["value"]
+      fb.page_users_week = page[1]["values"][i]["value"]
+      fb.page_users_month = page[2]["values"][i]["value"]
+    else
+      puts "didn't have page data"
+    end
+
+    if !post[0]["values"][i].nil? && post[0]["values"][i]["end_time"].to_date == api_date
+      fb.posts_users_day = post[0]["values"][i]["value"]
+      fb.posts_users_week = post[1]["values"][i]["value"]
+      fb.posts_users_month = post[2]["values"][i]["value"]
+    else
+      puts "didn't have post data"
+    end
+
+    if !post_enagement[0]["values"][i].nil? && post_enagement[0]["values"][i]["end_time"].to_date == api_date
+      fb.post_enagements_day = post_enagement[0]["values"][i]["value"]
+      fb.post_enagements_week = post_enagement[1]["values"][i]["value"]
+      fb.post_enagements_month = post_enagement[2]["values"][i]["value"]
+    else
+      puts "didn't have post_enagement data"
+    end
+
+    if !negative[0]["values"][i].nil? && negative[0]["values"][i]["end_time"].to_date == api_date
+      fb.negative_users_day = negative[0]["values"][i]["value"]
+      fb.negative_users_week = negative[1]["values"][i]["value"]
+      fb.negative_users_month = negative[2]["values"][i]["value"]
+    else
+      puts "didn't have negative data"
+    end
+
+    if !link_click[0]["values"][i].nil? && link_click[0]["values"][i]["end_time"].to_date == api_date
+      fb.link_clicks_day = link_click[0]["values"][i]["value"]["link clicks"]
+      fb.link_clicks_week = link_click[1]["values"][i]["value"]["link clicks"]
+      fb.link_clicks_month = link_click[2]["values"][i]["value"]["link clicks"]
+    else
+      puts "didn't have link click data"
+    end
+
+    if !gender.nil? && !gender[0]["values"].nil? && !gender[0]["values"][i].nil? && gender[0]["values"][i]["end_time"].to_date == api_date
+      fb.fans_female_day = gender[0]["values"][i]["value"].values[0..6].inject(0, :+)
+      fb.fans_male_day = gender[0]["values"][i]["value"].values[7..13].inject(0, :+)
+      fb.fans_13_17 = gender[0]["values"][i]["value"].values[0, 7].inject(0, :+)
+      fb.fans_18_24 = gender[0]["values"][i]["value"].values[1, 8].inject(0, :+)
+      fb.fans_25_34 = gender[0]["values"][i]["value"].values[2, 9].inject(0, :+)
+      fb.fans_35_44 = gender[0]["values"][i]["value"].values[3, 10].inject(0, :+)
+      fb.fans_45_54 = gender[0]["values"][i]["value"].values[4, 11].inject(0, :+)
+      fb.fans_55_64 = gender[0]["values"][i]["value"].values[5, 12].inject(0, :+)
+      fb.fans_65 = gender[0]["values"][i]["value"].values[6, 13].inject(0, :+)
+    else
+      puts "didn't have gender data"
+    end
+
+    if !enagement[0]["values"][i].nil? && enagement[0]["values"][i]["end_time"].to_date == api_date
+      fb.enagements_users_day = enagement[0]["values"][i]["value"]
+      fb.enagements_users_week = enagement[1]["values"][i]["value"]
+      fb.enagements_users_month = enagement[2]["values"][i]["value"]
+    else
+      puts "didn't have enagements data"
+    end
+    fb.save!
+    i += 1
   end
 end
 
@@ -154,7 +120,7 @@ page = get_year_data("page_impressions_unique")
 post = get_year_data("page_posts_impressions_unique")
 enagement = get_year_data("page_engaged_users")
 negative = get_year_data("page_negative_feedback_unique")
-gender = get_year_data("page_fans_gender_age").first.first.second
+gender = get_year_data("page_fans_gender_age")
 post_enagement = get_year_data("page_post_engagements")
 link_click = get_year_data("page_consumptions_by_consumption_type")
 
@@ -169,7 +135,7 @@ enagement = get_3_days_data("page_engaged_users")
 negative = get_3_days_data("page_negative_feedback_unique")
 post_enagement = get_3_days_data("page_post_engagements")
 link_click = get_3_days_data("page_consumptions_by_consumption_type")
-gender = get_3_days_data("page_fans_gender_age").first.first.second
+gender = get_3_days_data("page_fans_gender_age")
 
 i = 0
 
@@ -197,173 +163,147 @@ def set_ga_db(user, user_7, user_30, session_pageview,
   while i < user.size
     date = user[i]["dimensions"][0]
 
-    if user_7[i]["dimensions"][0] != date
-      puts "user_7"
-      puts date
-      puts user_7[i]["dimensions"][0]
-      break
-    elsif session_pageview[i]["dimensions"][0] != date
-      puts "session pageview"
-      puts date
-      puts session_pageview[i]["dimensions"][0]
-      break
-    elsif bounce[i]["dimensions"][0] != date
-      puts "bounce"
-      puts date
-      puts bounce[i]["dimensions"][0]
-      break
-    elsif pageview[i]["dimensions"][0] != date
-      puts "pageview"
-      puts date
-      puts pageview[i]["dimensions"][0]
-      break
-    elsif session[i]["dimensions"][0] != date
-      puts "session"
-      puts date
-      puts session[i]["dimensions"][0]
-      break
-    elsif channel[c]["dimensions"][0] != date
-      puts "channel"
-      puts date
-      puts channel[c]["dimensions"][0]
-      break
-    elsif bracket[e]["dimensions"][0] != date
-      puts "bracket"
-      puts date
-      puts bracket[e]["dimensions"][0]
-      break
-    elsif avg_session[i]["dimensions"][0] != date
-      puts "avg_session"
-      puts date
-      puts avg_session[i]["dimensions"][0]
-      break
-    elsif avg_time_page[i]["dimensions"][0] != date
-      puts "avg_time_page"
-      puts date
-      puts avg_time_page[i]["dimensions"][0]
-      break
-    elsif page_per_session[i]["dimensions"][0] != date
-      puts "page_per_session"
-      puts date
-      puts page_per_session[i]["dimensions"][0]
-      break
-    elsif single[i]["dimensions"][1] != date
-      puts "page_per_session"
-      puts date
-      puts page_per_session[i]["dimensions"][0]
-      break
-    elsif gender[d]["dimensions"][0] != date
-      puts "gender"
-      puts date
-      puts gender[d]["dimensions"][0]
-      break
-    elsif user_type[d]["dimensions"][0] != date
-      puts "user_typ"
-      puts date
-      puts user_typ[d]["dimensions"][0]
-      break
-    elsif device[b]["dimensions"][0] != date
-      puts "device"
-      puts date
-      puts device[b]["dimensions"][0]
-      break
-    else
-      GaDb.create(
-      date: user[i]["dimensions"][0],
-      web_users_day: user[i]["metrics"][0]["values"][0].to_f,
-      web_users_week: user_7[i]["metrics"][0]["values"][0].to_f,
-      web_users_month: user_30[i]["metrics"][0]["values"][0].to_f,
-      session_pageviews_day: session_pageview[i]["metrics"][0]["values"][0].to_f,
-      sessions_day: session[i]["metrics"][0]["values"][0].to_f,
-      bouce_rate_day: bounce[i]["metrics"][0]["values"][0].to_f,
-      pageviews_day: pageview[i]["metrics"][0]["values"][0].to_f,
-      avg_session_duration_day: avg_session[i]["metrics"][0]["values"][0].to_f,
-      avg_time_on_page_day: avg_time_page[i]["metrics"][0]["values"][0].to_f,
-      pageviews_per_session_day: page_per_session[i]["metrics"][0]["values"][0].to_f,
-      desktop_user: device[b]["metrics"][0]["values"][0].to_f,
-      mobile_user: device[b + 1]["metrics"][0]["values"][0].to_f,
-      tablet_user: device[b + 2]["metrics"][0]["values"][0].to_f,
-      new_visitor: user_type[d]["metrics"][0]["values"][0].to_f,
-      return_visitor: user_type[d + 1]["metrics"][0]["values"][0].to_f,
-      female_user: gender[d]["metrics"][0]["values"][0].to_f,
-      male_user: gender[d + 1]["metrics"][0]["values"][0].to_f,
-      user_18_24: bracket[e]["metrics"][0]["values"][0].to_f,
-      user_25_34: bracket[e + 1]["metrics"][0]["values"][0].to_f,
-      user_35_44: bracket[e + 2]["metrics"][0]["values"][0].to_f,
-      user_45_54: bracket[e + 3]["metrics"][0]["values"][0].to_f,
-      user_55_64: bracket[e + 4]["metrics"][0]["values"][0].to_f,
-      user_65: bracket[e + 5]["metrics"][0]["values"][0].to_f,
-      direct_user_day: 
-      if channel[c]["dimensions"][1] == "Direct" 
-        t = c
-        c += 1
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      elsif channel[c]["dimensions"][1] == "(Other)"
-        t = c + 1
-        c += 2
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      end,
-      direct_bounce: 
-      if channel[t]["dimensions"][1] == "Direct" 
-        channel[t]["metrics"][0]["values"][1].to_f
-      end,
-      email_user_day: 
-      if channel[c]["dimensions"][1] == "Email" 
-        t = c
-        c += 1
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      elsif channel[c]["dimensions"][1] == "Display"
-        c += 1
-        if channel[c]["dimensions"][1] == "Email" 
-          t = c
-          c += 1
-          channel[c - 1]["metrics"][0]["values"][0].to_f
-        end
-      end,
-      email_bounce: 
-      if channel[t]["dimensions"][1] == "Email" 
-        channel[t]["metrics"][0]["values"][1].to_f
-      end,
-      oganic_search_day: 
-      if channel[c]["dimensions"][1] == "Organic Search" 
-        t = c
-        c += 1
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      end,
-      oganic_search_bounce: 
-      if channel[t]["dimensions"][1] == "Organic Search" 
-        channel[t]["metrics"][0]["values"][1].to_f
-      end,
-      referral_user_day: 
-      if channel[c]["dimensions"][1] == "Referral" 
-        t = c
-        c += 1
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      end,
-      referral_bounce: 
-      if channel[t]["dimensions"][1] == "Referral" 
-        channel[t]["metrics"][0]["values"][1].to_f
-      end,
-      social_user_day:
-      if channel[c]["dimensions"][1] == "Social" 
-        t = c
-        c += 1
-        channel[c - 1]["metrics"][0]["values"][0].to_f
-      end,
-      social_bounce: 
-      if channel[t]["dimensions"][1] == "Social" 
-        channel[t]["metrics"][0]["values"][1].to_f
-      end,
+    ga = GaDb.new
+    ga.date = user[i]["dimensions"][0]
+    ga.web_users_day = user[i]["metrics"][0]["values"][0].to_f
 
-      single_session: single[i]["metrics"][0]["values"][0].to_f
-      )
+    if !user_7.nil? && user_7[i]["dimensions"][0] == date
+      ga.web_users_week = user_7[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have user_7 data"
     end
 
-    i += 1
+    if !user_30.nil? && user_30[i]["dimensions"][0] == date
+      ga.web_users_month = user_30[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have user_30 data"
+    end
+
+    if !session_pageview.nil? && session_pageview[i]["dimensions"][0] == date
+      ga.session_pageviews_day = session_pageview[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have session_pageview data"
+    end
+
+    if !session.nil? && session[i]["dimensions"][0] == date
+      ga.sessions_day = session[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have sessions_day data"
+    end
+
+    if !bounce.nil? && bounce[i]["dimensions"][0] == date
+      ga.bouce_rate_day = bounce[i]["metrics"][0]["values"][0].to_f
+    else 
+      puts "didn't have bounce data"
+    end
+
+    if !pageview.nil? && pageview[i]["dimensions"][0] == date
+      ga.pageviews_day = pageview[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have pageviews day"
+    end
+
+    if !avg_session.nil? && avg_session[i]["dimensions"][0] == date
+      ga.avg_session_duration_day = avg_session[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have avg_session data"
+    end
+
+    if !avg_time_page.nil? && avg_time_page[i]["dimensions"][0] == date
+      ga.avg_time_on_page_day = avg_time_page[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have avg_time data"
+    end
+
+    if !page_per_session.nil? && page_per_session[i]["dimensions"][0] == date
+      ga.pageviews_per_session_day = page_per_session[i]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have page_per data"
+    end
+
+    if !device.nil? && device[b]["dimensions"][0] == date
+      ga.desktop_user = device[b]["metrics"][0]["values"][0].to_f
+      ga.mobile_user = device[b]["metrics"][0]["values"][0].to_f
+      ga.tablet_user = device[b + 2]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have device data"
+    end
+
+    if !user_type.nil? && user_type[d]["dimensions"][0] == date
+      ga.new_visitor = user_type[d]["metrics"][0]["values"][0].to_f
+      ga.return_visitor = user_type[d + 1]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have user_type data"
+    end
+
+    if !gender.nil? && gender[d]["dimensions"][0] == date
+      ga.female_user = gender[d]["metrics"][0]["values"][0].to_f
+      ga.male_user = gender[d + 1]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have gender data"
+    end
+
+    if !bracket.nil? && bracket[e]["dimensions"][0] == date
+      ga.user_18_24 = bracket[e]["metrics"][0]["values"][0].to_f
+      ga.user_25_34 = bracket[e + 1]["metrics"][0]["values"][0].to_f
+      ga.user_35_44 = bracket[e + 2]["metrics"][0]["values"][0].to_f
+      ga.user_45_54 = bracket[e + 3]["metrics"][0]["values"][0].to_f
+      ga.user_55_64 = bracket[e + 4]["metrics"][0]["values"][0].to_f
+      ga.user_65 = bracket[e + 5]["metrics"][0]["values"][0].to_f
+    else
+      puts "didn't have bracket data"
+    end
+
+    if channel[c]["dimensions"][1] == "Direct" 
+      ga.direct_user_day = channel[c]["metrics"][0]["values"][0].to_f
+      ga.direct_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    elsif channel[c]["dimensions"][1] == "(Other)"
+      c += 1
+      ga.direct_user_day = channel[c]["metrics"][0]["values"][0].to_f
+      ga.direct_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    end
+
+    if channel[c]["dimensions"][1] == "Email" 
+      ga.email_user_day = channel[c]["metrics"][0]["values"][0].to_f 
+      ga.email_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    elsif channel[c]["dimensions"][1] == "Display"
+      c += 1
+      if channel[c]["dimensions"][1] == "Email" 
+        ga.email_user_day = channel[c]["metrics"][0]["values"][0].to_f 
+        ga.email_bounce = channel[c]["metrics"][0]["values"][1].to_f
+        c += 1
+      end
+    end
+        
+    if channel[c]["dimensions"][1] == "Organic Search"
+      ga.oganic_search_day = channel[c]["metrics"][0]["values"][0].to_f
+      ga.oganic_search_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    end
+
+    if channel[c]["dimensions"][1] == "Referral"
+      ga.referral_user_day = channel[c]["metrics"][0]["values"][0].to_f
+      ga.referral_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    end
+
+    if channel[c]["dimensions"][1] == "Social" 
+      ga.social_user_day = channel[c]["metrics"][0]["values"][0].to_f
+      ga.social_bounce = channel[c]["metrics"][0]["values"][1].to_f
+      c += 1
+    end
+
+    ga.single_session = single[i]["metrics"][0]["values"][0].to_f
+    ga.save!
+
     b += 3
     e += 6
     d += 2
     c += 1
+    i += 1
 
   end
 end
