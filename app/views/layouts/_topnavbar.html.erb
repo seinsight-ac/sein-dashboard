@@ -32,25 +32,32 @@
 // 隱藏下載按鈕
 $('#exceldate').hide();
 
-// 設定時間
-var utc = new Date();
-utc.setDate(utc.getDate() - 1);
-utc = utc.toJSON().slice(0,10).replace(/-/g,'/');
+// 設定時間並且不能選擇當天
+var utcstart = new Date();
+utcstart.setDate(utcstart.getDate() - 2);
+utcstart = utcstart.toJSON().slice(0,10).replace(/-/g,'/');
+
+var utcend = new Date();
+utcend.setDate(utcend.getDate() - 1);
+utcend = utcend.toJSON().slice(0,10).replace(/-/g,'/');
 
 $('#starttime').datetimepicker({
 	format: 'YYYY/MM/DD',
 	minDate: '2017/09/23',
-	maxDate: String(utc)
+	maxDate: String(utcstart)
 });
 
 $('#endtime').datetimepicker({
 	format: 'YYYY/MM/DD',
-	minDate: String(utc),
-	maxDate: String(utc)
+	minDate: String(utcend),
+	maxDate: String(utcend)
 });
 
-$('#starttime').on("dp.change", function(e) {
-	$('#endtime').data("DateTimePicker").minDate(e.date);
+// 不能選擇當天
+$('#starttime').blur( () => {
+	var a = new Date($('#starttime').data('date')); 
+	a.setDate(a.getDate() + 1);
+	$('#endtime').data("DateTimePicker").minDate(a);
 })
 
 $('#exceldate').on('click', function () {
