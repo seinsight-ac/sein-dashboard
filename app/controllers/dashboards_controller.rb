@@ -233,7 +233,7 @@ class DashboardsController < ApplicationController
     # 貼文互動總數
     @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
     @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
-
+    
     # 連結點擊數
     @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
     @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
