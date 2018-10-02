@@ -60,15 +60,15 @@ class ExportXls
       @sheet1[3, c] = data[i + 6].fans_adds_week
       @sheet1[4, c] = data[i + 6].fans_losts_week
       @sheet1[5, c] = data[i + 6].page_users_week
-      @sheet1[8, c] = data[i + 6].posts_users_week
-      @sheet1[9, c] = data[i + 6].post_enagements_week
+      @sheet1[8, c] = data[i + 6].post_enagements_week
+      @sheet1[9, c] = data[i + 6].enagements_users_week
       @sheet1[7, c] = data[i + 6].negative_users_week
       @sheet1[11, c] = data[i + 6].link_clicks_week
       @sheet1[6, c] = data[i + 6].posts_users_week
       @sheet1.row(10).set_format(c, percent)
       @sheet1[10, c] = data[i + 6].enagements_users_week / data[i + 6].posts_users_week.to_f
       @sheet1.row(12).set_format(c, percent)
-      @sheet1[12, c] = data[i + 6].enagements_users_week / data[i + 6].link_clicks_week.to_f
+      @sheet1[12, c] = data[i + 6].link_clicks_week / data[i + 6].enagements_users_week.to_f
       @sheet3.column(c).width = 20
 
       i  += 7
