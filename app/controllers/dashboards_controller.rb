@@ -255,14 +255,15 @@ class DashboardsController < ApplicationController
     @fans_male_day = FbDb.last(3).first.fans_male_day
     # 粉絲年齡分佈
     @fans_age = []
-    @fans_age << FbDb.last(3).first.fans_13_17
-    @fans_age << FbDb.last(3).first.fans_18_24
-    @fans_age << FbDb.last(3).first.fans_25_34
-    @fans_age << FbDb.last(3).first.fans_35_44
-    @fans_age << FbDb.last(3).first.fans_45_54
-    @fans_age << FbDb.last(3).first.fans_55_64
-    @fans_age << FbDb.last(3).first.fans_65
-
+    
+    @fans_age << FbDb.last(3).first.fans_13_17 if FbDb.last(2).first.fans_13_17.nil?
+    @fans_age << FbDb.last(3).first.fans_18_24 if FbDb.last(2).first.fans_18_24.nil?
+    @fans_age << FbDb.last(3).first.fans_25_34 if FbDb.last(2).first.fans_25_34.nil?
+    @fans_age << FbDb.last(3).first.fans_35_44 if FbDb.last(2).first.fans_35_44.nil?
+    @fans_age << FbDb.last(3).first.fans_45_54 if FbDb.last(2).first.fans_45_54.nil?
+    @fans_age << FbDb.last(3).first.fans_55_64 if FbDb.last(2).first.fans_55_64.nil?
+    @fans_age << FbDb.last(3).first.fans_65 if FbDb.last(2).first.fans_65.nil?
+   
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
     data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
