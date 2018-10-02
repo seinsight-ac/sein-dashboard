@@ -251,23 +251,21 @@ class DashboardsController < ApplicationController
     @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
     
     # 粉絲男女比例
-    @fans_female_day = FbDb.last(2).first.fans_female_day
-    @fans_male_day = FbDb.last(2).first.fans_male_day
-
+    @fans_female_day = FbDb.last(3).first.fans_female_day
+    @fans_male_day = FbDb.last(3).first.fans_male_day
     # 粉絲年齡分佈
     @fans_age = []
-    @fans_age << FbDb.last(2).first.fans_13_17
-    @fans_age << FbDb.last(2).first.fans_18_24
-    @fans_age << FbDb.last(2).first.fans_25_34
-    @fans_age << FbDb.last(2).first.fans_35_44
-    @fans_age << FbDb.last(2).first.fans_45_54
-    @fans_age << FbDb.last(2).first.fans_55_64
-    @fans_age << FbDb.last(2).first.fans_65
+    @fans_age << FbDb.last(3).first.fans_13_17
+    @fans_age << FbDb.last(3).first.fans_18_24
+    @fans_age << FbDb.last(3).first.fans_25_34
+    @fans_age << FbDb.last(3).first.fans_35_44
+    @fans_age << FbDb.last(3).first.fans_45_54
+    @fans_age << FbDb.last(3).first.fans_55_64
+    @fans_age << FbDb.last(3).first.fans_65
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
     data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
-
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
