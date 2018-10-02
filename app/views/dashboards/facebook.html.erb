@@ -23,7 +23,7 @@
       <%= render partial: "shared/linechart", locals: {idw: 'labellinkclicksw',idm: 'labellinkclicksm', title: '貼文點擊分析', linechartid: 'lineChartlinkclicks', height:213, content:'這週(月)貼文互動（心情、留言、分享等）數中連結點擊比例，互動率公式:日(週)連結點擊數 / 日(週)貼文互動觸數。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/top5", locals: {idw: 'labeltop5w',idm: 'labeltop5m', title: '最佳貼文', height:213, content:'' } %>
+      <%= render partial: "shared/top5", locals: {idw: 'labeltop5w',idm: 'labeltop5m', title: '最佳貼文', height:213, content:'依讚數、留言數、分享數做加權綜合分析，權重各為1、3、5，依此評分模式排出Top5的最佳貼文(週為昨天往前算7天，月為28天，使用篩選功能則依篩選期間變化)' } %>
     </div>
   </div>
   <div class="row">
