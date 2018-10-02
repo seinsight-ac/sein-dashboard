@@ -265,7 +265,7 @@ class DashboardsController < ApplicationController
 
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
-    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
@@ -274,7 +274,7 @@ class DashboardsController < ApplicationController
       date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
 
       unless d["message"].nil?
-        like = d["likes"]["summary"]["total_count"]
+        like = d["reactions"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
         share = 0 if d["shares"].nil?
