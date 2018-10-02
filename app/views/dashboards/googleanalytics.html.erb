@@ -13,17 +13,15 @@
       <%= render partial: "shared/tab", locals: {idw: 'labelavgsessiondurationw', idm: 'labelavgsessiondurationm', title: '官網平均停留時間', data: @avg_session_duration_week, rate: @avg_session_duration_week_rate, linechart: 'sparklineavgsessionduration', percent: '%', content:'使用者在工作階段中平均停留的時間（以秒為單位）(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總平均、折線圖呈現每日平均變化)'} %>
     </div>
   </div>
-   <div class="row">
-    <div class="col-lg-4">
-      <%= render partial: "shared/barchartmonth6", locals: {id: 'labeluseragew', title: '官網使用者年齡分佈', linechartid: 'barChartuserage', content:'使用者的年齡層(月為昨天往前算28天)' } %>
-    </div>
+  <div class="row">
     <div class="col-lg-4">
       <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw', idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量/所有工作階段瀏覽量。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
-
-
     </div>
     <div class="col-lg-4">
       <%= render partial: "shared/polarchart", locals: {id: 'labeldevice', title: '官網使用者裝置分析', linechartid: 'lineChartdevice', content:'使用者使用的設備類型：桌機、行動裝置、平板(月為昨天往前算28天)' } %>
+    </div>
+        <div class="col-lg-4">
+      <%= render partial: "shared/barchartmonth6", locals: {id: 'labeluseragew', title: '官網使用者年齡分佈', linechartid: 'barChartuserage', content:'使用者的年齡層(月為昨天往前算28天)' } %>
     </div>
   </div>
   <div class="row">
