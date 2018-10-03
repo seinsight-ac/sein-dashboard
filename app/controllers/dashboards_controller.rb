@@ -66,6 +66,39 @@ class DashboardsController < ApplicationController
       @avg_session_duration_last_select = @ga.pluck(:avg_session_duration_day).flat_map { |i| i.round(2) }
       @avg_session_duration_week_rate = convert_percentrate(@avg_session_duration_select, @ga.first.avg_session_duration_day)
 
+      graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
+      data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares, insights.metric(post_clicks_by_type_unique)&since=#{@starttime}&until=#{@endtime}&limit=100")
+      # [created_time, message, like, comment, share, interact]
+      posts = []
+
+      data.each do |d|
+        date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
+
+        unless d["message"].nil?
+          like = d["reactions"]["summary"]["total_count"]
+          comment = d["comments"]["summary"]["total_count"]
+          share = d["shares"]["count"] unless d["shares"].nil?
+          share = 0 if d["shares"].nil?
+          link_click = d["insights"]["data"][0]["values"][0]["value"]["link clicks"]
+
+          if d["message"].split("【").second.nil?
+            message = d["message"][0..20]
+          else
+            message = d["message"].split("】").first.split("【").second.split("💡").second
+          end
+
+          interact = like + comment * 3 + share * 5 + link_click * 10
+
+          posts << [date, message, interact]
+        end
+      end
+
+      posts.sort_by! { |item|
+        -item[2]
+      }
+
+      @select_top_posts = posts.first(5)
+
       if (@endtime.to_date - @starttime.to_date) > 20
         @posts_users_last_select = []
         @enagements_users_last_select = []
