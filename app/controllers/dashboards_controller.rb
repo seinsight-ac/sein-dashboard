@@ -96,8 +96,8 @@ class DashboardsController < ApplicationController
           @link_clicks_last_select << @fb.pluck(:link_clicks_week)[i]
           
           # 粉專讚數趨勢
-          @fans_adds_last_select_week << @fb.pluck(:fans_adds_week)
-          @fans_losts_last_select << @fb.pluck(:fans_losts_week)
+          @fans_adds_last_select_week << @fb.pluck(:fans_adds_week)[i]
+          @fans_losts_last_select << @fb.pluck(:fans_losts_week)[i]
 
           # 日期(fb的日期為到期日的早上七點 所以減一才是那天的值)
           @fb_last_select << @fb.pluck(:date).map { |a| (a.to_date - 1).strftime("%m%d").to_i }[i]
