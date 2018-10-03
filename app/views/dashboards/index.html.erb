@@ -1,27 +1,27 @@
 <div class="wrapper wrapper-content">
   <div class="row">
     <div class="col-lg-3"> 
-      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw',idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '%', content:'目前粉專讚數，折線圖為新增加的讚數，比例公式:( 這週(月)新讚數 - 上週(月)新讚數 ) / 上週(月)新讚數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpagefansw',idm: 'labelpagefansm', title: '粉絲專頁讚數', data: @fans, rate: @fans_adds_week_rate, linechart: 'sparklinefansadds', percent: '%', content:'目前粉專讚數，折線圖為新增加的讚數，比例公式:( 這週(月)新讚數 - 上週(月)新讚數 ) / 上週(月)新讚數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%', content:'這週(月)看見粉專的使用者數目，折線圖為每天的人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天)' } %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelpageusersw',idm: 'labelpageusersm', title: '粉專曝光使用者', data: @page_users_week, rate: @page_users_week_rate, linechart: 'sparklinepageusers', percent: '%', content:'這週(月)看見粉專的使用者數目，折線圖為每天的人數，比例公式:( 這週(月)人數 - 上週(月)人數 ) / 上週(月)人數 。(週為昨天往前算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)' } %>
     </div>    
     <div class="col-lg-3">
-      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為一定期間的不重複訪客總數(週從昨天往前推算7天，月為28天)'} %>
+      <%= render partial: "shared/tab", locals: {idw: 'labelwebusersw', idm: 'labelwebusersm', title: '官網使用者', data: @web_users_week, rate: @web_users_week_rate, linechart: 'sparklinewebusers', percent: '%', content:'使用者為一定期間的不重複訪客總數(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總、折線圖呈現每日變化)'} %>
     </div>
     <div class="col-lg-3">
-      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '%', content:'當月訂閱電子報的人數。(月為昨天往前算28天，折線圖呈現前4周的人數增減變化)'} %>
+      <%= render partial: "shared/tabmonthonly", locals: {id: 'labelmailusers', title: '電子報訂閱數', data: @mail_users, rate: @mail_users_month_rate, linechart: 'sparklinemailusers', percent: '%', content:'當月訂閱電子報的人數。(月為昨天往前算28天，折線圖呈現前4周的人數增減變化，使用篩選功能線圖呈現每周變化)'} %>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:213, content:'這週(月)粉絲與貼文互動（心情、留言、分享等）比例，互動率公式:日(週)互動人數 / 日(週)觸及人數。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelfansretentionw',idm: 'labelfansretentionm', title: '粉絲黏著度分析', linechartid: 'lineChartfansretention', height:213, content:'這週(月)粉絲與貼文互動（心情、留言、分享等）比例，互動率公式:日(週)互動人數 / 日(週)觸及人數。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量/所有工作階段瀏覽量。(週為昨天往前算7天，月為前4周)' } %>
+      <%= render partial: "shared/linechart", locals: {idw: 'labelwebactivityw',idm: 'labelwebactivitym', title: '官網瀏覽活躍度分析', linechartid: 'lineChartwebactivity', height:213, content:'活躍度為觀察使用者使用網站的積極程度。由多工作階段瀏覽量/所有工作階段瀏覽量。(週為昨天往前算7天，月為前4周，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
     <div class="col-lg-4">
-      <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity', content:'開信率為已開啟信件數/總投放信件數、連結點擊率為 點擊信中連結次數/開信次數，結合兩者呈現當月電子報成效(月為昨天往前算28天，圖表呈現前4週的數值增減變化)' } %>
+      <%= render partial: "shared/linechartmonthonly", locals: {id: 'labelmailactivity', title: '電子報成效分析', linechartid: 'lineChartmailactivity', content:'開信率為已開啟信件數/總投放信件數、連結點擊率為 點擊信中連結次數/開信次數，結合兩者呈現當月電子報成效(月為昨天往前算28天，圖表呈現前4週的數值增減變化，使用篩選功能若篩選超過20天線圖呈現每周變化)' } %>
     </div>
   </div>
 
@@ -31,7 +31,7 @@
       <%= render partial: "shared/hbarchartdayonly", locals: {id: 'labelcompetitors', title: '競爭對手流量分析', linechartid: 'barChartcompetitors', content:'競爭對手個別流量在台灣的排名及該站使用者未與網站互動即離開的跳出率分析(數據資料日期為擷取日，若其時間與現實時間差距太大，請通知工程師)', period: @created_at} %>
     </div>
     <div class="col-lg-6">
-      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'透過廣告獲得流量的來源、媒介，了解使用者從哪些管道進入網站並搭配使用者未與網頁互動的跳出率更準確地看出使用者的實際使用情況。(週從昨天往前推算7天，月為28天)' } %>
+      <%= render partial: "shared/barchart", locals: {idw: 'labelwebtrafficw', idm: 'labelwebtrafficm', title: '官網流量來源與跳出率分析', linechartid: 'barChartwebtraffic', content:'透過廣告獲得流量的來源、媒介，了解使用者從哪些管道進入網站並搭配使用者未與網頁互動的跳出率更準確地看出使用者的實際使用情況。(週從昨天往前推算7天，月為28天，使用篩選功能則呈現篩選期間加總、跳出率呈現加總平均)' } %>
     </div>
 
   </div>

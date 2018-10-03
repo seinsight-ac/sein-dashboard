@@ -60,15 +60,15 @@ class ExportXls
       @sheet1[3, c] = data[i + 6].fans_adds_week
       @sheet1[4, c] = data[i + 6].fans_losts_week
       @sheet1[5, c] = data[i + 6].page_users_week
-      @sheet1[8, c] = data[i + 6].posts_users_week
-      @sheet1[9, c] = data[i + 6].post_enagements_week
+      @sheet1[8, c] = data[i + 6].post_enagements_week
+      @sheet1[9, c] = data[i + 6].enagements_users_week
       @sheet1[7, c] = data[i + 6].negative_users_week
       @sheet1[11, c] = data[i + 6].link_clicks_week
       @sheet1[6, c] = data[i + 6].posts_users_week
       @sheet1.row(10).set_format(c, percent)
       @sheet1[10, c] = data[i + 6].enagements_users_week / data[i + 6].posts_users_week.to_f
       @sheet1.row(12).set_format(c, percent)
-      @sheet1[12, c] = data[i + 6].enagements_users_week / data[i + 6].link_clicks_week.to_f
+      @sheet1[12, c] = data[i + 6].link_clicks_week / data[i + 6].enagements_users_week.to_f
       @sheet3.column(c).width = 20
 
       i  += 7
@@ -285,7 +285,7 @@ class ExportXls
 
   def fb_post(since, before = Date.today.strftime("%Y-%m-%d"))
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
 
     @sheet4.row(0).set_format(0, head)
     @sheet4[0, 0] = "發文日期"
@@ -307,7 +307,7 @@ class ExportXls
     data.each do |d|
       unless d["message"].nil?
         date = d["created_time"].to_time
-        like = d["likes"]["summary"]["total_count"]
+        like = d["reactions"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
         share = 0 if d["shares"].nil?
