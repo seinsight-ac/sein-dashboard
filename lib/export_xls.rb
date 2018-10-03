@@ -285,7 +285,7 @@ class ExportXls
 
   def fb_post(since, before = Date.today.strftime("%Y-%m-%d"))
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
-    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares,insights.metric(post_impressions_unique, post_clicks_by_type_unique)&since=#{since}&until=#{before}&limit=100")
 
     @sheet4.row(0).set_format(0, head)
     @sheet4[0, 0] = "發文日期"
