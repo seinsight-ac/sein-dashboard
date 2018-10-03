@@ -29,6 +29,7 @@
 - 新增並設定config/database.yml檔，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCdatabase.yml%E8%B3%87%E6%96%99)
 - `rails console # 創建屬於自己的使用者`可以參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BC%E4%BD%BF%E7%94%A8%E8%80%85%E5%B8%B3%E5%AF%86)
 - `rails db:seed # 預下載一年內的資料`可以參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCseed%E8%B3%87%E6%96%99)
+- 設定背景執行(sidekiq)，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E8%83%8C%E6%99%AF%E5%9F%B7%E8%A1%8C)
 
 ## 作者
 
