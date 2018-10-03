@@ -233,7 +233,7 @@ class DashboardsController < ApplicationController
     # 貼文互動總數
     @post_enagements_last_7d = FbDb.last(7).pluck(:post_enagements_day)
     @post_enagements_last_4w = FbDb.last(22).pluck(:post_enagements_week).values_at(0, 7, 14, 21)
-
+    
     # 連結點擊數
     @link_clicks_last_7d = FbDb.last(7).pluck(:link_clicks_day)
     @link_clicks_last_4w = FbDb.last(22).pluck(:link_clicks_week).values_at(0, 7, 14, 21)
@@ -251,23 +251,25 @@ class DashboardsController < ApplicationController
     @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
     
     # 粉絲男女比例
-    @fans_female_day = FbDb.last(2).first.fans_female_day
-    @fans_male_day = FbDb.last(2).first.fans_male_day
+    @fans_female_day = FbDb.last(3).first.fans_female_day
+    @fans_male_day = FbDb.last(3).first.fans_male_day
 
     # 粉絲年齡分佈
     @fans_age = []
-    @fans_age << FbDb.last(2).first.fans_13_17
-    @fans_age << FbDb.last(2).first.fans_18_24
-    @fans_age << FbDb.last(2).first.fans_25_34
-    @fans_age << FbDb.last(2).first.fans_35_44
-    @fans_age << FbDb.last(2).first.fans_45_54
-    @fans_age << FbDb.last(2).first.fans_55_64
-    @fans_age << FbDb.last(2).first.fans_65
-
+    
+    if FbDb.last(2).first.fans_13_17.nil?
+      @fans_age << FbDb.last(3).first.fans_13_17 
+      @fans_age << FbDb.last(3).first.fans_18_24 
+      @fans_age << FbDb.last(3).first.fans_25_34 
+      @fans_age << FbDb.last(3).first.fans_35_44 
+      @fans_age << FbDb.last(3).first.fans_45_54 
+      @fans_age << FbDb.last(3).first.fans_55_64 
+      @fans_age << FbDb.last(3).first.fans_65
+    end 
+   
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
-    data = graph.get_object("278666028863859/posts?fields=created_time, message, likes.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
-
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
@@ -276,7 +278,7 @@ class DashboardsController < ApplicationController
       date = (d["created_time"].to_time + 8 * 60 * 60).strftime("%Y-%m-%d %H:%M")
 
       unless d["message"].nil?
-        like = d["likes"]["summary"]["total_count"]
+        like = d["reactions"]["summary"]["total_count"]
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
         share = 0 if d["shares"].nil?
