@@ -10,19 +10,9 @@ class DashboardsController < ApplicationController
       @fb_end = (params[:endtime].to_date + 2).strftime("%Y-%m-%d")
       @fb_start = (params[:starttime].to_date + 1).strftime("%Y-%m-%d")
 
-      puts @starttime
-      puts @endtime
-      puts @fb_end
-      puts @fb_start
-
       @fb = FbDb.where("date >= ? AND date <= ?", @fb_start, @fb_end)
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-
-      puts @fb.last.date
-      puts @fb[0].date
-      puts @ga.last.date
-      puts @ga[0].date
 
       unless @mailchimp.empty?
         @mail_users_select = @mailchimp.last.email_sent
@@ -250,26 +240,29 @@ class DashboardsController < ApplicationController
     @fans_losts_last_7d = FbDb.last(7).pluck(:fans_losts_day)
     @fans_losts_last_4w = FbDb.last(22).pluck(:fans_losts_week).values_at(0, 7, 14, 21)
     
+    i = 1
+    while FbDb.last(i).first.fans_female_day.nil?
+      i += 1
+    end
+
     # 粉絲男女比例
-    @fans_female_day = FbDb.last(3).first.fans_female_day
-    @fans_male_day = FbDb.last(3).first.fans_male_day
+    @fans_female_day = FbDb.last(i).first.fans_female_day
+    @fans_male_day = FbDb.last(i).first.fans_male_day
 
     # 粉絲年齡分佈
     @fans_age = []
-    
-    if FbDb.last(2).first.fans_13_17.nil?
-      @fans_age << FbDb.last(3).first.fans_13_17 
-      @fans_age << FbDb.last(3).first.fans_18_24 
-      @fans_age << FbDb.last(3).first.fans_25_34 
-      @fans_age << FbDb.last(3).first.fans_35_44 
-      @fans_age << FbDb.last(3).first.fans_45_54 
-      @fans_age << FbDb.last(3).first.fans_55_64 
-      @fans_age << FbDb.last(3).first.fans_65
-    end 
+
+    @fans_age << FbDb.last(i).first.fans_13_17 
+    @fans_age << FbDb.last(i).first.fans_18_24 
+    @fans_age << FbDb.last(i).first.fans_25_34 
+    @fans_age << FbDb.last(i).first.fans_35_44 
+    @fans_age << FbDb.last(i).first.fans_45_54 
+    @fans_age << FbDb.last(i).first.fans_55_64 
+    @fans_age << FbDb.last(i).first.fans_65
    
     graph = Koala::Facebook::API.new(CONFIG.FB_TOKEN)
     since_month = (Date.today << 1).strftime("%Y-%m-%d")
-    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares&since=#{since_month}&limit=100")
+    data = graph.get_object("278666028863859/posts?fields=created_time, message, reactions.limit(0).summary(true),comments.limit(0).summary(true),shares, insights.metric(post_clicks_by_type_unique)&since=#{since_month}&limit=100")
     # [created_time, message, like, comment, share, interact]
     posts = []
     posts_week = []
@@ -282,6 +275,7 @@ class DashboardsController < ApplicationController
         comment = d["comments"]["summary"]["total_count"]
         share = d["shares"]["count"] unless d["shares"].nil?
         share = 0 if d["shares"].nil?
+        link_click = d["insights"]["data"][0]["values"][0]["value"]["link clicks"]
 
         if d["message"].split("【").second.nil?
           message = d["message"][0..20]
@@ -289,27 +283,26 @@ class DashboardsController < ApplicationController
           message = d["message"].split("】").first.split("【").second.split("💡").second
         end
 
-        interact = like + comment * 3 + share * 5
+        interact = like + comment * 3 + share * 5 + link_click * 10
 
         if d["created_time"] >= (Date.today - 7).strftime("%Y-%m-%d")
-          posts_week << [date, message, like, comment, share, interact]
+          posts_week << [date, message, interact]
         end
 
-        posts << [date, message, like, comment, share, interact]
+        posts << [date, message, interact]
       end
-
-      posts.sort_by! { |item|
-        -item[5]
-      }
-
-      posts_week.sort_by! { |item|
-        -item[5]
-      }
-
-      @month_top_posts = posts.first(5)
-      @week_top_posts = posts_week.first(5)
-      puts @week_top_posts
     end
+
+    posts.sort_by! { |item|
+      -item[2]
+    }
+
+    posts_week.sort_by! { |item|
+      -item[2]
+    }
+
+    @month_top_posts = posts.first(5)
+    @week_top_posts = posts_week.first(5)
   end
 
   def googleanalytics
@@ -442,7 +435,7 @@ class DashboardsController < ApplicationController
     while @last.strftime("%a") != "Mon"
       @last -= 1
     end
-    @end = (@last + 28).strftime("%Y-%m-%d")
+    @end = (@last + 35).strftime("%Y-%m-%d")
     @last = @last.strftime("%Y-%m-%d") # 格式2018-08-18
   end
 
