@@ -98,16 +98,9 @@ $('#submitdate').on('click', function () {
 			},
 		success: function(data){
 			if ( window.location.href.indexOf("/dashboards/facebook") > -1 ) {
-				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('span').html(data.fans_adds_select_rate);
+				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.fans_adds_select_rate > 0 ) {
-					$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinefansadds").sparkline(data.fans_adds_last_select, {
 					type: 'line',
 					width: '100%',
@@ -116,16 +109,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinepageusers').parent('.ibox-content').children('h1').html(data.page_users_select);
-				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.page_users_select_rate);
+				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.page_users_select_rate > 0 ) {
-					$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinepageusers").sparkline(data.page_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -134,16 +120,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinepostsusers').parent('.ibox-content').children('h1').html(data.posts_users_select);
-				$('#sparklinepostsusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.posts_users_select_rate);
+				$('#sparklinepostsusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinepostsusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinepostsusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.posts_users_select_rate > 0 ) {
-					$('#sparklinepostsusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinepostsusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinepostsusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinepostsusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$('#sparklinepostsusers').sparkline(data.posts_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -152,16 +131,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinenegativeusers').parent('.ibox-content').children('h1').html(data.negative_users_select);
-				$('#sparklinenegativeusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.negative_users_select_rate);
+				$('#sparklinenegativeusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinenegativeusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinenegativeusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.negative_users_select_rate > 0 ) {
-					$('#sparklinenegativeusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinenegativeusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinenegativeusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinenegativeusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$('#sparklinenegativeusers').sparkline(data.negative_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -302,16 +274,9 @@ $('#submitdate').on('click', function () {
 			} else if ( window.location.href.indexOf("/dashboards/googleanalytics") > -1 ) {
 
 				$('#sparklinewebusers').parent('.ibox-content').children('h1').html(data.web_users_select);
-				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.web_users_select_rate);
+				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.web_users_select_rate > 0 ) {
-					$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinewebusers").sparkline(data.web_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -320,16 +285,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinepageviews').parent('.ibox-content').children('h1').html(data.pageviews_select);
-				$('#sparklinepageviwes').parent('.ibox-content').children('.stat-percent').children('span').html(data.pageviews_select_rate);
+				$('#sparklinepageviwes').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinepageviwes').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinepageviwes').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.pageviews_select_rate > 0 ) {
-					$('#sparklinepageviwes').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinepageviwes').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinepageviwes').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinepageviwes').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinepageviwes").sparkline(data.pageviews_last_select, {
 					type: 'line',
 					width: '100%',
@@ -338,16 +296,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinepageviewspersession').parent('.ibox-content').children('h1').html(data.pageviews_per_session_select);
-				$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('span').html(data.pageviews_per_session_select_rate);
+				$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinepageviewspersession').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.pageviews_per_session_select_rate > 0 ) {
-					$('#sparklinepageviewspersession').prev().children('i').addClass('fa fa-level-up');
-					$('ssparklinepageviewspersession').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinepageviewspersession').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinepageviewspersession').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinepageviewspersession").sparkline(data.pageviews_per_session_last_select, {
 					type: 'line',
 					width: '100%',
@@ -356,16 +307,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklineavgsessionduration').parent('.ibox-content').children('h1').html(data.avg_session_duration_select);
-				$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').html(data.avg_session_duration_week_rate);
+				$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklineavgsessionduration').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.avg_session_duration_week_rate > 0 ) {
-					$('#sparklineavgsessionduration').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklineavgsessionduration').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklineavgsessionduration').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklineavgsessionduration').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklineavgsessionduration").sparkline(data.avg_session_duration_last_select, {
 					type: 'line',
 					width: '100%',
@@ -462,16 +406,9 @@ $('#submitdate').on('click', function () {
 			
 			} else {
 				
-				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('span').html(data.fans_adds_select_rate);
+				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinefansadds').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.fans_adds_select_rate > 0 ) {
-					$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinefansadds').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinefansadds').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinefansadds").sparkline(data.fans_adds_last_select, {
 					type: 'line',
 					width: '100%',
@@ -480,16 +417,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinepageusers').parent('.ibox-content').children('h1').html(data.page_users_select);
-				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.page_users_select_rate);
+				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinepageusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.page_users_select_rate > 0 ) {
-					$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinepageusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinepageusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinepageusers").sparkline(data.page_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -498,16 +428,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinewebusers').parent('.ibox-content').children('h1').html(data.web_users_select);
-				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.web_users_select_rate);
+				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinewebusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.web_users_select_rate > 0 ) {
-					$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinewebusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinewebusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinewebusers").sparkline(data.web_users_last_select, {
 					type: 'line',
 					width: '100%',
@@ -516,16 +439,9 @@ $('#submitdate').on('click', function () {
 					fillColor: "#ffffff"
 				});
 				$('#sparklinemailusers').parent('.ibox-content').children('h1').html(data.mail_users_select);
-				$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').children('span').html(data.mail_users_select_rate);
+				$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').children('span').empty();
 				$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').children('i').removeClass();
 				$('#sparklinemailusers').parent('.ibox-content').children('.stat-percent').removeClass();
-				if (data.mail_users_select_rate > 0 ) {
-					$('#sparklinemailusers').prev().children('i').addClass('fa fa-level-up');
-					$('#sparklinemailusers').prev().addClass('stat-percent font-bold text-navy');
-				}	else {
-					$('#sparklinemailusers').prev().children('i').addClass('fa fa-level-down');
-					$('#sparklinemailusers').prev().addClass('stat-percent font-bold text-danger');
-				}
 				$("#sparklinemailusers").sparkline(data.mail_users_last_select, {
 					type: 'line',
 					width: '100%',
