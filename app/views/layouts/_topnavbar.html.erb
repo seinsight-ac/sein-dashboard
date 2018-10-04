@@ -195,7 +195,8 @@ $('#submitdate').on('click', function () {
 						}],
 					}
 				};
-				new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
+				lineChartfansretention.destroy();
+				lineChartfansretention = new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
 				var lineDatalinkclicks = {
 					labels: data.fb_last_select,
 					datasets: [
@@ -240,7 +241,8 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-			new Chart(document.getElementById("lineChartlinkclicks").getContext("2d"), {type: 'line', data: lineDatalinkclicks, options:lineOptions}); 
+			lineChartlinkclicks.destroy();
+			lineChartlinkclicks = new Chart(document.getElementById("lineChartlinkclicks").getContext("2d"), {type: 'line', data: lineDatalinkclicks, options:lineOptions}); 
 			var lineDatafansadds = {
 				labels: data.fb_last_select,
 				datasets: [
@@ -279,7 +281,8 @@ $('#submitdate').on('click', function () {
 					}],
 				}
 			};
-			new Chart(document.getElementById("lineChartfansadds").getContext("2d"), {type: 'line', data: lineDatafansadds, options:lineOptions}); 
+			lineChartfansadds.destroy();
+			lineChartfansadds = new Chart(document.getElementById("lineChartfansadds").getContext("2d"), {type: 'line', data: lineDatafansadds, options:lineOptions}); 
 			
 			} else if ( window.location.href.indexOf("/dashboards/googleanalytics") > -1 ) {
 
@@ -371,7 +374,8 @@ $('#submitdate').on('click', function () {
 						}],
 					}
 				};
-				new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
+				lineChartwebactivity.destroy();
+				lineChartwebactivity =	new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
 				var barDatawebtraffic = {
 					labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
 					datasets: [
@@ -467,7 +471,7 @@ $('#submitdate').on('click', function () {
 							backgroundColor: 'rgba(220, 220, 220, 0.3)',
 							pointBackgroundColor: "rgba(220, 220, 220, 0.3)",
 							pointBorderColor: "#fff",
-							data: data.posts_users_last_select,
+							data: data.posts_users_last_select_week,
 							yAxisID: 'y-axis-1',
 						},{
 							label: "貼文互動人數", 
@@ -503,7 +507,8 @@ $('#submitdate').on('click', function () {
 						}],
 					}
 				};
-				new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
+				lineChartfansretention.destroy();
+				lineChartfansretention = new Chart(document.getElementById("lineChartfansretention").getContext("2d"), {type: 'line', data: lineDatafansretention, options:lineOptions}); 
 				var lineDatawebactivity = {
 					labels: data.ga_last_select_date,
 					datasets: [
@@ -548,7 +553,8 @@ $('#submitdate').on('click', function () {
 						}],
 					}
 				};
-				new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
+				lineChartwebactivity.destroy();
+				lineChartwebactivity = new Chart(document.getElementById("lineChartwebactivity").getContext("2d"), {type: 'line', data: lineDatawebactivity, options:lineOptions}); 
 				var lineDatamailactivity = {
 					labels: data.select_date,
 					datasets: [
@@ -587,7 +593,8 @@ $('#submitdate').on('click', function () {
 						}],
 					}
 				};
-				new Chart(document.getElementById("lineChartmailactivity").getContext("2d"), {type: 'line', data: lineDatamailactivity, options:lineOptions}); 
+				lineChartmailactivity.destroy();
+				lineChartmailactivity = new Chart(document.getElementById("lineChartmailactivity").getContext("2d"), {type: 'line', data: lineDatamailactivity, options:lineOptions}); 
 				var barDatawebtraffic = {
 					labels: ["有機搜尋", "社群", "自然流量", "參照連結", "電郵"],
 					datasets: [

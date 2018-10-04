@@ -168,7 +168,7 @@ class DashboardsController < ApplicationController
         @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
       end
 
-      @fans_retention_rate_select = @enagements_users_last_select.zip(@posts_users_last_select).map { |x, y| (x / y.to_f).round(2) }
+      @fans_retention_rate_select = @enagements_users_last_select.zip(@posts_users_last_select_week).map { |x, y| (x / y.to_f).round(2) }
       @users_activity_rate_select = @activeusers_views_last_select.zip(@all_users_views_last_select).map { |x, y| (x / y.to_f).round(2) }
       @link_clicks_rate_select = @link_clicks_last_select.zip(@post_enagements_last_select).map { |x, y| (x / y.to_f).round(2) }
 
