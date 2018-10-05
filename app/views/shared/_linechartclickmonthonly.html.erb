@@ -29,4 +29,4 @@ var lineOptions = {
 		}],
 	}
 };
-new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+<%= linechartid %> = new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
