@@ -562,11 +562,7 @@ class DashboardsController < ApplicationController
 
   # 拿到每周的加總值
   def get_week_data(data)
-    value = []
-    value << data.first(7).reduce(:+)
-    value << data.first(14).last(7).reduce(:+)
-    value << data.first(21).last(7).reduce(:+)
-    value << data.first(28).last(7).reduce(:+)
+    data[0, week_cnt * 7].each_slice(7).map{|arr| arr.reduce(:+)}
   end
 
   # channel裡的值去掉nil把值相加
