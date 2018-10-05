@@ -22,7 +22,8 @@ $("<%= idw %>").click(function(){
 	var lineOptions = {
 		responsive: true,
 	};
-	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+	<%= linechartid %>.destroy();
+	<%= linechartid %> = new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
 
 });
 
@@ -49,8 +50,10 @@ $("<%= idm %>").click(function(){
 
 	var lineOptions = {
 		responsive: true,
-	};
-	new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+	};	
+	<%= linechartid %>.destroy();
+	<%= linechartid %> = new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+
 });
 
 var <%= dataname %> = {
@@ -74,4 +77,4 @@ var <%= dataname %> = {
 var lineOptions = {
 	responsive: true,
 };
-new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 
+<%= linechartid %> = new Chart(document.getElementById("<%= linechartid %>").getContext("2d"), {type: 'line', data: <%= dataname %>, options:lineOptions}); 

@@ -13,6 +13,7 @@ class DashboardsController < ApplicationController
       @fb = FbDb.where("date >= ? AND date <= ?", @fb_start, @fb_end)
       @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
       @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      puts @mailchimp
 
       unless @mailchimp.empty?
         @mail_users_select = @mailchimp.last.email_sent
@@ -43,7 +44,8 @@ class DashboardsController < ApplicationController
 
       # 粉專貼文觸及
       @posts_users_select = @fb.pluck(:posts_users_day).reduce(:+)
-      @posts_users_last_select = @fb.pluck(:posts_users_day)
+      @posts_users_last_select_day = @fb.pluck(:posts_users_day)
+      @posts_users_last_select_week = @fb.pluck(:posts_users_day)
       @posts_users_select_rate = convert_percentrate(@posts_users_select, @fb.first.posts_users_day) 
 
       # 粉專負面行動人數
@@ -121,7 +123,7 @@ class DashboardsController < ApplicationController
         end
         (start).step(data, 7) { |i| 
           # 粉絲黏著度分析
-          @posts_users_last_select << @fb.pluck(:posts_users_week)[i]
+          @posts_users_last_select_week << @fb.pluck(:posts_users_week)[i]
           @enagements_users_last_select << @fb.pluck(:enagements_users_week)[i]
 
           # 貼文點擊分析
@@ -144,7 +146,7 @@ class DashboardsController < ApplicationController
         }
       else
         # 粉絲黏著度分析
-        @posts_users_last_select = @fb.pluck(:posts_users_day)
+        @posts_users_last_select_day = @fb.pluck(:posts_users_day)
         @enagements_users_last_select = @fb.pluck(:enagements_users_day)
         
         # 貼文點擊分析
@@ -166,7 +168,7 @@ class DashboardsController < ApplicationController
         @ga_last_select_date = @ga.pluck(:date).map { |a| a.strftime("%m%d").to_i }
       end
 
-      @fans_retention_rate_select = @enagements_users_last_select.zip(@posts_users_last_select).map { |x, y| (x / y.to_f).round(2) }
+      @fans_retention_rate_select = @enagements_users_last_select.zip(@posts_users_last_select_week).map { |x, y| (x / y.to_f).round(2) }
       @users_activity_rate_select = @activeusers_views_last_select.zip(@all_users_views_last_select).map { |x, y| (x / y.to_f).round(2) }
       @link_clicks_rate_select = @link_clicks_last_select.zip(@post_enagements_last_select).map { |x, y| (x / y.to_f).round(2) }
 
@@ -176,7 +178,7 @@ class DashboardsController < ApplicationController
         :mail_links_rate_select => @mail_links_rate_select, :select_date => @select_date, 
         :fans_adds_last_select => @fans_adds_last_select, :fans_adds_select_rate => @fans_adds_select_rate, 
         :page_users_select => @page_users_select, :page_users_last_select => @page_users_last_select, 
-        :page_users_select_rate => @page_users_select_rate, :posts_users_last_select => @posts_users_last_select, 
+        :page_users_select_rate => @page_users_select_rate, :posts_users_last_select_day => @posts_users_last_select_day, 
         :enagements_users_last_select => @enagements_users_last_select, :fans_retention_rate_select => @fans_retention_rate_select, 
         :fb_last_select => @fb_last_select, :web_users_select => @web_users_select, 
         :web_users_last_select => @web_users_last_select, :web_users_select_rate => @web_users_select_rate, 
@@ -188,6 +190,7 @@ class DashboardsController < ApplicationController
         :negative_users_select => @negative_users_select, :negative_users_last_select => @negative_users_last_select, :negative_users_select_rate => @negative_users_select_rate,
         :fans_adds_last_select_week => @fans_adds_last_select_week, :fans_losts_last_select => @fans_losts_last_select, 
         :post_enagements_last_select => @post_enagements_last_select, :link_clicks_last_select => @link_clicks_last_select, :link_clicks_rate_select => @link_clicks_rate_select,
+        :select_top_posts => @select_top_posts, :posts_users_last_select_week => @posts_users_last_select_week,
       # GA  
         :pageviews_select => @pageviews_select, :pageviews_last_select => @pageviews_last_select, :pageviews_select_rate => @pageviews_select_rate,
         :pageviews_per_session_select => @pageviews_per_session_select, :pageviews_per_session_last_select => @pageviews_per_session_last_select, :pageviews_per_session_select_rate => @pageviews_per_session_select_rate,
