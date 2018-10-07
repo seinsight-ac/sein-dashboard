@@ -15,9 +15,9 @@
 - [X] 使用者可以切換來源標籤(FB, 官網)，看到各個不同來源資料更詳盡的dashboard
 - [X] 使用者可以自由切換每個區塊週、月的標籤，可以看到每個區塊個別的不同時間段資料
 - [X] 使用者可以統一切換那頁的週、月標籤，可以看到整頁dashboard統一呈現不同時間段資料
-- [X] 使用者可以自己選取時間區段(用日曆選取幾號到幾號)，可以看到整頁dashboard呈現選取時間段的資料
+- [ ] 使用者可以自己選取時間區段(用日曆選取幾號到幾號)，可以看到整頁dashboard呈現選取時間段的資料
 - [X] 使用者可以下載上個月詳細資料的excel檔
-- [X] 當使用者有篩選時間時，可以根據自己篩選的時間段去下載excel檔，看到更詳細的資訊
+- [ ] 當使用者有篩選時間時，可以根據自己篩選的時間段去下載excel檔，看到更詳細的資訊
 
 ## 專案使用
 - fork到自己的空間
@@ -29,7 +29,6 @@
 - 新增並設定config/database.yml檔，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCdatabase.yml%E8%B3%87%E6%96%99)
 - `rails console # 創建屬於自己的使用者`可以參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BC%E4%BD%BF%E7%94%A8%E8%80%85%E5%B8%B3%E5%AF%86)
 - `rails db:seed # 預下載一年內的資料`可以參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCseed%E8%B3%87%E6%96%99)
-- 設定背景執行(sidekiq)，參考[wiki](https://github.com/seinsight-ac/sein-dashboard/wiki/%E8%83%8C%E6%99%AF%E5%9F%B7%E8%A1%8C)
 
 ## 作者
 
