@@ -10,9 +10,9 @@ class DashboardsController < ApplicationController
       @fb_end = (params[:endtime].to_date + 2).strftime("%Y-%m-%d")
       @fb_start = (params[:starttime].to_date + 1).strftime("%Y-%m-%d")
 
-      @fb = FbDb.where("date >= ? AND date <= ?", @fb_start, @fb_end)
-      @ga = GaDb.where("date >= ? AND date <= ?", @starttime, @endtime)
-      @mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      @fb = FbDb.where(date: @fb_start..@fb_end)
+      @ga = GaDb.where(date: @starttime..@endtime)
+      @mailchimp = MailchimpDb.where(date: @starttime..@endtime)
       puts @mailchimp
 
       unless @mailchimp.empty?
@@ -114,7 +114,7 @@ class DashboardsController < ApplicationController
         @fans_losts_last_select = []
 
         data = @fb.size
-        @ga = GaDb.where("date >= ? AND date <= ?", (@starttime.to_date + data % 7 - 7).strftime("%Y-%m-%d"), @endtime)
+        @ga = GaDb.where(date: ((@starttime.to_date + data % 7 - 7).strftime("%Y-%m-%d"))..@endtime)
 
         if (data % 7).zero?
           start = 6
@@ -399,9 +399,9 @@ class DashboardsController < ApplicationController
   def excel
     last_month_mon
 
-    fb = FbDb.where("date >= ? AND date <= ?", @last, @end)
-    ga = GaDb.where("date >= ? AND date <= ?", @last, @end)
-    mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @last, @end)
+    fb = FbDb.where(date: @last..@end)
+    ga = GaDb.where(date: @last..@end)
+    mailchimp = MailchimpDb.where(date: @last..@end)
 
     export_xls = ExportXls.new
     
@@ -432,9 +432,9 @@ class DashboardsController < ApplicationController
       m = @endtime - @starttime
       @last = @starttime - (m % 7)
 
-      fb = FbDb.where("date >= ? AND date <= ?", @last, @endtime)
-      ga = GaDb.where("date >= ? AND date <= ?", @last, @endtime)
-      mailchimp = MailchimpDb.where("date >= ? AND date <= ?", @starttime, @endtime)
+      fb = FbDb.where(date: @last..@endtime)
+      ga = GaDb.where(date: @last..@endtime)
+      mailchimp = MailchimpDb.where(date: @starttime..@endtime)
 
       # export to xls
       export_xls = ExportXls.new
@@ -561,12 +561,8 @@ class DashboardsController < ApplicationController
   end
 
   # 拿到每周的加總值
-  def get_week_data(data)
-    value = []
-    value << data.first(7).reduce(:+)
-    value << data.first(14).last(7).reduce(:+)
-    value << data.first(21).last(7).reduce(:+)
-    value << data.first(28).last(7).reduce(:+)
+  def get_week_data(data, week_cnt = 4)
+    data[0, week_cnt * 7].each_slice(7).map{ |arr| arr.reduce(:+) }
   end
 
   # channel裡的值去掉nil把值相加
