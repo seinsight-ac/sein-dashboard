@@ -1,6 +1,5 @@
 ## 關於sein-dashboard
 - 目的：希望能優化／自動化分析數據的流程，幫助編輯台和負責社群管理的夥伴使用，減少手動輸入與分析數據的時間和投入的人力，產出能幫助判讀的視覺化報表，甚至能主動提醒一些重要的決策。
-- DEMO網址：www.sein.fun (預計2019/8失效)
 - 專案進度可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/projects/2)
 - 如果有使用上有問題可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/wiki)
 - 此專案有使用gem，關於gem的使用可以參考[這裡](https://github.com/seinsight-ac/sein-dashboard/wiki/%E9%97%9C%E6%96%BCgem%E7%9A%84%E4%BD%BF%E7%94%A8)
